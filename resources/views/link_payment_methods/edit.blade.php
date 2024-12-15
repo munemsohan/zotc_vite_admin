@@ -49,7 +49,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-from-label">{{ translate('Payment Link') }}</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" name="description">@php echo $manual_payment_method->description @endphp</textarea>
+                            <textarea class="form-control" name="description" placeholder="https://shop.bkash.com/***********/paymentlink/default-payment">@php echo $manual_payment_method->description @endphp</textarea>
                         </div>
                     </div>
                     <div id="bank_payment_data">

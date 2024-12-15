@@ -44,7 +44,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-from-label">{{ translate('Payment Link') }}</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" name="description"></textarea>
+                            <textarea class="form-control" name="description" placeholder="https://shop.bkash.com/***********/paymentlink/default-payment"></textarea>
                         </div>
                     </div>
                     <div class="form-group mb-3 text-right">
