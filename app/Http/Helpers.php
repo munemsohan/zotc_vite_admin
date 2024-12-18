@@ -3126,7 +3126,7 @@ if (!function_exists('replaceVarContentStyle')) {
 
         $imgSlug = get_zotc_setting('img_slug') ?: 'all';
 
-        $image_url = url("public/uploads/{$imgSlug}/content_media") . "/";
+        $image_url = static_asset("uploads/{$imgSlug}/content_media") . "/";
         $temp = $item;
 
         if (is_object($item)) {
