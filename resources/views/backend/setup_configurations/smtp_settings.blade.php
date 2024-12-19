@@ -33,6 +33,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="MAIL_HOST"
+                                        value="{{ env('MAIL_HOST') }}"
                                         placeholder="{{ env('MAIL_HOST') != '' ? '*****' : '' }}">
                                 </div>
                             </div>
@@ -43,6 +44,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="MAIL_PORT"
+                                        value="{{ env('MAIL_PORT') }}"
                                         placeholder="{{ env('MAIL_PORT') != '' ? '*****' : '' }}">
                                 </div>
                             </div>
@@ -53,6 +55,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="MAIL_USERNAME"
+                                        value="{{ env('MAIL_USERNAME') }}"
                                         placeholder="{{ env('MAIL_USERNAME') != '' ? '*****' : '' }}">
                                 </div>
                             </div>
@@ -63,6 +66,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="MAIL_PASSWORD"
+                                        value="{{ env('MAIL_PASSWORD') }}"
                                         placeholder="{{ env('MAIL_PASSWORD') != '' ? '*****' : '' }}">
                                 </div>
                             </div>
@@ -73,6 +77,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="MAIL_ENCRYPTION"
+                                        value="{{ env('MAIL_ENCRYPTION') }}"
                                         placeholder="{{ env('MAIL_ENCRYPTION') != '' ? '*****' : '' }}">
                                 </div>
                             </div>
