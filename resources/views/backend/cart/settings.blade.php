@@ -99,6 +99,49 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
+
+                    <div class="d-flex justify-content-between p-2">
+                        <h5 class="mb-0 h6 text-center">{{ translate('Custom Field') }}</h5>
+
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                            <input type="checkbox" id="customFieldToggle" onchange="toggleCustomField(this)"
+                                {{ get_cart_setting('custom_field') == 1 ? 'checked' : '' }}>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div id="customFieldSettings"
+                        class="{{ get_cart_setting('custom_field') == 1 ? 'd-block' : 'd-none' }} mb-2">
+                        <form class="form-horizontal row g-3 border p-1"
+                            action="{{ route('business_settings.cart.custom_field.update') }}" method="POST">
+                            @csrf
+                            <!-- Label Input -->
+                            <div class="col-md-7">
+                                <label for="label" class="form-label fw-bold">{{ translate('Input Field') }}</label>
+                                <input type="text" class="form-control" id="label" name="types[custom_field_label]"
+                                    value="{{ get_business_setting('custom_field_label') }}"
+                                    placeholder="{{ translate('Example: NID, Birth certificate Number') }}">
+                            </div>
+                            <!-- Label Required Toggle -->
+                            <div class="col-md-3 d-flex align-items-center pt-3">
+                                <label for="labelRequired"
+                                    class="form-label fw-bold me-2 mb-0">{{ translate('Required') }}</label>
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <!-- Hidden input to ensure a value of 0 is sent if unchecked -->
+                                    <input type="hidden" name="types[custom_field_required]" value="0">
+                                    <input type="checkbox" id="labelRequired" name="types[custom_field_required]"
+                                        value="1"
+                                        {{ get_business_setting('custom_field_required') == '1' ? 'checked' : '' }}>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <!-- Save Button -->
+                            <div class="col-md-2 d-flex align-items-center">
+                                <button type="submit"
+                                    class="btn btn-primary btn-sm w-100">{{ translate('Save') }}</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,6 +167,18 @@
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
                 }
             });
+        }
+
+        function toggleCustomField(el) {
+            if ($(el).is(':checked')) {
+                $('#customFieldSettings').removeClass('d-none');
+                $('#customFieldSettings').addClass('d-block');
+                updateCartSettings(el, 'custom_field');
+            } else {
+                $('#customFieldSettings').removeClass('d-block');
+                $('#customFieldSettings').addClass('d-none');
+                updateCartSettings(el, 'custom_field');
+            }
         }
     </script>
 @endsection

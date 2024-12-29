@@ -516,6 +516,7 @@ class BusinessSettingsController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request->all());
         foreach ($request->types as $key => $type) {
             if ($type == 'site_name') {
                 $this->overWriteEnvFile('APP_NAME', $request[$type]);
@@ -629,6 +630,33 @@ class BusinessSettingsController extends Controller
             return Redirect::to(URL::previous() . "#" . $request->tab);
         }
         return redirect()->back();
+    }
+
+    public function updateCartCustom(Request $request)
+    {
+        // Remove the '' from keys
+        $request->types = array_map(function($key) {
+            return str_replace("'", "", $key);
+        }, $request->types);
+        
+        foreach ($request->types as $key => $value) {
+            $business_settings = BusinessSetting::where('type', $key)->first();
+
+            if ($business_settings != null) {
+                $business_settings->value = $value;
+                $business_settings->save();
+            } else {
+                $business_settings = new BusinessSetting();
+
+                $business_settings->type = $key;
+                $business_settings->value = $value;
+                $business_settings->save();
+            }
+        }
+
+        Artisan::call('cache:clear');
+        flash(translate('Cart Custom updated successfully'))->success();
+        return back();
     }
 
     private function processImage($randomFilename, $imagePath, $desiredWidth, $desiredHeight)
