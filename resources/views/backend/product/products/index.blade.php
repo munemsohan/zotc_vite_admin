@@ -68,6 +68,22 @@
                     </div>
                 @endif
                 <div class="col-md-2 ml-auto">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="pagination"
+                        name="pagination" onchange="sort_products()">
+                        <option value="20" @if (request()->pagination == '20') selected @endif>{{ translate('Show 20') }}
+                        </option>
+                        <option value="50" @if (request()->pagination == '50') selected @endif>{{ translate('Show 50') }}
+                        </option>
+                        <option value="100" @if (request()->pagination == '100') selected @endif>
+                            {{ translate('Show 100') }}</option>
+                        <option value="500" @if (request()->pagination == '500') selected @endif>
+                            {{ translate('Show 500') }}</option>
+                        <option value="all" @if (request()->pagination == 'all') selected @endif>
+                            {{ translate('Show All') }}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 ml-auto">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" name="type" id="type"
                         onchange="sort_products()">
                         <option value="">{{ translate('Sort By') }}</option>
@@ -91,11 +107,12 @@
                             {{ translate('Base Price (Low > High)') }}</option>
                     </select>
                 </div>
+
                 <div class="col-md-2">
                     <div class="form-group mb-0">
-                        <input type="text" class="form-control form-control-sm" id="search"
-                            name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset
-                            placeholder="{{ translate('Type & Enter') }}">
+                        <input type="text" class="form-control form-control-sm" id="search" name="search"
+                            value="{{ request()->search }}" placeholder="{{ translate('Type & Enter') }}"
+                            onkeypress="if(event.keyCode == 13) { sort_products(); }">
                     </div>
                 </div>
             </div>
@@ -256,8 +273,8 @@
                                 </td>
                                 <td class="text-right">
                                     <a class="btn btn-soft-success btn-icon btn-circle btn-sm"
-                                        href="{{ route('product', $product->slug) }}" target="_blank"
-                                        title="{{ translate('View') }}">
+                                        href="{{ 'https://' . env('APP_URL') . '/product/' . $product->slug }}"
+                                        target="_blank" title="{{ translate('View') }}">
                                         <i class="las la-eye"></i>
                                     </a>
                                     @can('product_edit')
@@ -296,7 +313,9 @@
                     </tbody>
                 </table>
                 <div class="aiz-pagination">
-                    {{ $products->appends(request()->input())->links() }}
+                    @if (method_exists($products, 'appends'))
+                        {{ $products->appends(request()->input())->links() }}
+                    @endif
                 </div>
             </div>
         </form>
@@ -408,7 +427,7 @@
             });
         }
 
-        function sort_products(el) {
+        function sort_products() {
             $('#sort_products').submit();
         }
 

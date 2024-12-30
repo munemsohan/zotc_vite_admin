@@ -143,6 +143,8 @@ class ProductController extends Controller
         $query = null;
         $seller_id = null;
         $sort_search = null;
+        $pagination = $request->pagination ?? 20;
+
         $products = Product::where('auction_product', 0)->where('wholesale_product', 0);
         if (get_setting('vendor_system_activation') != 1) {
             $products = $products->where('added_by', 'admin');
@@ -167,12 +169,15 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
-        $products = $products->orderBy('created_at', 'desc')->paginate(15);
+        if ($pagination == 'all') {
+            $products = $products->orderBy('created_at', 'desc')->get();
+        } else {
+            $products = $products->orderBy('created_at', 'desc')->paginate($pagination);
+        }
         $type = 'All';
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search', 'pagination'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -246,7 +251,15 @@ class ProductController extends Controller
         $request->merge(['thumbnail_img' => $thumbnail_img]);
 
         $product = $this->productService->store($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+            '_token',
+            'sku',
+            'choice',
+            'tax_id',
+            'tax',
+            'tax_type',
+            'flash_deal_id',
+            'flash_discount',
+            'flash_discount_type'
         ]));
 
         if (isset($request->minimum_pay_with_shipping)) {
@@ -305,29 +318,47 @@ class ProductController extends Controller
         //VAT & Tax
         if ($request->tax_id) {
             $this->productTaxService->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
+                'tax_id',
+                'tax',
+                'tax_type',
+                'product_id'
             ]));
         }
 
         //Flash Deal
         $this->productFlashDealService->store($request->only([
-            'flash_deal_id', 'flash_discount', 'flash_discount_type'
+            'flash_deal_id',
+            'flash_discount',
+            'flash_discount_type'
         ]), $product);
 
         //Product Stock
         $this->productStockService->store($request->only([
-            'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
+            'colors_active',
+            'colors',
+            'choice_no',
+            'unit_price',
+            'sku',
+            'current_stock',
+            'product_id'
         ]), $product);
 
         // Frequently Bought Products
         $this->FrequentlyBoughtProductService->store($request->only([
-            'product_id', 'frequently_bought_selection_type', 'fq_brought_product_ids', 'fq_brought_product_category_id'
+            'product_id',
+            'frequently_bought_selection_type',
+            'fq_brought_product_ids',
+            'fq_brought_product_category_id'
         ]));
 
         // Product Translations
         $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
         ProductTranslation::create($request->only([
-            'lang', 'name', 'unit', 'description', 'product_id'
+            'lang',
+            'name',
+            'unit',
+            'description',
+            'product_id'
         ]));
 
         flash(translate('Product has been inserted successfully'))->success();
@@ -445,7 +476,15 @@ class ProductController extends Controller
 
         //Product
         $product = $this->productService->update($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+            '_token',
+            'sku',
+            'choice',
+            'tax_id',
+            'tax',
+            'tax_type',
+            'flash_deal_id',
+            'flash_discount',
+            'flash_discount_type'
         ]), $product);
 
         if (isset($request->minimum_pay_with_shipping)) {
@@ -551,35 +590,56 @@ class ProductController extends Controller
         //Product Stock
         $product->stocks()->delete();
         $this->productStockService->store($request->only([
-            'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
+            'colors_active',
+            'colors',
+            'choice_no',
+            'unit_price',
+            'sku',
+            'current_stock',
+            'product_id'
         ]), $product);
 
         //Flash Deal
         $this->productFlashDealService->store($request->only([
-            'flash_deal_id', 'flash_discount', 'flash_discount_type', 'discount', 'discount_type', 'discount_start_date', 'discount_end_date'
+            'flash_deal_id',
+            'flash_discount',
+            'flash_discount_type',
+            'discount',
+            'discount_type',
+            'discount_start_date',
+            'discount_end_date'
         ]), $product);
 
         //VAT & Tax
         if ($request->tax_id) {
             $product->taxes()->delete();
             $this->productTaxService->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
+                'tax_id',
+                'tax',
+                'tax_type',
+                'product_id'
             ]));
         }
 
         // Frequently Bought Products
         $product->frequently_bought_products()->delete();
         $this->FrequentlyBoughtProductService->store($request->only([
-            'product_id', 'frequently_bought_selection_type', 'fq_brought_product_ids', 'fq_brought_product_category_id'
+            'product_id',
+            'frequently_bought_selection_type',
+            'fq_brought_product_ids',
+            'fq_brought_product_category_id'
         ]));
 
         // Product Translations
         ProductTranslation::updateOrCreate(
             $request->only([
-                'lang', 'product_id'
+                'lang',
+                'product_id'
             ]),
             $request->only([
-                'name', 'unit', 'description'
+                'name',
+                'unit',
+                'description'
             ])
         );
 
