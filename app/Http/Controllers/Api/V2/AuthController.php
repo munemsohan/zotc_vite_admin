@@ -6,18 +6,13 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\OTPVerificationController;
 use App\Models\BusinessSetting;
-use App\Models\Customer;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Notifications\AppEmailVerificationNotification;
 use Hash;
-use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
 use Socialite;
 use App\Models\Cart;
 use App\Rules\Recaptcha;
-use App\Services\SocialRevoke;
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -69,8 +64,8 @@ class AuthController extends Controller
         $user->verification_code = rand(100000, 999999);
         $user->save();
 
-
         $user->email_verified_at = null;
+        
         if ($user->email != null) {
             if (BusinessSetting::where('type', 'email_verification')->first()->value != 1) {
                 $user->email_verified_at = date('Y-m-d H:m:s');

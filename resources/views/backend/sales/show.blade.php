@@ -298,9 +298,14 @@
                             @if (!empty($shippingAddress->country))
                                 {{ $shippingAddress->country }}
                             @endif
+
+                            @if (!empty($shippingAddress->custom_field))
+                                {{ $shippingAddress->custom_field->name }} : {{ $shippingAddress->custom_field->value }}
+                            @endif
                         </address>
 
-                        <input type="customer_phone" id="phone" value="{{ $shippingAddress->phone }}" oninput="saveOrderAddress()" placeholder="Customer Phone">
+                        <input type="customer_phone" id="phone" value="{{ $shippingAddress->phone }}"
+                            oninput="saveOrderAddress()" placeholder="Customer Phone">
                     @else
                         @if ($order->user)
                             <address>

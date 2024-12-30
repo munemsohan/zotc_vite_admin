@@ -13,7 +13,7 @@
                         enctype="multipart/form-data">
                         @csrf
                         <!-- System Name -->
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label class="col-sm-3 col-from-label">{{ translate('System Name') }}</label>
                             <div class="col-sm-9">
                                 <input type="hidden" name="types[]" value="site_name">
@@ -21,10 +21,10 @@
                                     placeholder="{{ translate('System Name') }}"
                                     value="{{ get_business_setting('site_name') }}">
                             </div>
-                        </div>
+                        </div> --}}
                         <!-- Frontend Website Name -->
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Frontend Website Name') }}</label>
+                            <label class="col-md-3 col-from-label">{{ translate('Website Name') }}</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="website_name">
                                 <input type="text" name="website_name" class="form-control"
@@ -61,7 +61,8 @@
                         </div>
                         <!-- Header Logo -->
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Header Logo') }} <br> <small>( 250 * 40 )</small></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Header Logo') }} <br> <small>( 250 * 40
+                                    )</small></label>
                             <div class="col-md-8">
                                 <div class=" input-group" data-toggle="aizuploader" data-type="image">
                                     <div class="input-group-prepend">

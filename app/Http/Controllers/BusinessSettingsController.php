@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use App\Models\Upload;
+use App\Models\ZotcSetting;
 use Artisan;
 use CoreComponentRepository;
 use DB;
@@ -632,13 +633,34 @@ class BusinessSettingsController extends Controller
         return redirect()->back();
     }
 
+    public function zotc_update(Request $request)
+    {
+        foreach ($request->types as $type) {
+            // Fetch existing setting or create a new instance
+            $zotc_settings = ZotcSetting::firstOrNew(['type' => $type]);
+
+            // Update the value of the setting
+            $zotc_settings->value = $request[$type];
+            $zotc_settings->save();
+        }
+
+        // Clear the cache
+        Artisan::call('cache:clear');
+
+        // Flash success message
+        flash("Settings updated successfully")->success();
+
+        return redirect()->back();
+    }
+
+
     public function updateCartCustom(Request $request)
     {
         // Remove the '' from keys
-        $request->types = array_map(function($key) {
+        $request->types = array_map(function ($key) {
             return str_replace("'", "", $key);
         }, $request->types);
-        
+
         foreach ($request->types as $key => $value) {
             $business_settings = BusinessSetting::where('type', $key)->first();
 

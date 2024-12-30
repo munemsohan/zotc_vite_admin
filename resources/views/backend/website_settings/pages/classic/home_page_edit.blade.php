@@ -1570,15 +1570,15 @@
 
     <!-- Themes -->
     <div class="tab-pane fade" id="themes" role="tabpanel" aria-labelledby="themes-tab">
-        <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('zotc_settings.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <input type="hidden" name="types[]" value="homepage_select">
+            <input type="hidden" name="types[]" value="theme">
             <div class="row">
                 <!-- Home Classic -->
                 <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
                     <label class="aiz-megabox d-block mb-3">
-                        <input value="classic" type="radio" name="homepage_select"
-                            @if (get_business_setting('homepage_select') == null || get_business_setting('homepage_select') == 'classic') checked @endif>
+                        <input value="classic" type="radio" name="theme"
+                            @if (get_zotc_setting('theme') == null || get_zotc_setting('theme') == 'classic') checked @endif>
                         <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
                             <div class="h-350px w-100 overflow-hidden">
                                 <img src="{{ static_asset('assets/img/pages/home-classic.png') }}" class="w-100"
@@ -1588,6 +1588,27 @@
                     </label>
                     <div class="d-flex flex-wrap justify-content-between align-items-center">
                         <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Classic') }}</span>
+                        <span>
+                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Modern Classic -->
+                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                    <label class="aiz-megabox d-block mb-3">
+                        <input value="modern" type="radio" name="theme"
+                            @if (get_zotc_setting('theme') == 'modern') checked @endif>
+                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                            <div class="h-350px w-100 overflow-hidden">
+                                <img src="{{ static_asset('assets/img/pages/home-classic.png') }}" class="w-100"
+                                    alt="home-page">
+                            </div>
+                        </span>
+                    </label>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Modern') }}</span>
                         <span>
                             <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
                                 onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
@@ -1613,7 +1634,6 @@
                 </div>
             </div>
         </form>
-
     </div>
 
     </div>
