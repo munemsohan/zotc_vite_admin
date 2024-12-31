@@ -315,12 +315,12 @@
                 title="{{ translate('Download Invoice') }}">
                 <i class="las la-download"></i>
             </a>
-            {{-- @can('delete_order')
+            @if (get_zotc_setting('order_delete') == 1)
                 <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
                     data-href="{{ route('orders.destroy', $order->id) }}" title="{{ translate('Delete') }}">
                     <i class="las la-trash"></i>
                 </a>
-            @endcan --}}
+            @endif
         </td>
         </tr>
         @endforeach
