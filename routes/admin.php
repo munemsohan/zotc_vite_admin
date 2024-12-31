@@ -245,6 +245,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::controller(BusinessSettingsController::class)->group(function () {
         Route::post('/business-settings/update', 'update')->name('business_settings.update');
         Route::post('/business-settings/update/activation', 'updateActivationSettings')->name('business_settings.update.activation');
+        Route::post('/business-settings/update/checkbox', 'updateCheckboxSettings')->name('business_settings.update.checkbox');
         Route::post('/business-settings/cart/custom_field/update', 'updateCartCustom')->name('business_settings.cart.custom_field.update');
         // Route::post('/business-settings/carupdate', 'update')->name('business_settings.update');
 
