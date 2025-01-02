@@ -227,20 +227,23 @@
                 </div>
             </div>
 
-            <!-- Contact Address -->
+            <!-- Product Details -->
             <div class="card">
                 <div class="card-header">
-                    <h6 class="fw-600 mb-0">{{ translate('Contact Address') }}</h6>
+                    <h6 class="fw-600 mb-0">{{ translate('Product Details Columns') }}</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <!-- Description -->
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
+                            <label class="col-md-3 col-from-label">{{ translate('Product Details Columns') }}</label>
                             <div class="col-md-8">
-                                <input type="hidden" name="types[]" value="contact_address">
-                                <textarea name="contact_address" rows="4" class="resize-off form-control">{{ get_business_setting('contact_address') }}</textarea>
+                                <input type="hidden" name="types[]" value="product_details_columns">
+                                <select class="form-control" name="product_details_columns">
+                                    <option value="3" @if (get_business_setting('product_details_columns') == 3) selected @endif>3</option>
+                                    <option value="2" @if (get_business_setting('product_details_columns') == 2) selected @endif>2</option>
+                                </select>
+
                             </div>
                         </div>
                         <!-- Update Button -->
