@@ -331,11 +331,32 @@
                         </svg>
                         <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Brands') }}</h3>
                     </div>
-                    <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_brands')"
-                            {{ get_business_setting('show_brands') == 1 ? 'checked' : '' }}>
-                        <span class="slider round"></span>
-                    </label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <form id="brand_count_form" class="form-horizontal mr-3"
+                            action="{{ route('business_settings.update') }}" method="POST">
+                            @csrf
+                            <div class="form-group row mb-0">
+                                <input type="hidden" name="types[]" value="brand_count">
+                                <div class="input-group mx-2">
+                                    <select name="brand_count" id="brand_count" class="form-control">
+                                        <option value="8"
+                                            {{ get_business_setting('brand_count') == '8' ? 'selected' : '' }}>
+                                            8
+                                        </option>
+                                        <option value="6"
+                                            {{ get_business_setting('brand_count') == '6' ? 'selected' : '' }}>
+                                            6
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                            <input type="checkbox" onchange="updateSettings(this, 'show_brands')"
+                                {{ get_business_setting('show_brands') == 1 ? 'checked' : '' }}>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         @endif
@@ -369,7 +390,7 @@
                     if (data.success) {
                         AIZ.plugins.notify('success',
                             '{{ translate('Homepage Section Order updated successfully') }}'
-                            );
+                        );
                     }
                 });
             }

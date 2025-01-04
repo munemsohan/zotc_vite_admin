@@ -1662,7 +1662,28 @@
             $('.nav-tabs a').on('shown.bs.tab', function(e) {
                 window.location.hash = e.target.hash;
             });
+
+            $('#brand_count_form').change(function() {
+                handleFormSubmission('#brand_count_form');
+            });
         });
+
+        function handleFormSubmission(formId) {
+            var formData = $(formId).serialize();
+
+            $.ajax({
+                url: $(formId).attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                },
+                error: function(xhr, status, error) {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
+            });
+        }
+
 
         function updateSettings(el, type) {
             if ($(el).is(':checked')) {

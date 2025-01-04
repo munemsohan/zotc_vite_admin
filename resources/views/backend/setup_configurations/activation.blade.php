@@ -243,7 +243,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between p-2">
-                    <h3 class="mb-0 h6 text-center">{{ translate('email_otp_verification') }}</h3>
+                    <h3 class="mb-0 h6 text-center">{{ translate('Email Otp Verification') }}</h3>
 
                     <label class="aiz-switch aiz-switch-success mb-0">
                         <input type="checkbox" onchange="updateSettings(this, 'email_verification')" <?php if (get_business_setting('email_verification') == 1) {
@@ -288,7 +288,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between p-2">
-                    <h5 class="mb-0 h6">{{ translate('order_minimum_pay_type') }}</h5>
+                    <h5 class="mb-0 h6">{{ translate('Order Minimum Pay Type') }}</h5>
                     <form id="order_minimum_pay_type_form" class="form-horizontal"
                         action="{{ route('business_settings.update') }}" method="POST">
                         @csrf
