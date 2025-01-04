@@ -1663,8 +1663,12 @@
                 window.location.hash = e.target.hash;
             });
 
-            $('#brand_count_form').change(function() {
+            $('#brand_count').change(function() {
                 handleFormSubmission('#brand_count_form');
+            });
+
+            $('#featured_category_count').change(function() {
+                handleFormSubmission('#featured_category_count_form');
             });
         });
 
