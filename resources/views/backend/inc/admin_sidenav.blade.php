@@ -1647,7 +1647,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('Facebook Add') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('Facebook Ad') }}</span>
                     </a>
                 </li>
 
@@ -1672,7 +1672,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('api') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('API') }}</span>
                     </a>
                 </li>
 

@@ -2741,5 +2741,20 @@
     "fetch_products": "Fetch Products",
     "custom_shipping_costs": "Custom Shipping Costs",
     "add_landing_page_by_builder": "Add Landing Page By Builder",
-    "advanced_menu": "Advanced Menu"
+    "advanced_menu": "Advanced Menu",
+    "facebook_boosting_ad_account": "Facebook Boosting/Ad Account",
+    "social_media_analytics": "Social Media / Analytics",
+    "file_system_cache_configuration": "File System & Cache Configuration",
+    "facebook_ad": "Facebook Ad",
+    "email_marketing": "Email Marketing",
+    "inventory_management": "Inventory Management",
+    "order_tracking": "Order Tracking",
+    "sales_report": "Sales Report",
+    "shipping_methods": "Shipping Methods",
+    "tax_configuration": "Tax Configuration",
+    "user_roles_permissions": "User Roles & Permissions",
+    "website_settings": "Website Settings",
+    "seo_settings": "SEO Settings",
+    "support_tickets": "Support Tickets",
+    "payment_gateway": "Payment Gateway"
 }
