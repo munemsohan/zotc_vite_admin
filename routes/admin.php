@@ -85,6 +85,8 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 Route::prefix('admin')->middleware(['auth', 'admin', 'prevent-back-history'])->group(function () {
     Route::get('/', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard');
 
+    Route::get('/clear-cache', [AdminController::class, 'clearDomainCache'])->name('cache.clear');
+
     // Extend plan
     Route::post('/planExtend', [AdminController::class, 'planExtend'])->name('extend.plan');
 
@@ -105,6 +107,7 @@ Route::prefix('admin')->middleware(['auth', 'admin', 'prevent-back-history'])->g
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-back-history', 'check.order.limit']], function () {
+
     Route::get('/shop-switch/{shop}', [AdminController::class, 'switchShop'])->name('shop.switch');
     Route::get('/main-admin-login', [AdminController::class, 'mainAdminLogin'])->name('main.admin.login');
 
@@ -247,10 +250,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/business-settings/update/activation', 'updateActivationSettings')->name('business_settings.update.activation');
         Route::post('/business-settings/update/checkbox', 'updateCheckboxSettings')->name('business_settings.update.checkbox');
         Route::post('/business-settings/cart/custom_field/update', 'updateCartCustom')->name('business_settings.cart.custom_field.update');
-        // Route::post('/business-settings/carupdate', 'update')->name('business_settings.update');
-
         Route::post('/zotc-settings/update', 'zotc_update')->name('zotc_settings.update');
-
         Route::get('/general-setting', 'general_setting')->name('general_setting.index');
         Route::get('/domain', 'domain')->name('domain');
         Route::get('/activation', 'activation')->name('activation.index');
@@ -258,13 +258,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/file_system', 'file_system')->name('file_system.index');
         Route::get('/social-login', 'social_login')->name('social_login.index');
         Route::get('/smtp-settings', 'smtp_settings')->name('smtp_settings.index');
+
+        //homapage order
+        Route::post('/homepage-order/update', 'homepage_order_update')->name('homepage_order.update');
+        
+        //google settings
         Route::get('/google-analytics', 'google_analytics')->name('google_analytics.index');
         Route::get('/google-recaptcha', 'google_recaptcha')->name('google_recaptcha.index');
         Route::get('/google-map', 'google_map')->name('google-map.index');
         Route::get('/google-firebase', 'google_firebase')->name('google-firebase.index');
-
-        //homapage order
-        Route::post('/homepage-order/update', 'homepage_order_update')->name('homepage_order.update');
+        Route::post('/google_site_verification/update', 'google_site_verification_update')->name('google_site_verification.update');
 
         //Facebook Settings
         Route::get('/facebook-chat', 'facebook_chat')->name('facebook_chat.index');
@@ -386,6 +389,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
                 // Route::post('/upload', 'upload')->name('media.upload');
                 // Route::get('/scan-media', 'scanMedia')->name('media.scan');
             });
+        });
+
+        Route::prefix('facebook-boost')->name('facebook-boost.')->controller(SupportTicketController::class)->group(function () {
+            Route::get('/', 'facebook_boost')->name('index');
+            Route::post('/store', 'facebook_boost_store')->name('store');
         });
     });
 
@@ -647,11 +655,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
 
-    // Route::get('/clear-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
-
-    Route::get('/clear-cache', [AdminController::class, 'clearDomainCache'])->name('cache.clear');
-
     Route::get('/admin-permissions', [RoleController::class, 'create_admin_permissions']);
 
     Route::get('/api', [ApiController::class, 'index'])->name('api.index');
+
+    Route::get('/shopbase/import', [AdminController::class, 'shopbase_import'])->name('shopbase_import');
+
+    Route::get('/mohasagor/import', [AdminController::class, 'mohasagor_import'])->name('mohasagor_import');
 });

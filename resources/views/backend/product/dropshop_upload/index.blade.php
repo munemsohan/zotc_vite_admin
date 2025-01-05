@@ -44,12 +44,21 @@
                             <button type="button" class="btn btn-primary fetch-categories" data-source="zotc_bds">Import
                                 Products from dropshop.com.bd</button>
                         </div>
-                        @for ($i = 2; $i <= 4; $i++)
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-primary fetch-categories"
-                                    data-source="zotc_bds_{{ $i }}">Coming Soon</button>
-                            </div>
-                        @endfor
+                        
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary fetch-categories" data-source="zotc_bdb">Import
+                                Products from shopbase.com.bd</button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary fetch-categories" data-source="zotc_bdm">Import
+                                Products from mohasagor.com.bd</button>
+                        </div>
+                        {{-- @for ($i = 3; $i <= 4; $i++) --}}
+                            {{-- <div class="col-md-2">
+                                <button type="button" class="btn btn-primary fetch-categories">Coming Soon</button>
+                            </div> --}}
+                        {{-- @endfor --}}
                     </div>
                     <input type="hidden" name="db_source" id="db_source" value="">
                 </div>
@@ -101,10 +110,10 @@
                 <!-- Buttons to upload from different databases -->
                 <div class="form-group">
                     <div class="row">
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <button type="button" class="btn btn-danger update-stock" data-source="zotc_bds">Update Stocks
                                 from dropshop.com.bd</button>
-                        </div>
+                        </div> --}}
                         @for ($i = 2; $i <= 4; $i++)
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-danger update-stock"

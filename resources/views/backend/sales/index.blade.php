@@ -255,11 +255,40 @@
         </td>
 
         <td>
-            <span class="fraudtext fw-700 d-none" id="fraudcheck_{{ $order->id }}" data-order="{{ $order->id }}">
-                @if ($order->fraud_status)
-                    {!! $order->fraud_status !!}
-                @endif
-            </span>
+            @if ($order->fraud_status)
+                @php
+                    $formattedData = null;
+
+                    // Split the fraud_status into parts
+                    $totalData = explode(';', $order->fraud_status);
+
+                    if (!empty($totalData)) {
+                        // Extract the 'Total' part from the fraud status
+                        foreach ($totalData as $dataPart) {
+                            if (str_contains($dataPart, 'Total')) {
+                                // Extract the numbers after 'Total:'
+                                $totalParts = explode(':', $dataPart)[1] ?? null;
+
+                                if ($totalParts) {
+                                    // Parse the individual counts (Total, Delivered, Canceled)
+                                    $counts = explode(',', $totalParts);
+                                    $totalParcels = $counts[0] ?? 0;
+                                    $deliveredParcels = $counts[1] ?? 0;
+
+                                    // Format the data as "Delivered/Total"
+                                    $formattedData = $deliveredParcels . '/' . $totalParcels;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                @endphp
+
+                <b>{{ $formattedData }}</b>
+            @else
+                <span class="fraudtext fw-700 d-none" id="fraudcheck_{{ $order->id }}"
+                    data-order="{{ $order->id }}"></span>
+            @endif
 
             @php
                 $user_orders = \App\Models\Order::where('user_id', $order->user_id);
@@ -486,30 +515,30 @@
                 var order_id = $element.data('order');
                 var fraudtext = $element.html().trim();
 
-                // if (fraudtext === '' || $(fraudtext).length === 0) {
-                $.ajax({
-                    url: "{{ url('admin/order/fraudcheck') }}/" + order_id,
-                    type: 'GET',
-                    success: function(response) {
-                        var responseArray = response.split(';');
-                        var totalData = responseArray.find(function(item) {
-                            return item.startsWith('Total:');
-                        });
+                if (fraudtext === '' || $(fraudtext).length === 0) {
+                    $.ajax({
+                        url: "{{ url('admin/order/fraudcheck') }}/" + order_id,
+                        type: 'GET',
+                        success: function(response) {
+                            var responseArray = response.split(';');
+                            var totalData = responseArray.find(function(item) {
+                                return item.startsWith('Total:');
+                            });
 
-                        if (totalData) {
-                            var totalParts = totalData.split(':')[1].split(',');
-                            var totalParcels = totalParts[0];
-                            var deliveredParcels = totalParts[1];
-                            var formattedData = deliveredParcels + '/' + totalParcels;
-                            $('#fraudcheck_' + order_id).html(formattedData);
-                            $('#fraudcheck_' + order_id).removeClass('d-none');
+                            if (totalData) {
+                                var totalParts = totalData.split(':')[1].split(',');
+                                var totalParcels = totalParts[0];
+                                var deliveredParcels = totalParts[1];
+                                var formattedData = deliveredParcels + '/' + totalParcels;
+                                $('#fraudcheck_' + order_id).html(formattedData);
+                                $('#fraudcheck_' + order_id).removeClass('d-none');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("AJAX Error:", error);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX Error:", error);
-                    }
-                });
-                // }
+                    });
+                }
             });
         }
     </script>

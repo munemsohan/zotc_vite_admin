@@ -165,6 +165,7 @@
                             <form action="{{ route('business_settings.update') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
+                                
                                 <!-- Contact address -->
                                 <div class="form-group">
                                     <label>{{ translate('Contact address') }} ({{ translate('Translatable') }})</label>

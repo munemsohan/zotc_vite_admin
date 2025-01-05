@@ -8,8 +8,8 @@
                 <div>
                     <a href="{{ route('landing-pages.builder.create') }}"
                         class="btn btn-circle btn-info">{{ translate('add_landing_page_by_builder') }}</a>
-                    <a href="{{ route('landing-pages.create') }}"
-                        class="btn btn-circle btn-info">{{ translate('Add New Landing Page') }}</a>
+                    {{-- <a href="{{ route('landing-pages.create') }}"
+                        class="btn btn-circle btn-info">{{ translate('Add New Landing Page') }}</a> --}}
                 </div>
             </div>
         @endcan
@@ -27,11 +27,13 @@
                     @foreach ($page as $key => $page)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td><a href="{{ route('landing-pages.show_landing_page', $page->slug) }}"
-                                    class="text-reset">{{ $page->title }}</a></td>
-                            <td>{{ route('home') }}/{{ $page->slug }}</td>
+                            <td>
+                                <a href="{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}"
+                                    class="text-reset">{{ $page->title }}</a>
+                            </td>
+                            <td>{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}</td>
                             <td class="text-right">
-                                <a href="{{ route('landing-pages.show_landing_page', $page->slug) }}" target="_blank"
+                                <a href="{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}" target="_blank"
                                     class="btn btn-soft-primary btn-icon btn-circle btn-sm"
                                     title="{{ translate('Delete') }}">
                                     <i class="las la-eye"></i>

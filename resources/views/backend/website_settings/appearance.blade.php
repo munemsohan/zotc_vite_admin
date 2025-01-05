@@ -227,6 +227,31 @@
                 </div>
             </div>
 
+            <!-- Contact Address -->
+            {{-- <div class="card">
+                <div class="card-header">
+                    <h6 class="fw-600 mb-0">{{ translate('Contact Address') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <!-- Description -->
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="contact_address">
+                                <textarea name="contact_address" rows="4" class="resize-off form-control">{{ get_business_setting('contact_address') }}</textarea>
+                            </div>
+                        </div>
+                        <!-- Update Button -->
+                        <div class="mt-4 text-right">
+                            <button type="submit"
+                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div> --}}
+
             <!-- Product Details -->
             <div class="card">
                 <div class="card-header">
@@ -254,6 +279,181 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Theme -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="fw-600 mb-0">{{ translate('Theme') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('zotc_settings.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="types[]" value="theme">
+                        <div class="row">
+                            <!-- Home Classic -->
+                            <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                                <label class="aiz-megabox d-block mb-3">
+                                    <input value="classic" type="radio" name="theme"
+                                        @if (get_zotc_setting('theme') == null || get_zotc_setting('theme') == 'classic') checked @endif>
+                                    <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                        <div class="h-350px w-100 overflow-hidden">
+                                            <img src="{{ static_asset('assets/img/pages/home-classic.png') }}"
+                                                class="w-100" alt="home-page">
+                                        </div>
+                                    </span>
+                                </label>
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                    <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Classic') }}</span>
+                                    <span>
+                                        <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                            onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Modern Classic -->
+                            <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                                <label class="aiz-megabox d-block mb-3">
+                                    <input value="modern" type="radio" name="theme"
+                                        @if (get_zotc_setting('theme') == 'modern') checked @endif>
+                                    <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                        <div class="h-350px w-100 overflow-hidden">
+                                            <img src="{{ static_asset('assets/img/pages/home-classic.png') }}"
+                                                class="w-100" alt="home-page">
+                                        </div>
+                                    </span>
+                                </label>
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                    <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Modern') }}</span>
+                                    <span>
+                                        <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                            onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bg-light p-3 mt-5">
+                            <div class="col-md-8 d-none d-md-block">
+                                <div class="d-flex align-items-center">
+                                    <div class="text-secondary mr-3"><i class="las la-4x la-sliders-h"></i></div>
+                                    <div>
+                                        <h4 class="fs-16 text-secondary">{{ translate('Configure your page layout') }}
+                                        </h4>
+                                        <small
+                                            class="fs-12 text-secondary">{{ translate('Each page contain different layout, choose one to bundle it in your Layout.') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                <!-- Save Button -->
+                                <button type="submit"
+                                    class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @can('authentication_layout_settings')
+                <div class="card rounded-0">
+                    <div class="card-header">
+                        <h6 class="fw-600 mb-0">{{ translate('Authentication Page Layout') }}</h6>
+                    </div>
+                    <div class="card-body p-2rem">
+                        <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="types[]" value="authentication_layout_select">
+                            @php $authentication_layout = get_business_setting('authentication_layout_select'); @endphp
+                            <div class="row">
+
+                                <!-- Boxed -->
+                                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                                    <label class="aiz-megabox d-block mb-3">
+                                        <input value="boxed" type="radio" name="authentication_layout_select"
+                                            @if ($authentication_layout == null || $authentication_layout == 'boxed') checked @endif>
+                                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                            <div class="h-190px w-100 overflow-hidden">
+                                                <img src="{{ static_asset('assets/img/authentication_pages/boxed.png') }}"
+                                                    class="w-100" alt="authentication-page">
+                                            </div>
+                                        </span>
+                                    </label>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                        <span
+                                            class="fs-14 fw-500 text-dark">{{ translate('Authentication Layout 1 - Boxed') }}</span>
+                                        <span>
+                                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                                onclick="imageShowOverlay('{{ static_asset('assets/img/authentication_pages/boxed.png') }}')">{{ translate('View') }}</a>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Free 2 -->
+                                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                                    <label class="aiz-megabox d-block mb-3">
+                                        <input value="free" type="radio" name="authentication_layout_select"
+                                            @if ($authentication_layout == 'free') checked @endif>
+                                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                            <div class="h-190px w-100 overflow-hidden">
+                                                <img src="{{ static_asset('assets/img/authentication_pages/free.png') }}"
+                                                    class="w-100" alt="authentication-page">
+                                            </div>
+                                        </span>
+                                    </label>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                        <span
+                                            class="fs-14 fw-500 text-dark">{{ translate('Authentication Layout 2 - Free') }}</span>
+                                        <span>
+                                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                                onclick="imageShowOverlay('{{ static_asset('assets/img/authentication_pages/free.png') }}')">{{ translate('View') }}</a>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Focused -->
+                                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                                    <label class="aiz-megabox d-block mb-3">
+                                        <input value="focused" type="radio" name="authentication_layout_select"
+                                            @if ($authentication_layout == 'focused') checked @endif>
+                                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                            <div class="h-190px w-100 overflow-hidden">
+                                                <img src="{{ static_asset('assets/img/authentication_pages/focused.png') }}"
+                                                    class="w-100" alt="authentication-page">
+                                            </div>
+                                        </span>
+                                    </label>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                        <span
+                                            class="fs-14 fw-500 text-dark">{{ translate('Authentication Layout 3 - Focused') }}</span>
+                                        <span>
+                                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
+                                                onclick="imageShowOverlay('{{ static_asset('assets/img/authentication_pages/focused.png') }}')">{{ translate('View') }}</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row bg-light p-3 mt-5">
+                                <div class="col-md-8 d-none d-md-block">
+                                    <div class="d-flex align-items-center">
+                                        <div class="text-secondary mr-3"><i class="las la-4x la-sliders-h"></i></div>
+                                        <div>
+                                            <h4 class="fs-16 text-secondary">
+                                                {{ translate('Configure your authentication page layout') }}</h4>
+                                            <small
+                                                class="fs-12 text-secondary">{{ translate('Each page contain different layout, choose one to bundle it in your Layout.') }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                    <!-- Save Button -->
+                                    <button type="submit"
+                                        class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endcan
 
             <!-- Global SEO -->
             <div class="card">
@@ -358,7 +558,8 @@
                     <h6 class="fw-600 mb-0">{{ translate('Website Popup') }}</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('business_settings.update') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <!-- Show website popup -->
                         <div class="form-group row">
@@ -407,7 +608,8 @@
                     <h6 class="fw-600 mb-0">{{ translate('Custom Script') }}</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('business_settings.update') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <!-- Header custom script -->
                         <div class="form-group row">
@@ -448,7 +650,8 @@
                     <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('business_settings.update') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <!-- Description -->
                         <div class="form-group row">

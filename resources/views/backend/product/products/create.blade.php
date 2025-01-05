@@ -1,6 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('content')
+
     @php
         CoreComponentRepository::instantiateShopRepository();
         CoreComponentRepository::initializeCache();
@@ -46,6 +47,7 @@
                         {{-- <h5 class="mb-3 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
                             {{ translate('Product Information') }}</h5> --}}
                         <div class="row">
+
                             <div class="col-md-6">
                                 <!-- Product Name -->
                                 <div class="form-group row">
@@ -236,24 +238,48 @@
                                         </div>
                                     </div>
 
+                                    <link
+                                        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+                                        rel="stylesheet">
+                                    <style>
+                                        .bootstrap-tagsinput {
+                                            width: 100%;
+                                        }
+
+                                        .bootstrap-tagsinput .tag {
+                                            margin-right: 2px;
+                                            color: white;
+                                            background-color: #007bff;
+                                            padding: 5px;
+                                            border-radius: 3px;
+                                            display: inline-block;
+                                        }
+                                    </style>
+
+                                    <!-- jQuery -->
+                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                                    <!-- Bootstrap Tags Input JS -->
+                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+
                                     <!-- Tags -->
                                     <div class="form-group row">
                                         <label class="col-xxl-3 col-from-label fs-13">{{ translate('Tags') }}
                                             <span class="text-danger">*</span></label>
                                         <div class="col-xxl-9">
-                                            <input type="text" class="form-control aiz-tag-input" name="tags[]"
+                                            <input type="text" class="form-control bootstrap-tagsinput" name="tags"
                                                 id="tags" value=""
                                                 placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput">
                                             <small
-                                                class="text-muted">{{ translate('This is used for search. Input those words by which cutomer can find this product.') }}</small>
+                                                class="text-muted">{{ translate("Press 'ENTER' or comma to seperate Tags") }}</small>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-xxl-3 col-from-label">{{ translate('purchase_price') }}</label>
                                         <div class="col-xxl-9">
-                                            <input type="text" placeholder="{{ translate('purchase_price') }}" name="purchase_price"
-                                                class="form-control" value="0">
+                                            <input type="text" placeholder="{{ translate('purchase_price') }}"
+                                                name="purchase_price" class="form-control" value="0">
                                         </div>
                                     </div>
 
@@ -332,7 +358,8 @@
                                         </div>
                                         <!-- Discount -->
                                         <div class="form-group row">
-                                            <label class="col-md-3 col-from-label">{{ translate('Discount') }}<br>({{ translate('for_flash_deal') }})</label>
+                                            <label
+                                                class="col-md-3 col-from-label">{{ translate('Discount') }}<br>({{ translate('for_flash_deal') }})</label>
                                             <div class="col-xxl-9">
                                                 <input type="number" name="flash_discount" value="0"
                                                     min="0" step="0.01" class="form-control">
@@ -499,7 +526,7 @@
                                                     class="text-muted">{{ translate('Leave it blank if you do not use external site link') }}</small>
                                             </div>
                                         </div>
-                                        
+
 
                                         <!-- Video Provider -->
                                         <div class="form-group row">
@@ -912,6 +939,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -955,6 +983,16 @@
             handleTabHashChange();
             initializeAdvanceButton();
             initializeAddRowButton();
+
+            $('#tags').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            });
+
+            $('#tags').tagsinput({
+                trimValue: true,
+            });
         });
 
         function initializeTreeView() {

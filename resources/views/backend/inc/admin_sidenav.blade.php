@@ -174,13 +174,13 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('product_bulk_export')
+                            {{-- @can('product_bulk_export')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('product_bulk_export.index') }}" class="aiz-side-nav-link">
                                         <span class="aiz-side-nav-text">{{ translate('Bulk Export') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                             @can('view_product_categories')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('categories.index') }}"
@@ -577,6 +577,14 @@
                                 <a href="{{ route('landing-pages.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['landing-pages', 'landing-pages.create', 'landing-pages.edit']) }}">
                                     <span class="aiz-side-nav-text">{{ translate('Landing Pages') }}</span>
+                                </a>
+                            </li>
+
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('facebook-boost.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['facebook-boost']) }}">
+                                    <span
+                                        class="aiz-side-nav-text">{{ translate('Facebook Boosting/Ad Account') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -1091,15 +1099,6 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('authentication_layout_settings')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.authentication-layout-settings') }}"
-                                        class="aiz-side-nav-link">
-                                        <span
-                                            class="aiz-side-nav-text">{{ translate('Authentication Layout & Settings') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('header_setup')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.header') }}" class="aiz-side-nav-link">
@@ -1287,7 +1286,7 @@
                                             <span class="aiz-side-nav-arrow"></span>
                                         </a>
                                         <ul class="aiz-side-nav-list level-2">
-                                            @can('view_all_manual_payment_methods')
+                                            {{-- @can('view_all_manual_payment_methods')
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('manual_payment_methods.index') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['manual_payment_methods.index', 'manual_payment_methods.create', 'manual_payment_methods.edit']) }}">
@@ -1295,7 +1294,7 @@
                                                             class="aiz-side-nav-text">{{ translate('Manual Payment Methods') }}</span>
                                                     </a>
                                                 </li>
-                                            @endcan
+                                            @endcan --}}
                                             @can('view_all_offline_wallet_recharges')
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('offline_wallet_recharge_request.index') }}"
@@ -1470,34 +1469,6 @@
                                 </li>
                             @endcanany
 
-                            <!-- Staffs -->
-                            @canany(['view_all_staffs', 'view_staff_roles'])
-                                <li class="aiz-side-nav-item">
-                                    <a href="#" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Staffs') }}</span>
-                                        <span class="aiz-side-nav-arrow"></span>
-                                    </a>
-                                    <ul class="aiz-side-nav-list level-2">
-                                        @can('view_all_staffs')
-                                            <li class="aiz-side-nav-item">
-                                                <a href="{{ route('staffs.index') }}"
-                                                    class="aiz-side-nav-link {{ areActiveRoutes(['staffs.index', 'staffs.create', 'staffs.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('All staffs') }}</span>
-                                                </a>
-                                            </li>
-                                        @endcan
-                                        @can('view_staff_roles')
-                                            <li class="aiz-side-nav-item">
-                                                <a href="{{ route('roles.index') }}"
-                                                    class="aiz-side-nav-link {{ areActiveRoutes(['roles.index', 'roles.create', 'roles.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Staff permissions') }}</span>
-                                                </a>
-                                            </li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                            @endcanany
-
                             <!-- System Update & Server Status -->
                             {{-- @canany(['system_update', 'server_status'])
                                     <li class="aiz-side-nav-item">
@@ -1537,6 +1508,49 @@
                                     <a href="{{ route('addons.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create']) }}">
                                         <span class="aiz-side-nav-text">{{ translate('Addon Manager') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
+
+                <!-- Staffs -->
+                @canany(['view_all_staffs', 'view_staff_roles'])
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <div class="aiz-side-nav-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 16 16">
+                                    <g id="Group_28286" data-name="Group 28286" transform="translate(0)">
+                                        <path id="Path_40743" data-name="Path 40743"
+                                            d="M16,9.125a3.122,3.122,0,0,0-1.255-2.5,6.9,6.9,0,0,0-1.94-4.6,6.725,6.725,0,0,0-9.61,0,6.9,6.9,0,0,0-1.94,4.6,3.124,3.124,0,0,0,1.87,5.627h1.25A.625.625,0,0,0,5,11.625v-5A.625.625,0,0,0,4.375,6H3.125a3.129,3.129,0,0,0-.569.052,5.487,5.487,0,0,1,10.887,0A3.129,3.129,0,0,0,12.875,6h-1.25A.625.625,0,0,0,11,6.625v5a.625.625,0,0,0,.625.625h.625v.625a1.877,1.877,0,0,1-1.875,1.875H8A.625.625,0,0,0,8,16h2.375A3.129,3.129,0,0,0,13.5,12.875v-.688A3.13,3.13,0,0,0,16,9.125ZM3.75,7.25V11H3.125a1.875,1.875,0,0,1,0-3.75ZM12.875,11H12.25V7.25h.625a1.875,1.875,0,1,1,0,3.75Z"
+                                            fill="#575b6a" />
+                                        <path id="Path_40744" data-name="Path 40744"
+                                            d="M197.875,113.25a.626.626,0,0,1,.625.625.618.618,0,0,1-.137.391,4.365,4.365,0,0,0-1.113,2.746v.613a.625.625,0,0,0,1.25,0v-.613a3.186,3.186,0,0,1,.838-1.964A1.875,1.875,0,1,0,196,113.875a.625.625,0,0,0,1.25,0A.626.626,0,0,1,197.875,113.25Z"
+                                            transform="translate(-189.875 -108.5)" fill="#575b6a" />
+                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625" cy="0.625"
+                                            r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <span class="aiz-side-nav-text">{{ translate('Staffs') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            @can('view_all_staffs')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('staffs.index') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['staffs.index', 'staffs.create', 'staffs.edit']) }}">
+                                        <span class="aiz-side-nav-text">{{ translate('All staffs') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('view_staff_roles')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('roles.index') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['roles.index', 'roles.create', 'roles.edit']) }}">
+                                        <span class="aiz-side-nav-text">{{ translate('Staff permissions') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1612,6 +1626,30 @@
                     </li>
                 @endcanany
 
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('facebook-boost.index') }}"
+                        class="aiz-side-nav-link {{ areActiveRoutes(['facebook-boost.index']) }}">
+                        <div class="aiz-side-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13.79" height="16"
+                                viewBox="0 0 13.79 16">
+                                <g id="_371925cdd3f531725a9fa8f3ebf8fe9e" data-name="371925cdd3f531725a9fa8f3ebf8fe9e"
+                                    transform="translate(-2.26 0)">
+                                    <path id="Path_40673" data-name="Path 40673"
+                                        d="M10.69,7H3.26a1.025,1.025,0,0,0-1,1V18.45a1.03,1.03,0,0,0,1,1.05h7.43a1.03,1.03,0,0,0,1.03-1.03V8A1.025,1.025,0,0,0,10.69,7ZM4.94,17.86H3.995v-.95H4.94Zm0-2.355H3.995v-.95H4.94Zm0-2.355H3.995V12.2H4.94Zm2.5,4.71H6.5v-.95h.955Zm0-2.355H6.5v-.95h.955Zm0-2.355H6.5V12.2h.955Zm2.5,4.71H8.99v-.95h.95Zm0-2.355H8.99v-.95h.95Zm0-2.355H8.99V12.2h.95Zm.325-3a.17.17,0,0,1-.165.17H3.835a.17.17,0,0,1-.165-.17V8.795a.165.165,0,0,1,.165-.165H10.13a.165.165,0,0,1,.165.165Zm5.09-1.45H15.13v9.09h.25a.67.67,0,0,0,.67-.67V9.375a.67.67,0,0,0-.695-.675Z"
+                                        transform="translate(0 -3.5)" fill="#4e5767" />
+                                    <rect id="Rectangle_20842" data-name="Rectangle 20842" width="1.465"
+                                        height="9.095" transform="translate(12.185 5.2)" fill="#4e5767" />
+                                    <rect id="Rectangle_20843" data-name="Rectangle 20843" width="0.63"
+                                        height="9.095" transform="translate(14.06 5.2)" fill="#4e5767" />
+                                    <path id="Path_40674" data-name="Path 40674"
+                                        d="M13.895.895a.89.89,0,0,0-.26-.635A.91.91,0,0,0,13,0a.895.895,0,0,0-.91.895v.53h1.79Zm-2.2,0a.76.76,0,0,1,0-.145.68.68,0,0,1,0-.1h.01A.5.5,0,0,1,11.755.5.43.43,0,0,1,11.79.4a1.2,1.2,0,0,1,.145-.26.5.5,0,0,1,.04-.055L12.045,0H7.995A.815.815,0,0,0,7.18.81V3.03h4.5Z"
+                                        transform="translate(-2.46)" fill="#4e5767" />
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="aiz-side-nav-text">{{ translate('Facebook Add') }}</span>
+                    </a>
+                </li>
 
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('api.index') }}"
@@ -1619,8 +1657,8 @@
                         <div class="aiz-side-nav-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13.79" height="16"
                                 viewBox="0 0 13.79 16">
-                                <g id="_371925cdd3f531725a9fa8f3ebf8fe9e" data-name="371925cdd3f531725a9fa8f3ebf8fe9e"
-                                    transform="translate(-2.26 0)">
+                                <g id="_371925cdd3f531725a9fa8f3ebf8fe9e"
+                                    data-name="371925cdd3f531725a9fa8f3ebf8fe9e" transform="translate(-2.26 0)">
                                     <path id="Path_40673" data-name="Path 40673"
                                         d="M10.69,7H3.26a1.025,1.025,0,0,0-1,1V18.45a1.03,1.03,0,0,0,1,1.05h7.43a1.03,1.03,0,0,0,1.03-1.03V8A1.025,1.025,0,0,0,10.69,7ZM4.94,17.86H3.995v-.95H4.94Zm0-2.355H3.995v-.95H4.94Zm0-2.355H3.995V12.2H4.94Zm2.5,4.71H6.5v-.95h.955Zm0-2.355H6.5v-.95h.955Zm0-2.355H6.5V12.2h.955Zm2.5,4.71H8.99v-.95h.95Zm0-2.355H8.99v-.95h.95Zm0-2.355H8.99V12.2h.95Zm.325-3a.17.17,0,0,1-.165.17H3.835a.17.17,0,0,1-.165-.17V8.795a.165.165,0,0,1,.165-.165H10.13a.165.165,0,0,1,.165.165Zm5.09-1.45H15.13v9.09h.25a.67.67,0,0,0,.67-.67V9.375a.67.67,0,0,0-.695-.675Z"
                                         transform="translate(0 -3.5)" fill="#4e5767" />

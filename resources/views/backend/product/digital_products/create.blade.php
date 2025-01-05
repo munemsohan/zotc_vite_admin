@@ -238,12 +238,41 @@
                                 <textarea class="aiz-text-editor" name="description"></textarea>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-from-label">{{ translate('Tags') }}</label>
-                        <div class="col-lg-8">
-                            <input type="text" class="form-control aiz-tag-input" name="tags[]"
-                                placeholder="{{ translate('Type to add a tag') }}">
+
+
+                        <link
+                            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+                            rel="stylesheet">
+                        <style>
+                            .bootstrap-tagsinput {
+                                width: 100%;
+                            }
+
+                            .bootstrap-tagsinput .tag {
+                                margin-right: 2px;
+                                color: white;
+                                background-color: #007bff;
+                                padding: 5px;
+                                border-radius: 3px;
+                                display: inline-block;
+                            }
+                        </style>
+
+                        <!-- jQuery -->
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        <!-- Bootstrap Tags Input JS -->
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+                        <!-- Tags -->
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">{{ translate('Tags') }}</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control bootstrap-tagsinput" name="tags"
+                                    id="tags" value="" placeholder="{{ translate('Type to add a tag') }}"
+                                    data-role="tagsinput">
+                                <small
+                                    class="text-muted">{{ translate("Press 'ENTER' or comma to seperate Tags") }}</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -373,7 +402,7 @@
                 // Select the first radio button if no main_id exists
                 $('#treeview input:radio').first().prop('checked', true);
             }
-            
+
             $('#advance_button').click(function() {
                 $('#advance_div').slideToggle();
             });

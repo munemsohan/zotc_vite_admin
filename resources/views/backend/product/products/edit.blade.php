@@ -93,7 +93,7 @@
                                     <label class="col-xxl-3 col-from-label fs-13">{{ translate('Unit price') }} <span
                                             class="text-danger">*</span></label>
                                     <div class="col-xxl-9">
-                                        <input type="text" placeholder="{{ translate('Unit price') }}" name="unit_price"
+                                        <input type="number" placeholder="{{ translate('Unit price') }}" name="unit_price"
                                             class="form-control" value="{{ $product->unit_price }}">
                                     </div>
                                 </div>
@@ -109,7 +109,7 @@
                                             class="form-control">
                                     </div>
                                 </div>
-                                
+
                                 <!-- Gallery Images -->
                                 <div class="form-group row">
                                     <label class="col-xxl-3 col-from-label fs-13"
@@ -253,16 +253,40 @@
                                         </div>
                                     </div>
 
+                                    <link
+                                        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+                                        rel="stylesheet">
+                                    <style>
+                                        .bootstrap-tagsinput {
+                                            width: 100%;
+                                        }
+
+                                        .bootstrap-tagsinput .tag {
+                                            margin-right: 2px;
+                                            color: white;
+                                            background-color: #007bff;
+                                            padding: 5px;
+                                            border-radius: 3px;
+                                            display: inline-block;
+                                        }
+                                    </style>
+
+                                    <!-- jQuery -->
+                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                                    <!-- Bootstrap Tags Input JS -->
+                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+
                                     <!-- Tags -->
                                     <div class="form-group row">
                                         <label class="col-xxl-3 col-from-label fs-13">{{ translate('Tags') }}
                                             <span class="text-danger">*</span></label>
                                         <div class="col-xxl-9">
-                                            <input type="text" class="form-control aiz-tag-input" name="tags[]"
+                                            <input type="text" class="form-control bootstrap-tagsinput" name="tags"
                                                 id="tags" value="{{ $product->tags }}"
                                                 placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput">
                                             <small
-                                                class="text-muted">{{ translate('This is used for search. Input those words by which cutomer can find this product.') }}</small>
+                                                class="text-muted">{{ translate("Press 'ENTER' or comma to seperate Tags") }}</small>
                                         </div>
                                     </div>
 
@@ -1163,6 +1187,16 @@
             initDropshipRows();
             fq_brought_product_selection_type();
             update_sku();
+
+            $('#tags').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            });
+
+            $('#tags').tagsinput({
+                trimValue: true,
+            });
         });
 
         function initTreeView() {

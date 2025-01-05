@@ -30,9 +30,11 @@
                     @foreach ($page as $key => $page)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td><a href="{{ route('custom-pages.show_custom_page', $page->slug) }}"
-                                    class="text-reset">{{ $page->getTranslation('title') }}</a></td>
-                            <td>{{ route('custom-pages.show_custom_page', $page->slug) }}</td>
+                            <td>
+                                <a href="{{ 'https://' . env('APP_URL') . '/page/' . $page->slug }}"
+                                    class="text-reset">{{ $page->getTranslation('title') }}</a>
+                            </td>
+                            <td>{{ 'https://' . env('APP_URL') . '/page/' . $page->slug }}</td>
                             <td class="text-right">
                                 @can('edit_website_page')
                                     @if ($page->type == 'home_page')

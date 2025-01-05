@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>INVOICE</title>
+    <title>{{ translate('INVOICE') }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta charset="UTF-8">
     <style media="all">
@@ -17,7 +17,7 @@
             position: relative;
             font-size: 13px !important;
             /* Default font */
-            font-family: 'HindSiliguri-Regular', sans-serif;
+            font-family: {{ $font_family }};
             font-weight: normal;
             direction: '{{ $direction }}';
             text-align: '{{ $text_align }}';
@@ -25,14 +25,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-        }
-
-        
-
-        /* Font face definitions for custom fonts */
-        @font-face {
-            font-family: bangla, sans-serif;
-            src: url('{{ static_asset('assets/fonts/HindSiliguri-Regular.ttf') }}') format('truetype');
         }
 
         .content {
@@ -101,10 +93,7 @@
                         @endif
                     </td>
                     <td></td>
-                    <td class="text-right strong" style="font-size: 1.5rem;">
-                        {{-- {{ translate('INVOICE') }} --}}
-                        {{ translate('INVOICE') }}
-                    </td>
+                    <td class="text-right strong" style="font-size: 1.5rem;">{{ translate('INVOICE') }}</td>
                 </tr>
                 <tr>
                     <td class="strong" style="font-size: 1rem;">{{ get_business_setting('site_name') }}</td>
@@ -315,11 +304,11 @@
         </div>
     </div>
     <div class="footer">
-        <div style="float: left; width: 40%; text-align: left; padding-left: 10px">
-            <img src="https://zo.tc/assets/img/logo.webp" height="30" style="display:inline-block;">
+        <div style="float: left; width: 40%; text-align: left; padding-left: 10px;">
+            <img src="https://zo.tc/assets/img/invoice-logo.webp" height="30" style="display:inline-block; background: white !important;">
         </div>
         <div style="float: left; width: 55%;">
-            <p style="margin-top: 10px; text-align: right;">Instantly Build your eCommerce Website for free:
+            <p style="margin-top: 10px; text-align: right;">Instantly Build your eCommerce Website with
                 https://{{ env('CENTRAL_DOMAIN') }}</p>
         </div>
     </div>

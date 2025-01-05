@@ -370,33 +370,33 @@
                                 <th>Total</th>
                                 <th>Delivered</th>
                                 <th>Returned</th>
-                                <th>Success Ratio</th>
+                                <th>Suc. Ratio</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
-                                // Example response
-                                $allFraudCheck = $order->fraud_status; // This should be your actual fraud_status field
-                                $courierDataArray = explode(';', $allFraudCheck);
+                                // Parse fraud status data
+                                $allFraudCheck = $order->fraud_status ?? '';
+                                $courierDataArray = array_filter(explode(';', $allFraudCheck));
                                 $couriers = [];
-                                $total_parcels = 0;
-                                $delivered_parcels = 0;
-                                $canceled_parcels = 0;
+                                $total_parcels = $delivered_parcels = $canceled_parcels = 0;
 
                                 foreach ($courierDataArray as $courierData) {
-                                    [$courier, $data] = explode(':', $courierData);
-                                    [$total, $delivered, $canceled] = explode(',', $data);
+                                    [$courier, $data] = explode(':', $courierData) + [null, null];
+                                    if ($data) {
+                                        [$total, $delivered, $canceled] = explode(',', $data) + [0, 0, 0];
 
-                                    $couriers[$courier] = [
-                                        'total' => (int) $total,
-                                        'delivered' => (int) $delivered,
-                                        'canceled' => (int) $canceled,
-                                    ];
+                                        $couriers[$courier] = [
+                                            'total' => (int) $total,
+                                            'delivered' => (int) $delivered,
+                                            'canceled' => (int) $canceled,
+                                        ];
 
-                                    if ($courier !== 'Total') {
-                                        $total_parcels += (int) $total;
-                                        $delivered_parcels += (int) $delivered;
-                                        $canceled_parcels += (int) $canceled;
+                                        if ($courier !== 'Total') {
+                                            $total_parcels += (int) $total;
+                                            $delivered_parcels += (int) $delivered;
+                                            $canceled_parcels += (int) $canceled;
+                                        }
                                     }
                                 }
 
@@ -446,26 +446,25 @@
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
+
 
                 <div class="col-md-2">
                     <div class="table-responsive">
                         @php
-                            $user_orders = \App\Models\Order::where('user_id', $order->user_id);
+                            // Calculate order statistics
+                            $all_orders = $user_all_orders->count();
+                            $delivered_orders = $user_all_orders->where('payment_status', 'delivered')->count();
+                            $cancelled_orders = $user_all_orders->where('payment_status', 'cancelled')->count();
+                            $pending_orders = $all_orders - $delivered_orders - $cancelled_orders;
 
-                            $all_orders = $user_orders->count();
-                            $cancelled_orders = $user_orders->where('payment_status', 'cancelled')->count();
-
-                            // Calculate the number of non-cancelled orders
+                            // Calculate success and danger percentages
                             $non_cancelled_orders = $all_orders - $cancelled_orders;
-                            $percentage = $all_orders > 0 ? ($non_cancelled_orders / $all_orders) * 100 : 0;
-
-                            // Adjusted percentage for the bg-success part
-                            $success_percentage = max(0, min($percentage, 100));
-                            // Remaining percentage for the bg-danger part
-                            $danger_percentage = 100 - $success_percentage;
+                            $success_percentage = $all_orders > 0 ? ($non_cancelled_orders / $all_orders) * 100 : 0;
+                            $success_percentage = round(max(0, min($success_percentage, 100)));
+                            $cancel_percentage = 100 - $success_percentage;
                         @endphp
+
                         <table class="table table-sm text-center table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -475,17 +474,22 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <p><strong>Total Orders:</strong> {{ $all_orders }}</p>
+                                        <strong>Total Orders:</strong> {{ $all_orders }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p><strong>Total Delivered:</strong> {{ $non_cancelled_orders }}</p>
+                                        <strong>Total Pending:</strong> {{ $pending_orders }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p><strong>Total Canceled:</strong> {{ $cancelled_orders }}</p>
+                                        <strong>Total Delivered:</strong> {{ $delivered_orders }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Total Canceled:</strong> {{ $cancelled_orders }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -494,19 +498,20 @@
                                             <div class="progress-bar bg-success" role="progressbar"
                                                 style="width: {{ $success_percentage }}%"
                                                 aria-valuenow="{{ $success_percentage }}" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
+                                                aria-valuemax="100">
+                                            </div>
                                             <div class="progress-bar bg-danger" role="progressbar"
-                                                style="width: {{ $danger_percentage }}%"
-                                                aria-valuenow="{{ $danger_percentage }}" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
+                                                style="width: {{ $cancel_percentage }}%"
+                                                aria-valuenow="{{ $cancel_percentage }}" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
-                                        <p class="mb-0 text-center">{{ (int) $success_percentage }}% Delivered</p>
+                                        <p class="mb-0 text-center">{{ $success_percentage }}% Delivered</p>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
 
                 </div>
                 <div class="col-md-3">

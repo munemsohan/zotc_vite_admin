@@ -72,7 +72,7 @@
                                 <div class="input-group d-block d-md-flex">
                                     <div class="input-group-prepend ">
                                         <span
-                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ route('home') }}/</span>
+                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ 'https://'.env('APP_URL').'/landing' }}/</span>
                                     </div>
                                     <input type="text" class="form-control w-100 w-md-auto"
                                         placeholder="{{ translate('Slug') }}" name="slug" id="slug" required>
@@ -194,12 +194,12 @@
                                 </div>
                             @endfor
                         </div>
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-sm btn-success" id="seeMoreLink">See More</button>
                         </div>
                     </div>
 
-                    <div class="col-md-12 text-center mb-2">
+                    <div class="col-md-12 text-right mt-5 mb-2">
                         <button type="submit" class="btn btn-primary">{{ translate('Import Page') }}</button>
                     </div>
                 </div>
@@ -217,9 +217,10 @@
         });
 
         function loadMorePages() {
-            const pageContainer = $('#pageContainer'); // Cache the container selector
-            const maxPages = 65; // Max page limit
-            let html = ''; // Build HTML outside the loop for efficiency
+            const pageContainer = $('#pageContainer');
+            const maxPages = 11;
+            // const maxPages = 65;
+            let html = '';
 
             for (let i = currentPage; i <= Math.min(currentPage + pagesToShow, maxPages); i++) {
                 html += `

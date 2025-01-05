@@ -48,27 +48,27 @@
                             {{ translate("Today's Deal") }}
                         </a>
                     </li>
-                    <!-- Banner Level 1 -->
+                    <!-- Home Banners -->
                     <li class="nav-item">
                         <a class="nav-link" id="banner-1-tab" href="#banner_1" data-toggle="tab" data-target="#banner_1"
                             type="button" role="tab" aria-controls="banner_1" aria-selected="false">
-                            {{ translate('Banner Level 1') }}
+                            {{ translate('Home Banners') }}
                         </a>
                     </li>
                     <!-- Banner Level 2 -->
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" id="banner-2-tab" href="#banner_2" data-toggle="tab" data-target="#banner_2"
                             type="button" role="tab" aria-controls="banner_2" aria-selected="false">
                             {{ translate('Banner Level 2') }}
                         </a>
-                    </li>
+                    </li> --}}
                     <!-- Banner Level 3 -->
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" id="banner-3-tab" href="#banner_3" data-toggle="tab" data-target="#banner_3"
                             type="button" role="tab" aria-controls="banner_3" aria-selected="false">
                             {{ translate('Banner Level 3') }}
                         </a>
-                    </li>
+                    </li> --}}
                     @if (addon_is_activated('auction'))
                         <!-- Auction Products -->
                         <li class="nav-item">
@@ -119,13 +119,6 @@
                             data-target="#sections" type="button" role="tab" aria-controls="sections"
                             aria-selected="false">
                             {{ translate('Sections') }}
-                        </a>
-                    </li>
-                    <!-- Theme Select -->
-                    <li class="nav-item">
-                        <a class="nav-link" id="themes-tab" href="#themes" data-toggle="tab" data-target="#themes"
-                            type="button" role="tab" aria-controls="themes" aria-selected="false">
-                            {{ translate('Themes') }}
                         </a>
                     </li>
                 </ul>
@@ -1568,74 +1561,6 @@
         </div>
     </div> --}}
 
-    <!-- Themes -->
-    <div class="tab-pane fade" id="themes" role="tabpanel" aria-labelledby="themes-tab">
-        <form action="{{ route('zotc_settings.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="types[]" value="theme">
-            <div class="row">
-                <!-- Home Classic -->
-                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
-                    <label class="aiz-megabox d-block mb-3">
-                        <input value="classic" type="radio" name="theme"
-                            @if (get_zotc_setting('theme') == null || get_zotc_setting('theme') == 'classic') checked @endif>
-                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
-                            <div class="h-350px w-100 overflow-hidden">
-                                <img src="{{ static_asset('assets/img/pages/home-classic.png') }}" class="w-100"
-                                    alt="home-page">
-                            </div>
-                        </span>
-                    </label>
-                    <div class="d-flex flex-wrap justify-content-between align-items-center">
-                        <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Classic') }}</span>
-                        <span>
-                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
-                                onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Modern Classic -->
-                <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
-                    <label class="aiz-megabox d-block mb-3">
-                        <input value="modern" type="radio" name="theme"
-                            @if (get_zotc_setting('theme') == 'modern') checked @endif>
-                        <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
-                            <div class="h-350px w-100 overflow-hidden">
-                                <img src="{{ static_asset('assets/img/pages/home-classic.png') }}" class="w-100"
-                                    alt="home-page">
-                            </div>
-                        </span>
-                    </label>
-                    <div class="d-flex flex-wrap justify-content-between align-items-center">
-                        <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Modern') }}</span>
-                        <span>
-                            <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
-                                onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row bg-light p-3 mt-5">
-                <div class="col-md-8 d-none d-md-block">
-                    <div class="d-flex align-items-center">
-                        <div class="text-secondary mr-3"><i class="las la-4x la-sliders-h"></i></div>
-                        <div>
-                            <h4 class="fs-16 text-secondary">{{ translate('Configure your page layout') }}</h4>
-                            <small
-                                class="fs-12 text-secondary">{{ translate('Each page contain different layout, choose one to bundle it in your Layout.') }}</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 d-flex align-items-center justify-content-end">
-                    <!-- Save Button -->
-                    <button type="submit"
-                        class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
     </div>
     </div>
     </div>
@@ -1687,7 +1612,6 @@
                 }
             });
         }
-
 
         function updateSettings(el, type) {
             if ($(el).is(':checked')) {

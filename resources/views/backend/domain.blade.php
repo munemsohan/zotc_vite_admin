@@ -195,21 +195,6 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ __('CNAME Record') }}</td>
-                                                <td>www</td>
-                                                <td>zotc.xyz</td>
-                                                <td>{{ __('Automatic') }}</td>
-                                            </tr>
-
-
-                                            <tr>
-                                                <td>{{ __('CNAME Record') }}</td>
-                                                <td>@</td>
-                                                <td>zotc.xyz</td>
-                                                <td>{{ __('Automatic') }}</td>
-                                            </tr>
-
-                                            <tr>
                                                 <td colspan="4">
                                                     <b>{{ __('Use this if you are using cloulflare') }}</b>
                                                 </td>
@@ -217,13 +202,13 @@
                                             <tr>
                                                 <td>A Record</td>
                                                 <td>@</td>
-                                                <td>109.123.233.80</td>
+                                                <td>103.84.173.171</td>
                                                 <td>Automatic</td>
                                             </tr>
                                             <tr>
                                                 <td>A Record</td>
                                                 <td>www</td>
-                                                <td>109.123.233.80</td>
+                                                <td>103.84.173.171</td>
                                                 <td>Automatic</td>
                                             </tr>
                                             <tr>
@@ -232,13 +217,13 @@
                                             </tr>
                                             <tr>
                                                 <td>Nameserver1</td>
-                                                <td>ns1.zotc.xyz</td>
+                                                <td>ns1.zotc.pw</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
                                             <tr>
                                                 <td>Nameserver2</td>
-                                                <td>ns2.zotc.xyz</td>
+                                                <td>ns2.zotc.pw</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

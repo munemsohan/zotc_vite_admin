@@ -40,7 +40,7 @@
                         <div class="form-group row">
                             <label class="col-lg-2 col-from-label">{{ translate('Unit price') }}</label>
                             <div class="col-lg-8">
-                                <input type="text" placeholder="{{ translate('Unit price') }}" name="unit_price"
+                                <input type="number" placeholder="{{ translate('Unit price') }}" name="unit_price"
                                     class="form-control" value="{{ $product->unit_price }}" required>
                             </div>
                         </div>
@@ -272,146 +272,171 @@
                         <h5 class="mb-0 h6">{{ translate('Description') }}</h5>
                     </div>
                     <div class="card-body">
+                        <link
+                            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+                            rel="stylesheet">
+
+                        <style>
+                            .bootstrap-tagsinput {
+                                width: 100%;
+                            }
+
+                            .bootstrap-tagsinput .tag {
+                                margin-right: 2px;
+                                color: white;
+                                background-color: #007bff;
+                                padding: 5px;
+                                border-radius: 3px;
+                                display: inline-block;
+                            }
+                        </style>
+
+                        <!-- jQuery -->
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        <!-- Bootstrap Tags Input JS -->
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+                        <!-- Tags -->
                         <div class="form-group row">
-                            <label class="col-lg-2 col-from-label">{{ translate('Tags') }}</label>
+                            <label class="col-lg-2 col-form-label">{{ translate('Tags') }}</label>
                             <div class="col-lg-8">
-                                <input type="text" class="form-control aiz-tag-input" name="tags[]" id="tags"
-                                    value="{{ $product->tags }}" placeholder="{{ translate('Type to add a tag') }}">
+                                <input type="text" class="form-control bootstrap-tagsinput" name="tags"
+                                    id="tags" value="{{ $product->tags }}"
+                                    placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput">
+                                <small
+                                    class="text-muted">{{ translate("Press 'ENTER' or comma to seperate Tags") }}</small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{-- Frequently Bought Products --}}
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
-                    </div>
-                    <div class="w-100">
-                        <div class="d-flex my-3">
-                            <div class="radio mar-btm mr-5 ml-4 d-flex align-items-center">
-                                <input id="fq_brought_select_products" type="radio"
-                                    name="frequently_bought_selection_type" value="product"
-                                    onchange="fq_brought_product_selection_type()"
-                                    @if ($product->frequently_bought_selection_type == 'product') checked @endif>
-                                <label for="fq_brought_select_products"
-                                    class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Product') }}</label>
-                            </div>
-                            <div class="radio mar-btm mr-3 d-flex align-items-center">
-                                <input id="fq_brought_select_category" type="radio"
-                                    name="frequently_bought_selection_type" value="category"
-                                    onchange="fq_brought_product_selection_type()"
-                                    @if ($product->frequently_bought_selection_type == 'category') checked @endif>
-                                <label for="fq_brought_select_category"
-                                    class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Category') }}</label>
-                            </div>
+            {{-- Frequently Bought Products --}}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
+                </div>
+                <div class="w-100">
+                    <div class="d-flex my-3">
+                        <div class="radio mar-btm mr-5 ml-4 d-flex align-items-center">
+                            <input id="fq_brought_select_products" type="radio" name="frequently_bought_selection_type"
+                                value="product" onchange="fq_brought_product_selection_type()"
+                                @if ($product->frequently_bought_selection_type == 'product') checked @endif>
+                            <label for="fq_brought_select_products"
+                                class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Product') }}</label>
                         </div>
+                        <div class="radio mar-btm mr-3 d-flex align-items-center">
+                            <input id="fq_brought_select_category" type="radio" name="frequently_bought_selection_type"
+                                value="category" onchange="fq_brought_product_selection_type()"
+                                @if ($product->frequently_bought_selection_type == 'category') checked @endif>
+                            <label for="fq_brought_select_category"
+                                class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Category') }}</label>
+                        </div>
+                    </div>
 
-                        <div class="px-3 px-md-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="fq_brought_select_product_div d-none">
-                                        @php
-                                            $fq_brought_products = $product
-                                                ->frequently_bought_products()
-                                                ->where('category_id', null)
-                                                ->get();
-                                        @endphp
+                    <div class="px-3 px-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="fq_brought_select_product_div d-none">
+                                    @php
+                                        $fq_brought_products = $product
+                                            ->frequently_bought_products()
+                                            ->where('category_id', null)
+                                            ->get();
+                                    @endphp
 
-                                        <div id="selected-fq-brought-products">
-                                            @if (count($fq_brought_products) > 0)
-                                                <div class="table-responsive mb-4">
-                                                    <table class="table aiz-table mb-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="opacity-50 pl-0">
-                                                                    {{ translate('Product Thumb') }}</th>
-                                                                <th class="opacity-50">{{ translate('Product Name') }}
-                                                                </th>
-                                                                <th class="opacity-50">{{ translate('Category') }}</th>
-                                                                <th class="opacity-50 text-right pr-0">
-                                                                    {{ translate('Options') }}</th>
+                                    <div id="selected-fq-brought-products">
+                                        @if (count($fq_brought_products) > 0)
+                                            <div class="table-responsive mb-4">
+                                                <table class="table aiz-table mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="opacity-50 pl-0">
+                                                                {{ translate('Product Thumb') }}</th>
+                                                            <th class="opacity-50">{{ translate('Product Name') }}
+                                                            </th>
+                                                            <th class="opacity-50">{{ translate('Category') }}</th>
+                                                            <th class="opacity-50 text-right pr-0">
+                                                                {{ translate('Options') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($fq_brought_products as $fQBproduct)
+                                                            <tr class="remove-parent">
+                                                                <input type="hidden" name="fq_brought_product_ids[]"
+                                                                    value="{{ $fQBproduct->frequently_bought_product->id }}">
+                                                                <td class="w-150px pl-0" style="vertical-align: middle;">
+                                                                    <p class="d-block size-48px">
+                                                                        <img src="{{ uploaded_asset($fQBproduct->frequently_bought_product->thumbnail_img) }}"
+                                                                            alt="{{ translate('Image') }}"
+                                                                            class="h-100 img-fit lazyload"
+                                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholderx200.webp') }}';">
+                                                                    </p>
+                                                                </td>
+                                                                <td style="vertical-align: middle;">
+                                                                    <p class="d-block fs-13 fw-700 hov-text-primary mb-1 text-dark"
+                                                                        title="{{ translate('Product Name') }}">
+                                                                        {{ $fQBproduct->frequently_bought_product->getTranslation('name') }}
+                                                                    </p>
+                                                                </td>
+                                                                <td style="vertical-align: middle;">
+                                                                    {{ $fQBproduct->frequently_bought_product->main_category->name ?? translate('Category Not Found') }}
+                                                                </td>
+                                                                <td class="text-right pr-0"
+                                                                    style="vertical-align: middle;">
+                                                                    <button type="button"
+                                                                        class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger"
+                                                                        data-toggle="remove-parent"
+                                                                        data-parent=".remove-parent">
+                                                                        <i class="las la-trash"></i>
+                                                                    </button>
+                                                                </td>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($fq_brought_products as $fQBproduct)
-                                                                <tr class="remove-parent">
-                                                                    <input type="hidden" name="fq_brought_product_ids[]"
-                                                                        value="{{ $fQBproduct->frequently_bought_product->id }}">
-                                                                    <td class="w-150px pl-0"
-                                                                        style="vertical-align: middle;">
-                                                                        <p class="d-block size-48px">
-                                                                            <img src="{{ uploaded_asset($fQBproduct->frequently_bought_product->thumbnail_img) }}"
-                                                                                alt="{{ translate('Image') }}"
-                                                                                class="h-100 img-fit lazyload"
-                                                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholderx200.webp') }}';">
-                                                                        </p>
-                                                                    </td>
-                                                                    <td style="vertical-align: middle;">
-                                                                        <p class="d-block fs-13 fw-700 hov-text-primary mb-1 text-dark"
-                                                                            title="{{ translate('Product Name') }}">
-                                                                            {{ $fQBproduct->frequently_bought_product->getTranslation('name') }}
-                                                                        </p>
-                                                                    </td>
-                                                                    <td style="vertical-align: middle;">
-                                                                        {{ $fQBproduct->frequently_bought_product->main_category->name ?? translate('Category Not Found') }}
-                                                                    </td>
-                                                                    <td class="text-right pr-0"
-                                                                        style="vertical-align: middle;">
-                                                                        <button type="button"
-                                                                            class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger"
-                                                                            data-toggle="remove-parent"
-                                                                            data-parent=".remove-parent">
-                                                                            <i class="las la-trash"></i>
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <button type="button"
-                                            class="btn btn-block border border-dashed hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center"
-                                            onclick="showFqBroughtProductModal()">
-                                            <i class="las la-plus"></i>
-                                            <span class="ml-2">{{ translate('Add More') }}</span>
-                                        </button>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    {{-- Select Category for Frequently Bought Product --}}
-                                    <div class="fq_brought_select_category_div d-none">
-                                        @php
-                                            $fq_brought_product_category_id = $product
-                                                ->frequently_bought_products()
-                                                ->where('category_id', '!=', null)
-                                                ->first();
-                                            $fqCategory =
-                                                $fq_brought_product_category_id != null
-                                                    ? $fq_brought_product_category_id->category_id
-                                                    : null;
+                                    <button type="button"
+                                        class="btn btn-block border border-dashed hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center"
+                                        onclick="showFqBroughtProductModal()">
+                                        <i class="las la-plus"></i>
+                                        <span class="ml-2">{{ translate('Add More') }}</span>
+                                    </button>
+                                </div>
 
-                                        @endphp
-                                        <div class="form-group row">
-                                            <label class="col-md-2 col-from-label">{{ translate('Category') }}</label>
-                                            <div class="col-md-10">
-                                                <select class="form-control aiz-selectpicker"
-                                                    data-placeholder="{{ translate('Select a Category') }}"
-                                                    name="fq_brought_product_category_id" data-live-search="true"
-                                                    data-selected="{{ $fqCategory }}">
-                                                    @foreach ($categories as $category)
-                                                        <option value="{{ $category->id }}">
-                                                            {{ $category->getTranslation('name') }}</option>
-                                                        @foreach ($category->childrenCategories as $childCategory)
-                                                            @include('categories.child_category', [
-                                                                'child_category' => $childCategory,
-                                                            ])
-                                                        @endforeach
+                                {{-- Select Category for Frequently Bought Product --}}
+                                <div class="fq_brought_select_category_div d-none">
+                                    @php
+                                        $fq_brought_product_category_id = $product
+                                            ->frequently_bought_products()
+                                            ->where('category_id', '!=', null)
+                                            ->first();
+                                        $fqCategory =
+                                            $fq_brought_product_category_id != null
+                                                ? $fq_brought_product_category_id->category_id
+                                                : null;
+
+                                    @endphp
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-from-label">{{ translate('Category') }}</label>
+                                        <div class="col-md-10">
+                                            <select class="form-control aiz-selectpicker"
+                                                data-placeholder="{{ translate('Select a Category') }}"
+                                                name="fq_brought_product_category_id" data-live-search="true"
+                                                data-selected="{{ $fqCategory }}">
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->id }}">
+                                                        {{ $category->getTranslation('name') }}</option>
+                                                    @foreach ($category->childrenCategories as $childCategory)
+                                                        @include('categories.child_category', [
+                                                            'child_category' => $childCategory,
+                                                        ])
                                                     @endforeach
-                                                </select>
-                                            </div>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -420,17 +445,17 @@
                     </div>
                 </div>
             </div>
-            <div class="my-4">
-                <button type="button" id="advance_button"
-                    class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('advanced_menu') }}</button>
+        </div>
+        <div class="my-4">
+            <button type="button" id="advance_button"
+                class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('advanced_menu') }}</button>
+        </div>
+        {{-- update button --}}
+        <div class="col-12">
+            <div class="float-right mb-3">
+                <button type="submit" name="button" class="btn btn-primary">{{ translate('Update Product') }}</button>
             </div>
-            {{-- update button --}}
-            <div class="col-12">
-                <div class="float-right mb-3">
-                    <button type="submit" name="button"
-                        class="btn btn-primary">{{ translate('Update Product') }}</button>
-                </div>
-            </div>
+        </div>
         </div>
     </form>
 @endsection

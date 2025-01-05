@@ -146,20 +146,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="border-top pt-3">
-                            <!-- Help line number -->
-                            <div class="form-group row">
-                                <label class="col-md-3 col-from-label">{{ translate('Help line number') }}</label>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <input type="hidden" name="types[]" value="helpline_number">
-                                        <input type="text" class="form-control"
-                                            placeholder="{{ translate('Help line number') }}" name="helpline_number"
-                                            value="{{ get_business_setting('helpline_number') }}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="border-top pt-3">
                             <!-- Header Nav Menu Text Color -->
                             <div class="form-group row">
