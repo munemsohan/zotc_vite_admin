@@ -186,35 +186,40 @@
         }
 
         function menuSearch() {
-            var filter, item;
+            var filter, items;
             filter = $("#menu-search").val().toUpperCase();
             items = $("#main-menu").find("a");
             items = items.filter(function(i, item) {
-                if ($(item).find(".aiz-side-nav-text")[0].innerText.toUpperCase().indexOf(filter) > -1 && $(item)
-                    .attr('href') !== '#') {
+                const $textElement = $(item).find(".aiz-side-nav-text");
+                const label = $textElement.text().toUpperCase(); // Translated label
+                const key = $textElement.data("key") ? $textElement.data("key").toUpperCase() :
+                ""; // Untranslated key
+
+                // Match against both the label and the key
+                if ((label.indexOf(filter) > -1 || key.indexOf(filter) > -1) && $(item).attr("href") !== "#") {
                     return item;
                 }
             });
 
-            if (filter !== '') {
-                $("#main-menu").addClass('d-none');
-                $("#search-menu").html('')
+            if (filter !== "") {
+                $("#main-menu").addClass("d-none");
+                $("#search-menu").html("");
                 if (items.length > 0) {
                     for (i = 0; i < items.length; i++) {
                         const text = $(items[i]).find(".aiz-side-nav-text")[0].innerText;
-                        const link = $(items[i]).attr('href');
+                        const link = $(items[i]).attr("href");
                         $("#search-menu").append(
-                            `<li class="aiz-side-nav-item"><a href="${link}" class="aiz-side-nav-link"><i class="las la-ellipsis-h aiz-side-nav-icon"></i><span>${text}</span></a></li`
+                            `<li class="aiz-side-nav-item"><a href="${link}" class="aiz-side-nav-link"><i class="las la-ellipsis-h aiz-side-nav-icon"></i><span>${text}</span></a></li>`
                         );
                     }
                 } else {
                     $("#search-menu").html(
-                        `<li class="aiz-side-nav-item"><span	class="text-center text-muted d-block">{{ translate('Nothing Found') }}</span></li>`
+                        `<li class="aiz-side-nav-item"><span class="text-center text-muted d-block">{{ translate('Nothing Found') }}</span></li>`
                     );
                 }
             } else {
-                $("#main-menu").removeClass('d-none');
-                $("#search-menu").html('')
+                $("#main-menu").removeClass("d-none");
+                $("#search-menu").html("");
             }
         }
     </script>

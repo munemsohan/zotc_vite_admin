@@ -40,7 +40,7 @@
                                         transform="translate(-2 -2)" fill="#575b6a" fill-rule="evenodd" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Dashboard') }}</span>
+                            <span class="aiz-side-nav-text" data-key="Dashboard">{{ translate('Dashboard') }}</span>
                         </a>
                     </li>
                 @endcan
@@ -91,7 +91,7 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('POS') }}</span>
+                                <span class="aiz-side-nav-text" data-key="pos">{{ translate('POS') }}</span>
                             </a>
                         </li>
                     @endcan
@@ -119,7 +119,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
+                            <span class="aiz-side-nav-text" data-key="Products">{{ translate('Products') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <!--Submenu-->
@@ -127,14 +127,16 @@
                             @can('show_all_products')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('products.all') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('All Products') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="All Products">{{ translate('All Products') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('add_new_product')
                                 <li class="aiz-side-nav-item">
                                     <a class="aiz-side-nav-link" href="{{ route('products.create') }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Add New product') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Add New Product">{{ translate('Add New product') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -142,7 +144,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('products.admin') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['products.admin', 'products.admin.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('In House Products') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="In House Product">{{ translate('In House Products') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -150,27 +153,31 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('digitalproducts.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['digitalproducts.index', 'digitalproducts.create', 'digitalproducts.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Digital Product">{{ translate('Digital Products') }}</span>
                                     </a>
                                 </li>
                             @endcan
 
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('product_dropshop_upload') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{ translate('Dropshop Import') }}</span>
+                                    <span class="aiz-side-nav-text"
+                                        data-key="Dropshop Import">{{ translate('Dropshop Import') }}</span>
                                 </a>
                             </li>
 
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('dropshipping') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{ translate('Dropshipping') }}</span>
+                                    <span class="aiz-side-nav-text"
+                                        data-key="Dropshipping">{{ translate('Dropshipping') }}</span>
                                 </a>
                             </li>
 
                             @can('product_bulk_import')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('product_bulk_upload.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Bulk Import') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Bulk Import">{{ translate('Bulk Import') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -185,7 +192,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('categories.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['categories.index', 'categories.create', 'categories.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Category') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Category">{{ translate('Category') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -193,7 +201,7 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('brands.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['brands.index', 'brands.create', 'brands.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Brand') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="Brand">{{ translate('Brand') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -201,7 +209,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('attributes.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['attributes.index', 'attributes.create', 'attributes.edit', 'attributes.show', 'edit-attribute-value' . '']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Attribute') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Attribute">{{ translate('Attribute') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -209,14 +218,15 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('colors') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['colors', 'colors.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Colors') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="Colrs">{{ translate('Colors') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @canany(['view_size_charts', 'view_measurement_points'])
                                 <li class="aiz-side-nav-item">
                                     <a href="javascript:void(0);" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Size Guide') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="size guide">{{ translate('Size Guide') }}</span>
                                         <span class="aiz-side-nav-arrow"></span>
                                     </a>
                                     <ul class="aiz-side-nav-list level-3">
@@ -224,14 +234,16 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('size-charts.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['size-charts.index', 'size-charts.create', 'size-charts.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Size Chart') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="size chart">{{ translate('Size Chart') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
                                         @can('view_measurement_points')
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('measurement-points.index') }}" class="aiz-side-nav-link">
-                                                    <span class="aiz-side-nav-text">{{ translate('Measurement Points') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="measurement points">{{ translate('Measurement Points') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -241,7 +253,8 @@
                             @can('view_product_reviews')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('reviews.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Product Reviews') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="product reviews">{{ translate('Product Reviews') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -255,21 +268,23 @@
                                     </li> --}}
                                     <li class="aiz-side-nav-item">
                                         <a href="javascript:void(0);" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Seller Product') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="seller product">{{ translate('Seller Product') }}</span>
                                             <span class="aiz-side-nav-arrow"></span>
                                         </a>
                                         <ul class="aiz-side-nav-list level-3">
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('products.seller', 'physical') }}"
                                                     class="aiz-side-nav-link">
-                                                    <span
-                                                        class="aiz-side-nav-text">{{ translate('Physical Products') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="physical products">{{ translate('Physical Products') }}</span>
                                                 </a>
                                             </li>
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('products.seller', 'digital') }}"
                                                     class="aiz-side-nav-link">
-                                                    <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="digital products">{{ translate('Digital Products') }}</span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -284,7 +299,8 @@
                                     'view_auction_product_orders'])
                                     <li class="aiz-side-nav-item">
                                         <a href="#" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Auction Products') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="auction products">{{ translate('Auction Products') }}</span>
                                             @if (env('DEMO_MODE') == 'On')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                     viewBox="0 0 16 14.001" class="mx-2">
@@ -301,8 +317,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a class="aiz-side-nav-link"
                                                         href="{{ route('auction_product_create.admin') }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Add New auction product') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="add new auction product">{{ translate('Add New auction product') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -310,16 +326,16 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('auction.all_products') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['auction_product_edit.admin', 'product_bids.admin']) }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('All Auction Products') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="All Auction Product">{{ translate('All Auction Products') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
                                             @can('view_inhouse_auction_products')
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('auction.inhouse_products') }}" class="aiz-side-nav-link">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Inhouse Auction Products') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="inhouse auction product">{{ translate('Inhouse Auction Products') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -328,8 +344,8 @@
                                                     <li class="aiz-side-nav-item">
                                                         <a href="{{ route('auction.seller_products') }}"
                                                             class="aiz-side-nav-link">
-                                                            <span
-                                                                class="aiz-side-nav-text">{{ translate('Seller Auction Products') }}</span>
+                                                            <span class="aiz-side-nav-text"
+                                                                data-key="seller auction product">{{ translate('Seller Auction Products') }}</span>
                                                         </a>
                                                     </li>
                                                 @endcan
@@ -338,8 +354,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('auction_products_orders') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['auction_products_orders.index']) }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Auction Products Orders') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="auction product order">{{ translate('Auction Products Orders') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -354,7 +370,8 @@
                                     'view_inhouse_wholesale_products', 'view_sellers_wholesale_products'])
                                     <li class="aiz-side-nav-item">
                                         <a href="#" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Wholesale Products') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="wholesale products">{{ translate('Wholesale Products') }}</span>
                                             @if (env('DEMO_MODE') == 'On')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                     viewBox="0 0 16 14.001" class="mx-2">
@@ -370,8 +387,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a class="aiz-side-nav-link"
                                                         href="{{ route('wholesale_product_create.admin') }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Add New Wholesale Product') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="add new wholesale product">{{ translate('Add New Wholesale Product') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -379,8 +396,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('wholesale_products.all') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['wholesale_product_edit.admin']) }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('All Wholesale Products') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="all wholesale product">{{ translate('All Wholesale Products') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -388,8 +405,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('wholesale_products.in_house') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['wholesale_product_edit.admin']) }}">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('In House Wholesale Products') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="in house wholesale prodcut">{{ translate('In House Wholesale Products') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -398,8 +415,8 @@
                                                     <li class="aiz-side-nav-item">
                                                         <a href="{{ route('wholesale_products.seller') }}"
                                                             class="aiz-side-nav-link {{ areActiveRoutes(['wholesale_product_edit.admin']) }}">
-                                                            <span
-                                                                class="aiz-side-nav-text">{{ translate('Seller Wholesale Products') }}</span>
+                                                            <span class="aiz-side-nav-text"
+                                                                data-key="seller wholesale products">{{ translate('Seller Wholesale Products') }}</span>
                                                         </a>
                                                     </li>
                                                 @endcan
@@ -429,7 +446,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Sales') }}</span>
+                            <span class="aiz-side-nav-text" data-key="sales">{{ translate('Sales') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <!--Submenu-->
@@ -438,7 +455,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('all_orders.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['all_orders.index', 'all_orders.show']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('All Orders') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="all orders">{{ translate('All Orders') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -446,7 +464,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('inhouse_orders.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['inhouse_orders.index', 'inhouse_orders.show']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Inhouse orders') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="inhouse orders">{{ translate('Inhouse orders') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -455,7 +474,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('seller_orders.index') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['seller_orders.index', 'seller_orders.show']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('Seller Orders') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="seller orders">{{ translate('Seller Orders') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -465,7 +485,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('pick_up_point.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_point.index', 'pick_up_point.order_show']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Pick-up Point Order') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="pick up point order">{{ translate('Pick-up Point Order') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -474,7 +495,8 @@
                                 @can('view_all_customers')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('customers.index') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Customer list') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="customer list">{{ translate('Customer list') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -482,7 +504,8 @@
                                     @can('view_classified_products')
                                         <li class="aiz-side-nav-item">
                                             <a href="{{ route('classified_products') }}" class="aiz-side-nav-link">
-                                                <span class="aiz-side-nav-text">{{ translate('Classified Products') }}</span>
+                                                <span class="aiz-side-nav-text"
+                                                    data-key="classified products">{{ translate('Classified Products') }}</span>
                                             </a>
                                         </li>
                                     @endcan
@@ -490,7 +513,8 @@
                                         <li class="aiz-side-nav-item">
                                             <a href="{{ route('customer_packages.index') }}"
                                                 class="aiz-side-nav-link {{ areActiveRoutes(['customer_packages.index', 'customer_packages.create', 'customer_packages.edit']) }}">
-                                                <span class="aiz-side-nav-text">{{ translate('Classified Packages') }}</span>
+                                                <span class="aiz-side-nav-text"
+                                                    data-key="classified packages">{{ translate('Classified Packages') }}</span>
                                             </a>
                                         </li>
                                     @endcan
@@ -499,8 +523,6 @@
                         </ul>
                     </li>
                 @endcanany
-
-
 
                 <!-- marketing -->
                 @canany(['view_all_flash_deals', 'send_newsletter', 'send_bulk_sms', 'view_all_subscribers',
@@ -524,7 +546,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Marketing') }}</span>
+                            <span class="aiz-side-nav-text" data-key="marketing">{{ translate('Marketing') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -532,21 +554,24 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('flash_deals.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['flash_deals.index', 'flash_deals.create', 'flash_deals.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Flash deals') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="flash deals">{{ translate('Flash deals') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('send_newsletter')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('newsletters.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Newsletters') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="newsletter">{{ translate('Newsletters') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @if (addon_is_activated('otp_system') && auth()->user()->can('send_bulk_sms'))
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('sms.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Bulk SMS') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="bulk sms">{{ translate('Bulk SMS') }}</span>
                                         @if (env('DEMO_MODE') == 'On')
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                 viewBox="0 0 16 14.001" class="mx-2">
@@ -561,7 +586,8 @@
                             @can('view_all_subscribers')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('subscribers.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Subscribers') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="subscribers">{{ translate('Subscribers') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -569,22 +595,24 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('coupon.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['coupon.index', 'coupon.create', 'coupon.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Coupon') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="coupon">{{ translate('Coupon') }}</span>
                                     </a>
                                 </li>
                             @endif
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('landing-pages.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['landing-pages', 'landing-pages.create', 'landing-pages.edit']) }}">
-                                    <span class="aiz-side-nav-text">{{ translate('Landing Pages') }}</span>
+                                    <span class="aiz-side-nav-text"
+                                        data-key="landing pages">{{ translate('Landing Pages') }}</span>
                                 </a>
                             </li>
 
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('facebook-boost.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['facebook-boost']) }}">
-                                    <span
-                                        class="aiz-side-nav-text">{{ translate('Facebook Boosting/Ad Account') }}</span>
+                                    <span class="aiz-side-nav-text"
+                                        data-key="facebook ad">{{ translate('Facebook Boosting/Ad Account') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -612,7 +640,7 @@
                                         transform="translate(6.667 4)" fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Reports') }}</span>
+                            <span class="aiz-side-nav-text" data-key="reports">{{ translate('Reports') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -620,7 +648,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('in_house_sale_report.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['in_house_sale_report.index']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('In House Product Sale') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="in house product sale">{{ translate('In House Product Sale') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -628,7 +657,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('seller_sale_report.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['seller_sale_report.index']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Seller Products Sale') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="seller products sale">{{ translate('Seller Products Sale') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -636,7 +666,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('stock_report.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['stock_report.index']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Products Stock') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="products stock">{{ translate('Products Stock') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -644,7 +675,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('wish_report.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['wish_report.index']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Products wishlist') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="products wishlist">{{ translate('Products wishlist') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -652,21 +684,24 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('user_search_report.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['user_search_report.index']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('User Searches') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="user searches">{{ translate('User Searches') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('commission_history_report')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('commission-log.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="commission history">{{ translate('Commission History') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('wallet_transaction_report')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('wallet-history.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Wallet Recharge History') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="wallet recharge history">{{ translate('Wallet Recharge History') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -692,7 +727,8 @@
                                             transform="translate(-363.281 -392.344)" fill="#575b6a" />
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('Delivery Boy') }}</span>
+                                <span class="aiz-side-nav-text"
+                                    data-key="delivery boy">{{ translate('Delivery Boy') }}</span>
                                 @if (env('DEMO_MODE') == 'On')
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                         viewBox="0 0 16 14.001" class="mx-2">
@@ -707,21 +743,24 @@
                                 @can('view_all_delivery_boy')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boys.index') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('All Delivery Boy') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="all delivery boy">{{ translate('All Delivery Boy') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('add_delivery_boy')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boys.create') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Add Delivery Boy') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="add delivery boy">{{ translate('Add Delivery Boy') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('delivery_boy_payment_history')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boys-payment-histories') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Payment Histories') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="payment history">{{ translate('Payment Histories') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -729,21 +768,24 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boys-collection-histories') }}"
                                             class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Collected Histories') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="collected histories">{{ translate('Collected Histories') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('order_cancle_request_by_delivery_boy')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boy.cancel-request') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Cancel Request') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="cancel request">{{ translate('Cancel Request') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('delivery_boy_configuration')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('delivery-boy-configuration') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Configuration') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="configuration">{{ translate('Configuration') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -767,7 +809,7 @@
                                             transform="translate(-3.25 -3.25)" fill="#575b6a" />
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('Refunds') }}</span>
+                                <span class="aiz-side-nav-text" data-key="refunds">{{ translate('Refunds') }}</span>
                                 @if (env('DEMO_MODE') == 'On')
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                         viewBox="0 0 16 14.001" class="mx-2">
@@ -783,28 +825,32 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('refund_requests_all') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['refund_requests_all', 'reason_show']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('Refund Requests') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="refund request">{{ translate('Refund Requests') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_approved_refund_requests')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('paid_refund') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Approved Refunds') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="approved refunds">{{ translate('Approved Refunds') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_rejected_refund_requests')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('rejected_refund') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Rejected Refunds') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="rejected refunds">{{ translate('Rejected Refunds') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('refund_request_configuration')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('refund_time_config') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Refund Configuration') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="refund configuration">{{ translate('Refund Configuration') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -829,7 +875,7 @@
                                             transform="translate(-3 -4)" fill="#575b6a" />
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('Sellers') }}</span>
+                                <span class="aiz-side-nav-text" data-key="sellers">{{ translate('Sellers') }}</span>
                                 <span class="aiz-side-nav-arrow"></span>
                             </a>
                             <ul class="aiz-side-nav-list level-2">
@@ -842,7 +888,8 @@
                                         @endphp
                                         <a href="{{ route('sellers.index') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['sellers.index', 'sellers.create', 'sellers.edit', 'sellers.payment_history', 'sellers.approved', 'sellers.profile_modal', 'sellers.show_verification_request']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('All Seller') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="all sellers">{{ translate('All Seller') }}</span>
                                             @if ($sellers > 0)
                                                 <span class="badge badge-info">{{ $sellers }}</span>
                                             @endif
@@ -852,14 +899,16 @@
                                 @can('seller_payment_history')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('sellers.payment_histories') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Payouts') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="payouts">{{ translate('Payouts') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_seller_payout_requests')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('withdraw_requests_all') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Payout Requests') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="payout request">{{ translate('Payout Requests') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -867,7 +916,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('business_settings.vendor_commission') }}"
                                             class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Seller Commission') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="seller commission">{{ translate('Seller Commission') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -876,7 +926,8 @@
                                         <li class="aiz-side-nav-item">
                                             <a href="{{ route('seller_packages.index') }}"
                                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller_packages.index', 'seller_packages.create', 'seller_packages.edit']) }}">
-                                                <span class="aiz-side-nav-text">{{ translate('Seller Packages') }}</span>
+                                                <span class="aiz-side-nav-text"
+                                                    data-key="seller packages">{{ translate('Seller Packages') }}</span>
                                                 @if (env('DEMO_MODE') == 'On')
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                         viewBox="0 0 16 14.001" class="mx-2">
@@ -892,8 +943,8 @@
                                 @can('seller_verification_form_configuration')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('seller_verification_form.index') }}" class="aiz-side-nav-link">
-                                            <span
-                                                class="aiz-side-nav-text">{{ translate('Seller Verification Form') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="seller verification form">{{ translate('Seller Verification Form') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -934,7 +985,7 @@
                                             transform="translate(-170.498 -267.375)" fill="#575b6a" />
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('Affiliate') }}</span>
+                                <span class="aiz-side-nav-text" data-key="affiliate">{{ translate('Affiliate') }}</span>
                                 @if (env('DEMO_MODE') == 'On')
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                         viewBox="0 0 16 14.001" class="mx-2">
@@ -949,16 +1000,16 @@
                                 @can('affiliate_registration_form_config')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('affiliate.configs') }}" class="aiz-side-nav-link">
-                                            <span
-                                                class="aiz-side-nav-text">{{ translate('Affiliate Registration Form') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="affiliate registration form">{{ translate('Affiliate Registration Form') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('affiliate_configurations')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('affiliate.index') }}" class="aiz-side-nav-link">
-                                            <span
-                                                class="aiz-side-nav-text">{{ translate('Affiliate Configurations') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="affiliate configuration">{{ translate('Affiliate Configurations') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -966,29 +1017,32 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('affiliate.users') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['affiliate.users', 'affiliate_users.show_verification_request', 'affiliate_user.payment_history']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('Affiliate Users') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="affiliate users">{{ translate('Affiliate Users') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_all_referral_users')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('refferals.users') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Referral Users') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="referral users">{{ translate('Referral Users') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_affiliate_withdraw_requests')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('affiliate.withdraw_requests') }}" class="aiz-side-nav-link">
-                                            <span
-                                                class="aiz-side-nav-text">{{ translate('Affiliate Withdraw Requests') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="affiliate withdraw request">{{ translate('Affiliate Withdraw Requests') }}</span>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('view_affiliate_logs')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('affiliate.logs.admin') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Affiliate Logs') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="affiliate logs">{{ translate('Affiliate Logs') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1020,7 +1074,8 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <span class="aiz-side-nav-text">{{ translate('Club Point') }}</span>
+                                <span class="aiz-side-nav-text"
+                                    data-key="club points">{{ translate('Club Point') }}</span>
                                 @if (env('DEMO_MODE') == 'On')
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                         viewBox="0 0 16 14.001" class="mx-2">
@@ -1035,8 +1090,8 @@
                                 @can('club_point_configurations')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('club_points.configs') }}" class="aiz-side-nav-link">
-                                            <span
-                                                class="aiz-side-nav-text">{{ translate('Club Point Configurations') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="club points configuration">{{ translate('Club Point Configurations') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1044,7 +1099,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('set_product_points') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['set_product_points', 'product_club_point.edit']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('Set Product Point') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="set product point">{{ translate('Set Product Point') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1052,7 +1108,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('club_points.index') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['club_points.index', 'club_point.details']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('User Points') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="user points">{{ translate('User Points') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1080,7 +1137,8 @@
                                         transform="translate(-112.375 -73.625)" fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Website Setup') }}</span>
+                            <span class="aiz-side-nav-text"
+                                data-key="website setup">{{ translate('Website Setup') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -1095,14 +1153,16 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('custom-pages.edit', ['id' => 'home', 'lang' => env('DEFAULT_LANGUAGE'), 'page' => 'home']) }}"
                                         class="aiz-side-nav-link {{ url()->current() == url('/admin/website/custom-pages/edit/home') ? 'active' : '' }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Homepage Settings') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="homepage settings">{{ translate('Homepage Settings') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('header_setup')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.header') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Header') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="header">{{ translate('Header') }}</span>
+
                                     </a>
                                 </li>
                             @endcan
@@ -1110,7 +1170,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.footer', ['lang' => App::getLocale()]) }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['website.footer']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Footer') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="footer">{{ translate('Footer') }}</span>
+
                                     </a>
                                 </li>
                             @endcan
@@ -1118,14 +1179,15 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.pages') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Pages') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="pages">{{ translate('Pages') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('website_appearance')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.appearance') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Appearance') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="appearance">{{ translate('Appearance') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1150,7 +1212,7 @@
                                         fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Setup') }}</span>
+                            <span class="aiz-side-nav-text" data-key="setup">{{ translate('Setup') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -1163,18 +1225,20 @@
                             @endcan --}}
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('cart.settings') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{ translate('Cart Settings') }}</span>
+                                    <span class="aiz-side-nav-text"
+                                        data-key="cart settings">{{ translate('Cart Settings') }}</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('domain') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{ translate('Domain') }}</span>
+                                    <span class="aiz-side-nav-text" data-key="domain">{{ translate('Domain') }}</span>
                                 </a>
                             </li>
                             @can('features_activation')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('activation.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Features activation') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="features activation">{{ translate('Features activation') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1182,14 +1246,16 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('languages.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['languages.index', 'languages.create', 'languages.store', 'languages.show', 'languages.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Languages') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="languages">{{ translate('Languages') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('currency_setup')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('currency.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Currency') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="currency">{{ translate('Currency') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1197,7 +1263,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('tax.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['tax.index', 'tax.create', 'tax.store', 'tax.show', 'tax.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Vat & TAX') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="vat tax">{{ translate('Vat & TAX') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1205,7 +1272,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('pick_up_points.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_points.index', 'pick_up_points.create', 'pick_up_points.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Pickup point') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="pickup point">{{ translate('Pickup point') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1215,7 +1283,8 @@
                                     'send_bulk_sms'])
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('otp_credentials.index') }}" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('SMS Setup') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="SMS Setup">{{ translate('SMS Setup') }}</span>
                                             @if (env('DEMO_MODE') == 'On')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                     viewBox="0 0 16 14.001" class="mx-2">
@@ -1257,14 +1326,16 @@
                             @can('smtp_settings')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('smtp_settings.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('SMTP Settings') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="SMTP Settings">{{ translate('SMTP Settings') }}</span>
                                     </a>
                                 </li>
                             @endcan
                             @can('payment_methods_configurations')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('payment_method.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Payment Methods') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Payment Methods">{{ translate('Payment Methods') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1274,7 +1345,8 @@
                                     'view_all_offline_customer_package_payments', 'view_all_offline_seller_package_payments'])
                                     <li class="aiz-side-nav-item">
                                         <a href="#" class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Offline Payment System') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="Offline Payment System">{{ translate('Offline Payment System') }}</span>
                                             @if (env('DEMO_MODE') == 'On')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                                     viewBox="0 0 16 14.001" class="mx-2">
@@ -1299,8 +1371,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('offline_wallet_recharge_request.index') }}"
                                                         class="aiz-side-nav-link">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Offline Wallet Recharge') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="Offline Wallet Recharge">{{ translate('Offline Wallet Recharge') }}</span>
                                                     </a>
                                                 </li>
                                             @endcan
@@ -1310,8 +1382,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('offline_customer_package_payment_request.index') }}"
                                                         class="aiz-side-nav-link">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Offline Customer Package Payments') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="Offline Customer Package Payments">{{ translate('Offline Customer Package Payments') }}</span>
                                                     </a>
                                                 </li>
                                             @endif
@@ -1319,8 +1391,8 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('offline_seller_package_payment_request.index') }}"
                                                         class="aiz-side-nav-link">
-                                                        <span
-                                                            class="aiz-side-nav-text">{{ translate('Offline Seller Package Payments') }}</span>
+                                                        <span class="aiz-side-nav-text"
+                                                            data-key="Offline Seller Package Payments">{{ translate('Offline Seller Package Payments') }}</span>
                                                     </a>
                                                 </li>
                                             @endif
@@ -1339,12 +1411,11 @@
                             @can('social_media_logins')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('social_login.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Social media / Analytics') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Social media / Analytics">{{ translate('Social media / Analytics') }}</span>
                                     </a>
                                 </li>
                             @endcan
-
-
                         </ul>
                     </li>
 
@@ -1358,15 +1429,16 @@
                                         fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Configurations') }}</span>
+                            <span class="aiz-side-nav-text"
+                                data-key="Configurations">{{ translate('Configurations') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
                             @can('file_system_&_cache_configuration')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('file_system.index') }}" class="aiz-side-nav-link">
-                                        <span
-                                            class="aiz-side-nav-text">{{ translate('File System & Cache Configuration') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="File System & Cache Configuration">{{ translate('File System & Cache Configuration') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1375,7 +1447,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('carriers.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['carriers.index', 'carriers.create', 'carriers.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Courier Service') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Courier Service">{{ translate('Courier Service') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1384,7 +1457,8 @@
                                 'manage_shipping_cities', 'manage_zones'])
                                 <li class="aiz-side-nav-item">
                                     <a href="javascript:void(0);" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Shipping') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Shipping">{{ translate('Shipping') }}</span>
                                         <span class="aiz-side-nav-arrow"></span>
                                     </a>
                                     <ul class="aiz-side-nav-list level-3">
@@ -1392,8 +1466,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('shipping_configuration.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['shipping_configuration.index', 'shipping_configuration.edit', 'shipping_configuration.update']) }}">
-                                                    <span
-                                                        class="aiz-side-nav-text">{{ translate('Shipping Configuration') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Shipping Configuration">{{ translate('Shipping Configuration') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1401,7 +1475,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('countries.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['countries.index', 'countries.edit', 'countries.update']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Shipping Countries') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Shipping Countries">{{ translate('Shipping Countries') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1409,7 +1484,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('states.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['states.index', 'states.edit', 'states.update']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Shipping States') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Shipping States">{{ translate('Shipping States') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1417,7 +1493,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('cities.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['cities.index', 'cities.edit', 'cities.update']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Shipping Cities') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Shipping Cities">{{ translate('Shipping Cities') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1425,7 +1502,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('zones.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['zones.index', 'zones.create', 'zones.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Shipping Zones') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Shipping Zones">{{ translate('Shipping Zones') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1438,14 +1516,15 @@
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('uploaded-files.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['uploaded-files.create']) }}">
-                                    <span class="aiz-side-nav-text">{{ translate('Gallery') }}</span>
+                                    <span class="aiz-side-nav-text" data-key="Gallery">{{ translate('Gallery') }}</span>
                                 </a>
                             </li>
                             <!--Blog System-->
                             @canany(['view_blogs', 'view_blog_categories'])
                                 <li class="aiz-side-nav-item">
                                     <a href="#" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Blog System') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Blog System">{{ translate('Blog System') }}</span>
                                         <span class="aiz-side-nav-arrow"></span>
                                     </a>
                                     <ul class="aiz-side-nav-list level-2">
@@ -1453,7 +1532,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('blog.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['blog.create', 'blog.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('All Posts') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="All Posts">{{ translate('All Posts') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1461,7 +1541,8 @@
                                             <li class="aiz-side-nav-item">
                                                 <a href="{{ route('blog-category.index') }}"
                                                     class="aiz-side-nav-link {{ areActiveRoutes(['blog-category.create', 'blog-category.edit']) }}">
-                                                    <span class="aiz-side-nav-text">{{ translate('Categories') }}</span>
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Categories">{{ translate('Categories') }}</span>
                                                 </a>
                                             </li>
                                         @endcan
@@ -1507,7 +1588,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('addons.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Addon Manager') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Addon Manager">{{ translate('Addon Manager') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1529,12 +1611,12 @@
                                         <path id="Path_40744" data-name="Path 40744"
                                             d="M197.875,113.25a.626.626,0,0,1,.625.625.618.618,0,0,1-.137.391,4.365,4.365,0,0,0-1.113,2.746v.613a.625.625,0,0,0,1.25,0v-.613a3.186,3.186,0,0,1,.838-1.964A1.875,1.875,0,1,0,196,113.875a.625.625,0,0,0,1.25,0A.626.626,0,0,1,197.875,113.25Z"
                                             transform="translate(-189.875 -108.5)" fill="#575b6a" />
-                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625" cy="0.625"
-                                            r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
+                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625"
+                                            cy="0.625" r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
                                     </g>
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Staffs') }}</span>
+                            <span class="aiz-side-nav-text" data-key="Staffs">{{ translate('Staffs') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -1542,7 +1624,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('staffs.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['staffs.index', 'staffs.create', 'staffs.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('All staffs') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="All staffs">{{ translate('All staffs') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1550,7 +1633,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('roles.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['roles.index', 'roles.create', 'roles.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Staff permissions') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Staff permissions">{{ translate('Staff permissions') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1572,12 +1656,12 @@
                                         <path id="Path_40744" data-name="Path 40744"
                                             d="M197.875,113.25a.626.626,0,0,1,.625.625.618.618,0,0,1-.137.391,4.365,4.365,0,0,0-1.113,2.746v.613a.625.625,0,0,0,1.25,0v-.613a3.186,3.186,0,0,1,.838-1.964A1.875,1.875,0,1,0,196,113.875a.625.625,0,0,0,1.25,0A.626.626,0,0,1,197.875,113.25Z"
                                             transform="translate(-189.875 -108.5)" fill="#575b6a" />
-                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625" cy="0.625"
-                                            r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
+                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625"
+                                            cy="0.625" r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
                                     </g>
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text">{{ translate('Support') }}</span>
+                            <span class="aiz-side-nav-text" data-key="Support">{{ translate('Support') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -1588,7 +1672,7 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('support_ticket.admin_index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['support_ticket.admin_index', 'support_ticket.admin_show']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Ticket') }}</span>
+                                        <span class="aiz-side-nav-text" data-key="Ticket">{{ translate('Ticket') }}</span>
                                         @if ($support_ticket > 0)
                                             <span class="badge badge-info">{{ $support_ticket }}</span>
                                         @endif
@@ -1605,7 +1689,8 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('conversations.admin_index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['conversations.admin_index', 'conversations.admin_show']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Product Conversations') }}</span>
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Product Conversations">{{ translate('Product Conversations') }}</span>
                                         @if (count($conversation) > 0)
                                             <span class="badge badge-info">{{ count($conversation) }}</span>
                                         @endif
@@ -1617,7 +1702,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('product_query.index') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['product_query.index', 'product_query.show']) }}">
-                                            <span class="aiz-side-nav-text">{{ translate('Product Queries') }}</span>
+                                            <span class="aiz-side-nav-text"
+                                                data-key="Product Queries">{{ translate('Product Queries') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1632,8 +1718,8 @@
                         <div class="aiz-side-nav-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13.79" height="16"
                                 viewBox="0 0 13.79 16">
-                                <g id="_371925cdd3f531725a9fa8f3ebf8fe9e" data-name="371925cdd3f531725a9fa8f3ebf8fe9e"
-                                    transform="translate(-2.26 0)">
+                                <g id="_371925cdd3f531725a9fa8f3ebf8fe9e"
+                                    data-name="371925cdd3f531725a9fa8f3ebf8fe9e" transform="translate(-2.26 0)">
                                     <path id="Path_40673" data-name="Path 40673"
                                         d="M10.69,7H3.26a1.025,1.025,0,0,0-1,1V18.45a1.03,1.03,0,0,0,1,1.05h7.43a1.03,1.03,0,0,0,1.03-1.03V8A1.025,1.025,0,0,0,10.69,7ZM4.94,17.86H3.995v-.95H4.94Zm0-2.355H3.995v-.95H4.94Zm0-2.355H3.995V12.2H4.94Zm2.5,4.71H6.5v-.95h.955Zm0-2.355H6.5v-.95h.955Zm0-2.355H6.5V12.2h.955Zm2.5,4.71H8.99v-.95h.95Zm0-2.355H8.99v-.95h.95Zm0-2.355H8.99V12.2h.95Zm.325-3a.17.17,0,0,1-.165.17H3.835a.17.17,0,0,1-.165-.17V8.795a.165.165,0,0,1,.165-.165H10.13a.165.165,0,0,1,.165.165Zm5.09-1.45H15.13v9.09h.25a.67.67,0,0,0,.67-.67V9.375a.67.67,0,0,0-.695-.675Z"
                                         transform="translate(0 -3.5)" fill="#4e5767" />
@@ -1647,7 +1733,8 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('Facebook Ad') }}</span>
+                        <span class="aiz-side-nav-text"
+                            data-key="Facebook Ad">{{ translate('Facebook Ad') }}</span>
                     </a>
                 </li>
 
@@ -1672,7 +1759,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('API') }}</span>
+                        <span class="aiz-side-nav-text" data-key="API">{{ translate('API') }}</span>
                     </a>
                 </li>
 
