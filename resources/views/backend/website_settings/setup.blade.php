@@ -103,11 +103,11 @@
 
     {{-- row 4 --}}
     <div class="row">
-        {{-- Social media / Analytics --}}
+        {{-- Social Media / Analytics --}}
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header clickable-header" data-div="social_media_div">
-                    <h6>{{ translate('Social media / Analytics') }}</h6>
+                    <h6>{{ translate('social_media_analytics') }}</h6>
                 </div>
             </div>
         </div>
