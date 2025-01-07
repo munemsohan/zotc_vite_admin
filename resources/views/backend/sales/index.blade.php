@@ -41,6 +41,18 @@
                                 <option value="processing" @if ($delivery_status == 'processing') selected @endif>
                                     {{ translate('Processing') }}
                                 </option>
+                                <option value="in_courier" @if ($delivery_status == 'in_courier') selected @endif>
+                                    {{ translate('In Courier') }}
+                                </option>
+                                <option value="no_received" @if ($delivery_status == 'no_received') selected @endif>
+                                    {{ translate('No Received') }}
+                                </option>
+                                <option value="print_out" @if ($delivery_status == 'print_out') selected @endif>
+                                    {{ translate('In Courier') }}
+                                </option>
+                                <option value="returned" @if ($delivery_status == 'returned') selected @endif>
+                                    {{ translate('Returned') }}
+                                </option>
                                 <option value="shipped" @if ($delivery_status == 'shipped') selected @endif>
                                     {{ translate('Shipped') }}
                                 </option>

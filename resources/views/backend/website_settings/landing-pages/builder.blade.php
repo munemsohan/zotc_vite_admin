@@ -218,7 +218,7 @@
 
         function loadMorePages() {
             const pageContainer = $('#pageContainer');
-            const maxPages = 11;
+            const maxPages = 15;
             // const maxPages = 65;
             let html = '';
 

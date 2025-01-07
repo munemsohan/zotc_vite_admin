@@ -87,7 +87,7 @@
                 <tr>
                     <td>
                         @if ($logo != null)
-                            <img src="{{ uploaded_asset($logo) }}" height="30" style="display:inline-block;background: white !important;">
+                            <img src="{{ uploaded_asset(get_business_setting('header_logo_white')) }}" height="30" style="display:inline-block;background: white !important;">
                         @else
                             <h1 class="fw-bold">{{ get_business_setting('site_name') }}</h1>
                         @endif
@@ -261,14 +261,14 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="text-left" style="padding:0 1rem;">
+                        <td class="text-left" style="padding:0 1rem">
                             @php
                             $removedXML = '<?xml version="1.0" encoding="UTF-8"@endphp';
                             $qrCode = QrCode::size(100)->generate($order->track_url);
                             $qrCode = str_replace($removedXML, '', $qrCode);
                             ?>
                             {!! $qrCode !!}
-                            <p style="margin-top: 10px">{{ $order->track_url }}</p>
+                            <p style="margin-top: 10px; font-size: 11px">{{ $order->track_url }}</p>
                         </td>
                         <td>
                             <table class="text-right sm-padding small strong">
