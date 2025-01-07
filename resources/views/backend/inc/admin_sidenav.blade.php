@@ -1,3 +1,36 @@
+<style>
+    .show_div {
+        padding: 2px 10px;
+        margin-left: 10px;
+    }
+
+    /* Add SVG icon inside the button using ::before */
+    .show_div::before {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 8px;
+        background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2250%22%20height%3D%2250%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%208l8%208%208-8%22%20%2F%3E%3C%2Fsvg%3E');
+        background-size: cover;
+    }
+
+    /* Style for the Hide button */
+    .hide_div {
+        padding: 2px 10px;
+        margin-left: 10px;
+    }
+
+    /* Add SVG icon inside the button using ::before */
+    .hide_div::before {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 8px;
+        background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2015l-7-7-7%207%22%20%2F%3E%3C%2Fsvg%3E');
+        background-size: cover;
+    }
+</style>
+
 <div class="aiz-sidebar-wrap">
     <div class="aiz-sidebar left c-scrollbar">
         <div class="aiz-side-nav-logo-wrap">
@@ -1137,85 +1170,8 @@
                                         transform="translate(-112.375 -73.625)" fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text" data-key="Settings">{{ translate('Settings') }}</span>
+                            <span class="aiz-side-nav-text" data-key="Settings">{{ translate('Website Setup') }}</span>
                         </a>
-                    </li>
-                @endcan
-
-                <!-- Website Setup -->
-                @canany(['header_setup', 'footer_setup', 'view_all_website_pages', 'website_appearance',
-                    'authentication_layout_settings'])
-                    <li class="aiz-side-nav-item">
-                        <a href="#"
-                            class="aiz-side-nav-link {{ areActiveRoutes(['website.footer', 'website.header']) }}">
-                            <div class="aiz-side-nav-icon">
-                                <svg id="Group_28315" data-name="Group 28315" xmlns="http://www.w3.org/2000/svg"
-                                    width="16" height="16" viewBox="0 0 16 16">
-                                    <circle id="Ellipse_893" data-name="Ellipse 893" cx="0.625" cy="0.625"
-                                        r="0.625" transform="translate(7.375 6.125)" fill="#575b6a" />
-                                    <path id="Path_40777" data-name="Path 40777"
-                                        d="M13.5,0H2.5A2.5,2.5,0,0,0,0,2.5V11a2.5,2.5,0,0,0,2.5,2.5H7.375v1.25H5.5A.625.625,0,0,0,5.5,16h5a.625.625,0,0,0,0-1.25H8.625V12.875A.625.625,0,0,0,8,12.25H2.5A1.251,1.251,0,0,1,1.25,11V2.5A1.251,1.251,0,0,1,2.5,1.25h11A1.251,1.251,0,0,1,14.75,2.5V11a1.251,1.251,0,0,1-1.25,1.25h-3a.625.625,0,0,0,0,1.25h3A2.5,2.5,0,0,0,16,11V2.5A2.5,2.5,0,0,0,13.5,0Z"
-                                        fill="#575b6a" />
-                                    <path id="Path_40778" data-name="Path 40778"
-                                        d="M120.375,84.75a.625.625,0,0,0,.625-.625v-.688a3.107,3.107,0,0,0,1.1-.456l.487.487a.625.625,0,0,0,.884-.884l-.487-.487a3.108,3.108,0,0,0,.456-1.1h.688a.625.625,0,1,0,0-1.25h-.688a3.108,3.108,0,0,0-.456-1.1l.487-.487a.625.625,0,0,0-.884-.884l-.487.487a3.107,3.107,0,0,0-1.1-.456v-.688a.625.625,0,0,0-1.25,0v.688a3.108,3.108,0,0,0-1.1.456l-.487-.487a.625.625,0,0,0-.884.884l.487.487a3.108,3.108,0,0,0-.456,1.1h-.688a.625.625,0,0,0,0,1.25h.688a3.108,3.108,0,0,0,.456,1.1l-.487.487a.625.625,0,0,0,.884.884l.487-.487a3.107,3.107,0,0,0,1.1.456v.688A.625.625,0,0,0,120.375,84.75ZM118.5,80.375a1.875,1.875,0,1,1,1.875,1.875A1.877,1.877,0,0,1,118.5,80.375Z"
-                                        transform="translate(-112.375 -73.625)" fill="#575b6a" />
-                                </svg>
-                            </div>
-                            <span class="aiz-side-nav-text"
-                                data-key="website setup">{{ translate('Website Setup') }}</span>
-                            <span class="aiz-side-nav-arrow"></span>
-                        </a>
-                        <ul class="aiz-side-nav-list level-2">
-                            {{-- @can('select_homepage')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.select-homepage') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Select Homepage') }}</span>
-                                    </a>
-                                </li>
-                            @endcan --}}
-                            {{-- @can('edit_website_page')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('custom-pages.edit', ['id' => 'home', 'lang' => env('DEFAULT_LANGUAGE'), 'page' => 'home']) }}"
-                                        class="aiz-side-nav-link {{ url()->current() == url('/admin/website/custom-pages/edit/home') ? 'active' : '' }}">
-                                        <span class="aiz-side-nav-text"
-                                            data-key="homepage settings">{{ translate('Homepage Settings') }}</span>
-                                    </a>
-                                </li>
-                            @endcan --}}
-                            {{-- @can('header_setup')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.header') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text" data-key="header">{{ translate('Header') }}</span>
-
-                                    </a>
-                                </li>
-                            @endcan --}}
-                            @can('footer_setup')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.footer', ['lang' => App::getLocale()]) }}"
-                                        class="aiz-side-nav-link {{ areActiveRoutes(['website.footer']) }}">
-                                        <span class="aiz-side-nav-text" data-key="footer">{{ translate('Footer') }}</span>
-
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('view_all_website_pages')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.pages') }}"
-                                        class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
-                                        <span class="aiz-side-nav-text" data-key="pages">{{ translate('Pages') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('website_appearance')
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('website.appearance') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text"
-                                            data-key="appearance">{{ translate('Appearance') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
                     </li>
                 @endcanany
 
@@ -1247,25 +1203,33 @@
                                     </a>
                                 </li>
                             @endcan --}}
-                            <li class="aiz-side-nav-item">
+                            {{-- <li class="aiz-side-nav-item">
                                 <a href="{{ route('cart.settings') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text"
                                         data-key="cart settings">{{ translate('Cart Settings') }}</span>
                                 </a>
-                            </li>
+                            </li> --}}
+                            @can('view_all_website_pages')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('website.pages') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
+                                        <span class="aiz-side-nav-text" data-key="pages">{{ translate('Pages') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('domain') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text" data-key="domain">{{ translate('Domain') }}</span>
                                 </a>
                             </li>
-                            @can('features_activation')
+                            {{-- @can('features_activation')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('activation.index') }}" class="aiz-side-nav-link">
                                         <span class="aiz-side-nav-text"
                                             data-key="features activation">{{ translate('Features activation') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                             @can('language_setup')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('languages.index') }}"
@@ -1540,8 +1504,7 @@
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('uploaded-files.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['uploaded-files.create']) }}">
-                                    <span class="aiz-side-nav-text"
-                                        data-key="Gallery">{{ translate('Gallery') }}</span>
+                                    <span class="aiz-side-nav-text" data-key="Gallery">{{ translate('Gallery') }}</span>
                                 </a>
                             </li>
                             <!--Blog System-->
