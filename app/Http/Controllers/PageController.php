@@ -9,7 +9,8 @@ use App\Models\PageTranslation;
 
 class PageController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         // Staff Permission Check
         $this->middleware(['permission:add_website_page'])->only('create');
         $this->middleware(['permission:edit_website_page'])->only('edit');
@@ -21,10 +22,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -46,7 +44,7 @@ class PageController extends Controller
     {
         $page = new Page;
         $page->title = $request->title;
-        
+
         if (Page::where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
             $page->slug             = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
             $page->type             = "custom_page";
@@ -87,18 +85,24 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-   public function edit(Request $request, $id)
-   {
+    public function edit(Request $request, $id)
+    {
         $lang = $request->lang;
         $page_name = $request->page;
         $page = Page::where('slug', $id)->first();
-        if($page != null){
+        if ($page != null) {
             if ($page_name == 'home') {
-                return view('backend.website_settings.pages.'.get_setting('homepage_select').'.home_page_edit', compact('page','lang'));
+                return view('backend.website_settings.pages.' . get_setting('homepage_select') . '.home_page_edit', compact('page', 'lang'));
             }
-            return view('backend.website_settings.pages.edit', compact('page','lang'));
+            return view('backend.website_settings.pages.edit', compact('page', 'lang'));
         }
         abort(404);
+    }
+
+    public function websiteSetup(Request $request)
+    {
+        $lang = $request->lang;
+        return view('backend.website_settings.setup', compact('lang'));
     }
 
     /**
@@ -111,13 +115,13 @@ class PageController extends Controller
     public function update(Request $request, $id)
     {
         $page = Page::findOrFail($id);
-        if (Page::where('id','!=', $id)->where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
-            if($page->type == 'custom_page'){
-              $page->slug           = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
+        if (Page::where('id', '!=', $id)->where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
+            if ($page->type == 'custom_page') {
+                $page->slug           = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
             }
-            if($request->lang == env("DEFAULT_LANGUAGE")){
-              $page->title          = $request->title;
-              $page->content        = $request->content;
+            if ($request->lang == env("DEFAULT_LANGUAGE")) {
+                $page->title          = $request->title;
+                $page->content        = $request->content;
             }
             $page->meta_title       = $request->meta_title;
             $page->meta_description = $request->meta_description;
@@ -134,9 +138,8 @@ class PageController extends Controller
             return redirect()->route('website.pages');
         }
 
-      flash(translate('Slug has been used already'))->warning();
-      return back();
-
+        flash(translate('Slug has been used already'))->warning();
+        return back();
     }
 
     /**
@@ -150,24 +153,25 @@ class PageController extends Controller
         $page = Page::findOrFail($id);
         $page->page_translations()->delete();
 
-        if(Page::destroy($id)){
+        if (Page::destroy($id)) {
             flash(translate('Page has been deleted successfully'))->success();
             return redirect()->back();
         }
         return back();
     }
 
-    public function show_custom_page($slug){
+    public function show_custom_page($slug)
+    {
         $page = Page::where('slug', $slug)->first();
-        if($page != null){
+        if ($page != null) {
             return view('frontend.custom_page', compact('page'));
         }
         abort(404);
     }
-    
-    public function mobile_custom_page($slug){
+    public function mobile_custom_page($slug)
+    {
         $page = Page::where('slug', $slug)->first();
-        if($page != null){
+        if ($page != null) {
             return view('frontend.m_custom_page', compact('page'));
         }
         abort(404);

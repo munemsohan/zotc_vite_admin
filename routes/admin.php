@@ -364,6 +364,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
             Route::get('/custom-pages/destroy/{id}', 'destroy')->name('custom-pages.destroy');
         });
 
+        Route::get('website-setup', [PageController::class, 'websiteSetup'])->name('website-setup');
+
         Route::prefix('landing-pages')->name('landing-pages.')->controller(LandingPageController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
