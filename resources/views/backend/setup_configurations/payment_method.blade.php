@@ -23,7 +23,7 @@
             <div class="card-header">
                 <h6 class="m-0">Online payment</h6>
 
-                <button class="btn btn-sm btn-primary" id="togglecardbody">Show</button>
+                <button class="btn btn-sm btn-primary" id="toggleOnlinepayment">Show</button>
             </div>
             <div class="card-body" id="online_payment_card_body" style="display: none">
                 <div class="row">
@@ -1678,7 +1678,7 @@
                 <div class="card-header">
                     <h6 class="m-0">Manual payment</h6>
 
-                    <button class="btn btn-sm btn-primary" id="toggleManualcardbody">Show</button>
+                    <button class="btn btn-sm btn-primary" id="toggleManualPayment">Show</button>
                 </div>
                 <div class="card-body" id="manual_payment_card_body" style="display: none">
                     @can('add_manual_payment_method')
@@ -1750,7 +1750,7 @@
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-sm btn-primary ml-2" id="toggleLinkcardbody">Show</button>
+                        <button class="btn btn-sm btn-primary ml-2" id="toggleLinkPayment">Show</button>
                     </div>
                 </div>
                 <div class="card-body" id="link_payment_card_body" style="display: none">

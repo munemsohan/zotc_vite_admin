@@ -156,22 +156,47 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $(document).ready(function() {
-                // Toggle showcase visibility or redirect to URL
-                $('.clickable-header').on('click', function() {
-                    const targetDivId = $(this).data('div');
-                    const redirectUrl = $(this).data('url');
+            // Toggle showcase visibility or redirect to URL
+            $('.clickable-header').on('click', function() {
+                const targetDivId = $(this).data('div');
+                const redirectUrl = $(this).data('url');
 
-                    if (redirectUrl) {
-                        // If a URL is provided, redirect to it
-                        window.location.href = redirectUrl;
-                    } else if (targetDivId) {
-                        // Otherwise, toggle visibility of the target div
-                        const targetDiv = $('#' + targetDivId);
-                        $('.showcase').not(targetDiv).addClass('d-none');
-                        targetDiv.toggleClass('d-none');
-                    }
-                });
+                if (redirectUrl) {
+                    // If a URL is provided, redirect to it
+                    window.location.href = redirectUrl;
+                } else if (targetDivId) {
+                    // Otherwise, toggle visibility of the target div
+                    const targetDiv = $('#' + targetDivId);
+                    $('.showcase').not(targetDiv).addClass('d-none');
+                    targetDiv.toggleClass('d-none');
+                }
+            });
+
+            // Toggle visibility for specific buttons
+            $("#toggleOnlinepayment").on("click", function() {
+                $("#online_payment_card_body").slideToggle(300);
+                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+                $(this).text(buttonText);
+            });
+
+            $("#toggleManualPayment").on("click", function() {
+                $("#manual_payment_card_body").slideToggle(300);
+                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+                $(this).text(buttonText);
+            });
+
+            $("#toggleLinkPayment").on("click", function() {
+                $("#link_payment_card_body").slideToggle(300);
+                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+                $(this).text(buttonText);
+            });
+
+            // Generic toggle for div visibility
+            $("[id^='toggle']").on('click', function() {
+                const targetId = $(this).data('target');
+                $(`#${targetId}`).slideToggle(300);
+                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+                $(this).text(buttonText);
             });
 
             // Toggle div visibility for buttons
@@ -181,7 +206,7 @@
                 $(this).toggleClass('show_div hide_div');
             });
 
-            // Forms for change event handling
+            // Attach change event to inputs and selects in forms
             const formIds = [
                 '#thermal_printer_form',
                 '#order_minimum_pay_type_form',
@@ -216,23 +241,14 @@
                 '#payfast_form',
             ];
 
-            // Attach change event to inputs and selects inside forms
             formIds.forEach(function(formId) {
                 $(`${formId} input, ${formId} select`).on('change', function() {
                     handleFormSubmission(formId);
                 });
             });
-
-            // Toggle card body functionality
-            $("[id^='toggle']").on('click', function() {
-                const targetId = $(this).data('target');
-                $(`#${targetId}`).slideToggle(300);
-                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
-                $(this).text(buttonText);
-            });
         });
 
-        // Handle form submission
+        // Handle form submission via AJAX
         function handleFormSubmission(formId) {
             const formData = $(formId).serialize();
             const actionUrl = $(formId).attr('action');
@@ -267,7 +283,7 @@
             });
         }
 
-        // Toggle custom field settings
+        // Toggle custom field settings visibility
         function toggleCustomField(el) {
             const isChecked = $(el).is(':checked');
             $('#customFieldSettings').toggleClass('d-none', !isChecked).toggleClass('d-block', isChecked);
