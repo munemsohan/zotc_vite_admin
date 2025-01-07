@@ -648,6 +648,37 @@
                                         data-key="facebook ad">{{ translate('Facebook Boosting/Ad Account') }}</span>
                                 </a>
                             </li>
+
+                            <!--Blog System-->
+                            @canany(['view_blogs', 'view_blog_categories'])
+                                <li class="aiz-side-nav-item">
+                                    <a href="#" class="aiz-side-nav-link">
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Blog System">{{ translate('Blog System') }}</span>
+                                        <span class="aiz-side-nav-arrow"></span>
+                                    </a>
+                                    <ul class="aiz-side-nav-list level-2">
+                                        @can('view_blogs')
+                                            <li class="aiz-side-nav-item">
+                                                <a href="{{ route('blog.index') }}"
+                                                    class="aiz-side-nav-link {{ areActiveRoutes(['blog.create', 'blog.edit']) }}">
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="All Posts">{{ translate('All Posts') }}</span>
+                                                </a>
+                                            </li>
+                                        @endcan
+                                        @can('view_blog_categories')
+                                            <li class="aiz-side-nav-item">
+                                                <a href="{{ route('blog-category.index') }}"
+                                                    class="aiz-side-nav-link {{ areActiveRoutes(['blog-category.create', 'blog-category.edit']) }}">
+                                                    <span class="aiz-side-nav-text"
+                                                        data-key="Categories">{{ translate('Categories') }}</span>
+                                                </a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endcanany
                         </ul>
                     </li>
                 @endcanany
@@ -1209,7 +1240,7 @@
                                         data-key="cart settings">{{ translate('Cart Settings') }}</span>
                                 </a>
                             </li> --}}
-                            @can('view_all_website_pages')
+                            {{-- @can('view_all_website_pages')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.pages') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
@@ -1221,7 +1252,7 @@
                                 <a href="{{ route('domain') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text" data-key="domain">{{ translate('Domain') }}</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             {{-- @can('features_activation')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('activation.index') }}" class="aiz-side-nav-link">
@@ -1319,14 +1350,14 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('payment_methods_configurations')
+                            {{-- @can('payment_methods_configurations')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('payment_method.index') }}" class="aiz-side-nav-link">
                                         <span class="aiz-side-nav-text"
                                             data-key="Payment Methods">{{ translate('Payment Methods') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                             <!-- Offline Payment Addon-->
                             @if (addon_is_activated('offline_payment'))
                                 @canany(['view_all_manual_payment_methods', 'view_all_offline_wallet_recharges',
@@ -1396,14 +1427,14 @@
                                 </li>
                             @endcan --}}
 
-                            @can('social_media_logins')
+                            {{-- @can('social_media_logins')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('social_login.index') }}" class="aiz-side-nav-link">
                                         <span class="aiz-side-nav-text"
                                             data-key="Social media / Analytics">{{ translate('Social media / Analytics') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                         </ul>
                     </li>
 
@@ -1507,36 +1538,6 @@
                                     <span class="aiz-side-nav-text" data-key="Gallery">{{ translate('Gallery') }}</span>
                                 </a>
                             </li>
-                            <!--Blog System-->
-                            @canany(['view_blogs', 'view_blog_categories'])
-                                <li class="aiz-side-nav-item">
-                                    <a href="#" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text"
-                                            data-key="Blog System">{{ translate('Blog System') }}</span>
-                                        <span class="aiz-side-nav-arrow"></span>
-                                    </a>
-                                    <ul class="aiz-side-nav-list level-2">
-                                        @can('view_blogs')
-                                            <li class="aiz-side-nav-item">
-                                                <a href="{{ route('blog.index') }}"
-                                                    class="aiz-side-nav-link {{ areActiveRoutes(['blog.create', 'blog.edit']) }}">
-                                                    <span class="aiz-side-nav-text"
-                                                        data-key="All Posts">{{ translate('All Posts') }}</span>
-                                                </a>
-                                            </li>
-                                        @endcan
-                                        @can('view_blog_categories')
-                                            <li class="aiz-side-nav-item">
-                                                <a href="{{ route('blog-category.index') }}"
-                                                    class="aiz-side-nav-link {{ areActiveRoutes(['blog-category.create', 'blog-category.edit']) }}">
-                                                    <span class="aiz-side-nav-text"
-                                                        data-key="Categories">{{ translate('Categories') }}</span>
-                                                </a>
-                                            </li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                            @endcanany
 
                             <!-- System Update & Server Status -->
                             {{-- @canany(['system_update', 'server_status'])
