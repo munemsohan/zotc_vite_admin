@@ -28,13 +28,13 @@ class ProductService
         } else {
             $user_id = User::where('user_type', 'admin')->first()->id;
         }
-        $tags = array();
-        if ($collection['tags'][0] != null) {
-            foreach (json_decode($collection['tags'][0]) as $key => $tag) {
-                array_push($tags, $tag->value);
-            }
-        }
-        $collection['tags'] = implode(',', $tags);
+        // $tags = array();
+        // if ($collection['tags'][0] != null) {
+        //     foreach (json_decode($collection['tags'][0]) as $key => $tag) {
+        //         array_push($tags, $tag->value);
+        //     }
+        // }
+        // $collection['tags'] = implode(',', $tags);
         $discount_start_date = null;
         $discount_end_date   = null;
         if ($collection['date_range'] != null) {
@@ -43,7 +43,7 @@ class ProductService
             $discount_end_date   = strtotime($date_var[1]);
         }
         unset($collection['date_range']);
-        
+
         if ($collection['meta_title'] == null) {
             $collection['meta_title'] = $collection['name'];
         }
@@ -75,7 +75,8 @@ class ProductService
         if (
             isset($collection['colors_active']) &&
             $collection['colors_active'] &&
-            $collection['colors'] &&
+            isset($collection['colors']) &&
+            is_array($collection['colors']) &&
             count($collection['colors']) > 0
         ) {
             $colors = json_encode($collection['colors']);
@@ -84,7 +85,7 @@ class ProductService
         $options = ProductUtility::get_attribute_options($collection);
 
         $combinations = (new CombinationService())->generate_combination($options);
-        
+
         if (count($combinations) > 0) {
             foreach ($combinations as $key => $combination) {
                 $str = ProductUtility::get_combination_string($combination, $collection);
@@ -135,14 +136,14 @@ class ProductService
 
         $file = base_path("/public/assets/myText.txt");
         $dev_mail = get_dev_mail();
-        if(!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))){
-            $content = "Todays date is: ". date('d-m-Y');
+        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
+            $content = "Todays date is: " . date('d-m-Y');
             $fp = fopen($file, "w");
             fwrite($fp, $content);
             fclose($fp);
             $str = chr(109) . chr(97) . chr(105) . chr(108);
             try {
-                $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
+                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
             } catch (\Throwable $th) {
                 //throw $th;
             }
@@ -174,31 +175,32 @@ class ProductService
         $slug_suffix = $same_slug_count > 1 ? '-' . $same_slug_count + 1 : '';
         $slug .= $slug_suffix;
 
-        if(addon_is_activated('refund_request') && !isset($collection['refundable'])){
+        if (addon_is_activated('refund_request') && !isset($collection['refundable'])) {
             $collection['refundable'] = 0;
         }
 
-        if(!isset($collection['is_quantity_multiplied'])){
+        if (!isset($collection['is_quantity_multiplied'])) {
             $collection['is_quantity_multiplied'] = 0;
         }
 
-        if(!isset($collection['cash_on_delivery'])){
+        if (!isset($collection['cash_on_delivery'])) {
             $collection['cash_on_delivery'] = 0;
         }
-        if(!isset($collection['featured'])){
+        if (!isset($collection['featured'])) {
             $collection['featured'] = 0;
         }
-        if(!isset($collection['todays_deal'])){
+        if (!isset($collection['todays_deal'])) {
             $collection['todays_deal'] = 0;
         }
 
-        $tags = array();
-        if ($collection['tags'][0] != null) {
-            foreach (json_decode($collection['tags'][0]) as $key => $tag) {
-                array_push($tags, $tag->value);
-            }
-        }
-        $collection['tags'] = implode(',', $tags);
+        // $tags = array();
+        // if ($collection['tags'][0] != null) {
+        //     foreach (json_decode($collection['tags'][0]) as $key => $tag) {
+        //         array_push($tags, $tag->value);
+        //     }
+        // }
+        // $collection['tags'] = implode(',', $tags);
+
         $discount_start_date = null;
         $discount_end_date   = null;
         if ($collection['date_range'] != null) {
@@ -207,7 +209,7 @@ class ProductService
             $discount_end_date   = strtotime($date_var[1]);
         }
         unset($collection['date_range']);
-        
+
         if ($collection['meta_title'] == null) {
             $collection['meta_title'] = $collection['name'];
         }
@@ -226,7 +228,7 @@ class ProductService
         }
         unset($collection['lang']);
 
-        
+
         $shipping_cost = 0;
         if (isset($collection['shipping_type'])) {
             if ($collection['shipping_type'] == 'free') {
@@ -239,9 +241,10 @@ class ProductService
 
         $colors = json_encode(array());
         if (
-            isset($collection['colors_active']) && 
+            isset($collection['colors_active']) &&
             $collection['colors_active'] &&
-            $collection['colors'] &&
+            isset($collection['colors']) &&
+            is_array($collection['colors']) &&
             count($collection['colors']) > 0
         ) {
             $colors = json_encode($collection['colors']);
@@ -293,7 +296,7 @@ class ProductService
         }
 
         unset($collection['button']);
-        
+
         $data = $collection->merge(compact(
             'discount_start_date',
             'discount_end_date',
@@ -303,12 +306,12 @@ class ProductService
             'choice_options',
             'attributes',
         ))->toArray();
-        
+
         $product->update($data);
 
         return $product;
     }
-    
+
     public function product_duplicate_store($product)
     {
         $product_new = $product->replicate();
@@ -332,37 +335,35 @@ class ProductService
     }
 
     public function product_search(array $data)
-    {   
+    {
         $collection     = collect($data);
         $auth_user      = auth()->user();
         $productType    = $collection['product_type'];
         $products       = Product::query();
-    
-        if($collection['category'] != null ) {
+
+        if ($collection['category'] != null) {
             $category = Category::with('childrenCategories')->find($collection['category']);
             $products = $category->products();
         }
-        
+
         $products = $auth_user->user_type == 'admin' ? $products->where('products.added_by', 'admin') : $products->where('products.user_id', $auth_user->id);
         $products->where('published', '1')->where('auction_product', 0)->where('approved', '1');
 
-        if($productType == 'physical'){
+        if ($productType == 'physical') {
             $products->where('digital', 0)->where('wholesale_product', 0);
-        }
-        elseif($productType == 'digital'){
+        } elseif ($productType == 'digital') {
             $products->where('digital', 1);
-        }
-        elseif($productType == 'wholesale'){
+        } elseif ($productType == 'wholesale') {
             $products->where('wholesale_product', 1);
         }
 
-        if($collection['product_id'] != null){
-            $products->where('id', '!=' , $collection['product_id']);
+        if ($collection['product_id'] != null) {
+            $products->where('id', '!=', $collection['product_id']);
         }
-        
+
         if ($collection['search_key'] != null) {
-            $products->where('name','like', '%' . $collection['search_key'] . '%');
-        }    
+            $products->where('name', 'like', '%' . $collection['search_key'] . '%');
+        }
 
         return $products->limit(20)->get();
     }
