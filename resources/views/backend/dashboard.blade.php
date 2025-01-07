@@ -352,19 +352,22 @@
                                                 Pay Now with:
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/bkash/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/bkash/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn"
                                                         src="{{ url('public/assets/img/cards/bkash.png') }}" width="50px">
                                                 </a>
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/visa/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/visa/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn py-2"
                                                         src="{{ url('public/assets/img/cards/visa.webp') }}" width="85px">
                                                 </a>
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/paddle/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/paddle/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn py-2"
                                                         src="{{ url('public/assets/img/cards/paypal.webp') }}"
                                                         width="85px">
@@ -445,19 +448,22 @@
                                                 Pay Now with:
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/bkash/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/bkash/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn"
                                                         src="{{ url('public/assets/img/cards/bkash.png') }}" width="50px">
                                                 </a>
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/visa/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/visa/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn py-2"
                                                         src="{{ url('public/assets/img/cards/visa.webp') }}" width="85px">
                                                 </a>
                                             </div>
                                             <div class="col-auto m-0">
-                                                <a href="{{ url('admin/upgrade/paddle/' . $plan->id) }}" class="btn btn-sm p-0">
+                                                <a href="{{ url('admin/upgrade/paddle/' . $plan->id) }}"
+                                                    class="btn btn-sm p-0">
                                                     <img class="border-2 rounded pay_btn py-2"
                                                         src="{{ url('public/assets/img/cards/paypal.webp') }}"
                                                         width="85px">
@@ -478,6 +484,7 @@
                                 <tr>
                                     <td class="feature-name clean-text">Full eCommerce Website</td>
                                     <td>
+                                        <del>{{ $currency == 'BDT' ? '50000 BDT' : '500 $' }}</del>
                                         {{ $currency == 'BDT' ? '10000 BDT' : '100 $' }} One Time
                                         @if ($planParts[0] != 10)
                                             <button class="btn btn-sm btn-dark my-2 lifetimebuynow"
@@ -510,39 +517,48 @@
                                                 </div>
                                             </div>
                                         @endif
+                                        <p class="text-danger"><small>Limited Time offer Till (First 300 Websites)</small></p>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td class="feature-name clean-text">Fraud Checker</td>
                                     <td>
-                                        {{ $currency == 'BDT' ? '5000 BDT' : '50 $' }} BDT One Time
-                                        @if (!isset($planParts[7]) || $planParts[7] == '')
+                                        {{ $currency == 'BDT' ? '2000 BDT' : '20 $' }} BDT One Time
+                                        @if (!isset($planParts[7]) || $planParts[7] != 'fraud_checker')
                                             <button class="btn btn-sm btn-dark my-2 lifetimebuynow"
                                                 data-purpose="fraud_checker">
                                                 Buy Now
                                             </button>
 
-                                            <div id="fraud_checker_div" style="display: none">
+                                            <div id="fraud_checker_div" style="display: none;">
                                                 <div class="form-group">
                                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                        <a href="{{ url('/admin/lifetime/fraud_checker/bkash') }}"
+                                                        <!-- bKash Payment Option -->
+                                                        <a href="{{ route('buy.lifetime.plan', ['plan_type' => 'fraud_checker', 'payment_method' => 'bkash']) }}"
                                                             class="btn btn-sm btn-outline-primary rounded-pill">
-                                                            <input type="radio" name="payment_method" value="bkash">
-                                                            <img src="{{ url('public/assets/img/cards/bkash.png') }}"
-                                                                width="50px" alt="bKash">
+                                                            <input type="radio" name="payment_method" value="bkash"
+                                                                autocomplete="off">
+                                                            <img src="{{ asset('public/assets/img/cards/bkash.png') }}"
+                                                                width="50" alt="bKash">
                                                         </a>
-                                                        <a href="{{ url('/admin/lifetime/fraud_checker/visa') }}"
+
+                                                        <!-- Visa Payment Option -->
+                                                        <a href="{{ route('buy.lifetime.plan', ['plan_type' => 'fraud_checker', 'payment_method' => 'visa']) }}"
                                                             class="btn btn-sm btn-outline-primary rounded-pill">
-                                                            <input type="radio" name="payment_method" value="visa">
-                                                            <img src="{{ url('public/assets/img/cards/visa.webp') }}"
-                                                                width="100px" alt="visa">
+                                                            <input type="radio" name="payment_method" value="visa"
+                                                                autocomplete="off">
+                                                            <img src="{{ asset('public/assets/img/cards/visa.webp') }}"
+                                                                width="100" alt="Visa">
                                                         </a>
-                                                        <a href="{{ url('/admin/lifetime/fraud_checker/visa') }}"
+
+                                                        <!-- PayPal Payment Option -->
+                                                        <a href="{{ route('buy.lifetime.plan', ['plan_type' => 'fraud_checker', 'payment_method' => 'paypal']) }}"
                                                             class="btn btn-sm btn-outline-primary rounded-pill">
-                                                            <input type="radio" name="payment_method" value="visa">
-                                                            <img src="{{ url('public/assets/img/cards/paypal.webp') }}"
-                                                                width="100px" alt="paddle">
+                                                            <input type="radio" name="payment_method" value="paypal"
+                                                                autocomplete="off">
+                                                            <img src="{{ asset('public/assets/img/cards/paypal.webp') }}"
+                                                                width="100" alt="PayPal">
                                                         </a>
                                                     </div>
                                                 </div>
@@ -588,20 +604,20 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                {{-- <tr>
                                     <td class="feature-name clean-text">Support and Maintenance</td>
                                     <td>{{ $currency == 'BDT' ? '1000 BDT' : '10 $' }} BDT/Month</td>
-                                </tr>
+                                </tr> --}}
 
                                 <tr>
                                     <td class="feature-name clean-text">Hosting</td>
                                     <td>{{ $currency == 'BDT' ? '2000 BDT' : '20 $' }} BDT Yearly</td>
                                 </tr>
 
-                                <tr>
+                                {{-- <tr>
                                     <td class="feature-name clean-text">Domain</td>
                                     <td>.com/.net</td>
-                                </tr>
+                                </tr> --}}
                             </tbody>
                         </table>
                     </div>

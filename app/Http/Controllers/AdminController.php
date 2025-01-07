@@ -402,7 +402,7 @@ class AdminController extends Controller
     {
         $validPlans = [
             'full_website' => 10000,
-            'fraud_checker' => 5000,
+            'fraud_checker' => 2000, //previouly 5000
             'courier' => 2000
         ];
 
