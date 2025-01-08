@@ -5,7 +5,7 @@
                 <h5 class="mb-0 h6 text-center">{{ translate('HTTPS Activation') }}</h5>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'FORCE_HTTPS')" <?php if (env('FORCE_HTTPS') == 'On') {
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'FORCE_HTTPS')" <?php if (env('FORCE_HTTPS') == 'On') {
                         echo 'checked';
                     } ?>>
                     <span class="slider round"></span>
@@ -15,7 +15,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Disable image encoding?') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'disable_image_optimization')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'disable_image_optimization')"
                         <?php if (get_business_setting('disable_image_optimization') == 1) {
                             echo 'checked';
                         } ?>>
@@ -26,9 +26,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Classified Product') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'classified_product')" <?php if (get_business_setting('classified_product') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'classified_product')"
+                        <?php if (get_business_setting('classified_product') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -36,7 +37,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Coupon System Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'coupon_system')" <?php if (get_business_setting('coupon_system') == 1) {
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'coupon_system')" <?php if (get_business_setting('coupon_system') == 1) {
                         echo 'checked';
                     } ?>>
                     <span class="slider round"></span>
@@ -46,9 +47,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Conversation Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'conversation_system')" <?php if (get_business_setting('conversation_system') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'conversation_system')"
+                        <?php if (get_business_setting('conversation_system') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -56,7 +58,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Admin Approval On Seller Product') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'product_approve_by_admin')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'product_approve_by_admin')"
                         <?php if (\App\Models\BusinessSetting::where('type', 'product_approve_by_admin')->first() && get_business_setting('product_approve_by_admin') == 1) {
                             echo 'checked';
                         } ?>>
@@ -68,7 +70,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Product Query Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'product_query_activation')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'product_query_activation')"
                         <?php if (get_business_setting('product_query_activation') == 1) {
                             echo 'checked';
                         } ?>>
@@ -80,7 +82,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Auction Product for Seller') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'seller_auction_product')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'seller_auction_product')"
                         <?php if (get_business_setting('seller_auction_product') == 1) {
                             echo 'checked';
                         } ?>>
@@ -92,7 +94,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Google login') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'google_login')" <?php if (get_business_setting('google_login') == 1) {
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'google_login')" <?php if (get_business_setting('google_login') == 1) {
                         echo 'checked';
                     } ?>>
                     <span class="slider round"></span>
@@ -103,7 +105,7 @@
                 <h5 class="mb-0 h6">{{ translate('POS Activation for Seller') }}</h5>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'pos_activation_for_seller')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'pos_activation_for_seller')"
                         @if (get_business_setting('pos_activation_for_seller') == 1) checked @endif>
                     <span class="slider round"></span>
                 </label>
@@ -150,7 +152,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Left Floating Buttons') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'left_floating_buttons')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'left_floating_buttons')"
                         {{ get_business_setting('left_floating_buttons') == 1 ? 'checked' : '' }}>
                     <span class="slider round"></span>
                 </label>
@@ -159,7 +161,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Cart Floating Button') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'cart_floating_button')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'cart_floating_button')"
                         {{ get_business_setting('cart_floating_button') == 1 ? 'checked' : '' }}>
                     <span class="slider round"></span>
                 </label>
@@ -190,9 +192,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Maintenance Mode Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'maintenance_mode')" <?php if (get_business_setting('maintenance_mode') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'maintenance_mode')"
+                        <?php if (get_business_setting('maintenance_mode') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -200,7 +203,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Vendor System Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'vendor_system_activation')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'vendor_system_activation')"
                         <?php if (get_business_setting('vendor_system_activation') == 1) {
                             echo 'checked';
                         } ?>>
@@ -211,9 +214,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Wallet System Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'wallet_system')" <?php if (get_business_setting('wallet_system') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'wallet_system')"
+                        <?php if (get_business_setting('wallet_system') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -221,16 +225,17 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Pickup Point Activation') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'pickup_point')" <?php if (get_business_setting('pickup_point') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'pickup_point')"
+                        <?php if (get_business_setting('pickup_point') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
             <div class="d-flex justify-content-between p-2">
                 <h3 class="mb-0 h6 text-center">{{ translate('Seller Product Manage By Admin') }}</h3>
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'product_manage_by_admin')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'product_manage_by_admin')"
                         <?php if (\App\Models\BusinessSetting::where('type', 'product_manage_by_admin')->first() && get_business_setting('product_manage_by_admin') == 1) {
                             echo 'checked';
                         } ?>>
@@ -242,9 +247,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Email Otp Verification') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'email_verification')" <?php if (get_business_setting('email_verification') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'email_verification')"
+                        <?php if (get_business_setting('email_verification') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -253,7 +259,7 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Wholesale Product for Seller') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'seller_wholesale_product')"
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'seller_wholesale_product')"
                         <?php if (get_business_setting('seller_wholesale_product') == 1) {
                             echo 'checked';
                         } ?>>
@@ -265,9 +271,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Facebook login') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'facebook_login')" <?php if (get_business_setting('facebook_login') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'facebook_login')"
+                        <?php if (get_business_setting('facebook_login') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -276,9 +283,10 @@
                 <h3 class="mb-0 h6 text-center">{{ translate('Twitter login') }}</h3>
 
                 <label class="aiz-switch aiz-switch-success mb-0">
-                    <input type="checkbox" onchange="updateSettings(this, 'twitter_login')" <?php if (get_business_setting('twitter_login') == 1) {
-                        echo 'checked';
-                    } ?>>
+                    <input type="checkbox" onchange="updateFeatureSettings(this, 'twitter_login')"
+                        <?php if (get_business_setting('twitter_login') == 1) {
+                            echo 'checked';
+                        } ?>>
                     <span class="slider round"></span>
                 </label>
             </div>

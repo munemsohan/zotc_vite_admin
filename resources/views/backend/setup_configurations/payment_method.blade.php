@@ -8,7 +8,7 @@
                 </div>
 
                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                    <input type="checkbox" onchange="updateSettings(this, 'cash_payment')" <?php if (get_business_setting('cash_payment') == 1) {
+                    <input type="checkbox" onchange="updatePaymentSettings(this, 'cash_payment')" <?php if (get_business_setting('cash_payment') == 1) {
                         echo 'checked';
                     } ?>>
                     <span class="slider round"></span>
@@ -37,7 +37,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'bkash')" <?php if (get_business_setting('bkash') == 1) {
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'bkash')" <?php if (get_business_setting('bkash') == 1) {
                                         echo 'checked';
                                     } ?>>
                                     <span class="slider round"></span>
@@ -123,7 +123,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'nagad')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'nagad')"
                                         <?php if (get_business_setting('nagad') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -209,7 +209,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'sslcommerz_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'sslcommerz_payment')"
                                         <?php if (get_business_setting('sslcommerz_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -272,7 +272,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'aamarpay')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'aamarpay')"
                                         <?php if (get_business_setting('aamarpay') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -337,7 +337,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'uddoktapay_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'uddoktapay_payment')"
                                         <?php if (get_business_setting('uddoktapay_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -389,7 +389,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'paypal_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'paypal_payment')"
                                         <?php if (get_business_setting('paypal_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -453,7 +453,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'stripe_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'stripe_payment')"
                                         <?php if (get_business_setting('stripe_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -503,7 +503,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'mercadopago_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'mercadopago_payment')"
                                         <?php if (get_business_setting('mercadopago_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -574,7 +574,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'iyzico')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'iyzico')"
                                         <?php if (get_business_setting('iyzico') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -640,7 +640,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'instamojo_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'instamojo_payment')"
                                         <?php if (get_business_setting('instamojo_payment') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -703,7 +703,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'paystack')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'paystack')"
                                         <?php if (get_business_setting('paystack') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -776,7 +776,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'payhere')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'payhere')"
                                         <?php if (get_business_setting('payhere') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -851,7 +851,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'ngenius')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'ngenius')"
                                         <?php if (get_business_setting('ngenius') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -918,7 +918,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'voguepay')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'voguepay')"
                                         <?php if (get_business_setting('voguepay') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -969,7 +969,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'razorpay')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'razorpay')"
                                         <?php if (get_business_setting('razorpay') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1020,7 +1020,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'authorizenet')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'authorizenet')"
                                         <?php if (get_business_setting('authorizenet') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1088,7 +1088,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'payku')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'payku')"
                                         <?php if (get_business_setting('payku') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1152,7 +1152,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'proxypay')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'proxypay')"
                                         <?php if (get_business_setting('proxypay') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1171,7 +1171,7 @@
                                     <div class="clearfix">
                                         <img class="float-left" src="{{ static_asset('assets/img/cards/myfatoorah.png') }}" height="30">
                                         <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                            <input type="checkbox" onchange="updateSettings(this, 'myfatoorah')" <?php if (get_business_setting('myfatoorah') == 1) {
+                                            <input type="checkbox" onchange="updatePaymentSettings(this, 'myfatoorah')" <?php if (get_business_setting('myfatoorah') == 1) {
                                                 echo 'checked';
                                             } ?>>
                                             <span class="slider round"></span>
@@ -1194,7 +1194,7 @@
                                 </div>
 
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'paytm_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'paytm_payment')"
                                         <?php if (\App\Models\BusinessSetting::where('type', 'paytm_payment')->first()->value == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1290,7 +1290,7 @@
                                         height="30">
                                 </div>
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'toyyibpay_payment')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'toyyibpay_payment')"
                                         <?php if (\App\Models\BusinessSetting::where('type', 'toyyibpay_payment')->first()->value == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1353,7 +1353,7 @@
                                         height="30">
                                 </div>
                                 <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                    <input type="checkbox" onchange="updateSettings(this, 'myfatoorah')"
+                                    <input type="checkbox" onchange="updatePaymentSettings(this, 'myfatoorah')"
                                         <?php if (get_business_setting('myfatoorah') == 1) {
                                             echo 'checked';
                                         } ?>>
@@ -1406,7 +1406,7 @@
                                                 height="30">
                                         </div>
                                         <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                            <input type="checkbox" onchange="updateSettings(this, 'mpesa')"
+                                            <input type="checkbox" onchange="updatePaymentSettings(this, 'mpesa')"
                                                 @if (get_business_setting('mpesa') == 1) checked @endif>
                                             <span class="slider round"></span>
                                         </label>
@@ -1534,7 +1534,7 @@
                                             height="30">
                                     </div>
                                     <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                        <input type="checkbox" onchange="updateSettings(this, 'flutterwave')"
+                                        <input type="checkbox" onchange="updatePaymentSettings(this, 'flutterwave')"
                                             @if (get_business_setting('flutterwave') == 1) checked @endif>
                                         <span class="slider round"></span>
                                     </label>
@@ -1611,7 +1611,7 @@
                                     </div>
 
                                     <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                                        <input type="checkbox" onchange="updateSettings(this, 'payfast')"
+                                        <input type="checkbox" onchange="updatePaymentSettings(this, 'payfast')"
                                             @if (get_business_setting('payfast') == 1) checked @endif>
                                         <span class="slider round"></span>
                                     </label>

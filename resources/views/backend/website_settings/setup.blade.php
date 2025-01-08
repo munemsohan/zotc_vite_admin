@@ -154,6 +154,7 @@
 @endsection
 
 @section('script')
+    {{-- setup --}}
     <script>
         $(document).ready(function() {
             // Toggle showcase visibility or redirect to URL
@@ -171,32 +172,30 @@
                     targetDiv.toggleClass('d-none');
                 }
             });
+        });
+    </script>
 
-            // Toggle visibility for specific buttons
-            $("#toggleOnlinepayment").on("click", function() {
-                $("#online_payment_card_body").slideToggle(300);
-                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
-                $(this).text(buttonText);
+    {{-- home page settings --}}
+    <script>
+        $(document).ready(function() {
+            var hash = document.location.hash;
+            if (hash) {
+                $('.nav-tabs a[href="' + hash + '"]').tab('show');
+            } else {
+                $('.nav-tabs a[href="#home_slider"]').tab('show');
+            }
+
+            // Change hash for page-reload
+            $('.nav-tabs a').on('shown.bs.tab', function(e) {
+                window.location.hash = e.target.hash;
             });
 
-            $("#toggleManualPayment").on("click", function() {
-                $("#manual_payment_card_body").slideToggle(300);
-                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
-                $(this).text(buttonText);
+            $('#brand_count').change(function() {
+                handleHomePageSettingsFormSubmission('#brand_count_form');
             });
 
-            $("#toggleLinkPayment").on("click", function() {
-                $("#link_payment_card_body").slideToggle(300);
-                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
-                $(this).text(buttonText);
-            });
-
-            // Generic toggle for div visibility
-            $("[id^='toggle']").on('click', function() {
-                const targetId = $(this).data('target');
-                $(`#${targetId}`).slideToggle(300);
-                const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
-                $(this).text(buttonText);
+            $('#featured_category_count').change(function() {
+                handleHomePageSettingsFormSubmission('#featured_category_count_form');
             });
 
             // Toggle div visibility for buttons
@@ -205,9 +204,65 @@
                 $('#' + divId).toggleClass('d-none');
                 $(this).toggleClass('show_div hide_div');
             });
+        });
 
-            // Attach change event to inputs and selects in forms
-            const formIds = [
+        function handleHomePageSettingsFormSubmission(formId) {
+            var formData = $(formId).serialize();
+
+            $.ajax({
+                url: $(formId).attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                },
+                error: function(xhr, status, error) {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
+            });
+        }
+
+        function updateHomePageSettings(el, type) {
+            if ($(el).is(':checked')) {
+                var value = 1;
+            } else {
+                var value = 0;
+            }
+
+            $.post('{{ route('business_settings.update.activation') }}', {
+                _token: '{{ csrf_token() }}',
+                type: type,
+                value: value
+            }, function(data) {
+                if (data == '1') {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                } else {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
+            });
+        }
+
+        function checkCategoryStatus(checkbox) {
+            if (checkbox.checked) {
+                $('#full_slider_div').removeClass('d-none').addClass('d-flex justify-content-between align-items-center');
+            } else {
+                $('#full_slider_div').addClass('d-none').removeClass('d-flex justify-content-between align-items-center');
+            }
+        }
+
+        function checkScrollTextStatus(checkbox) {
+            if (checkbox.checked) {
+                $('#scroll_text_div').removeClass('d-none').addClass('d-block');
+            } else {
+                $('#scroll_text_div').addClass('d-none').removeClass('d-block');
+            }
+        }
+    </script>
+
+    {{-- features --}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var formIds = [
                 '#thermal_printer_form',
                 '#order_minimum_pay_type_form',
                 '#minimum_order_form',
@@ -217,6 +272,107 @@
                 '#monthly_order_form',
                 '#yearly_sales_form',
                 '#yearly_order_form',
+            ];
+
+            // Attach change event to inputs inside forms
+            formIds.forEach(function(formId) {
+                $(formId + ' input').change(function() {
+                    handleFeaturesFormSubmission(formId);
+                });
+            });
+
+            // Handle select change for all forms
+            formIds.forEach(function(formId) {
+                $(formId + ' select').change(function() {
+                    handleFeaturesFormSubmission(formId);
+                });
+            });
+
+            // Additional specific form handlers
+            $('#print_width').change(function() {
+                handleFeaturesFormSubmission($(this).closest('form').attr('id'));
+            });
+
+            $('#order_minimum_pay_type').change(function() {
+                handleFeaturesFormSubmission($(this).closest('form').attr('id'));
+            });
+        });
+
+        function handleFeaturesFormSubmission(formId) {
+            var formData = $(formId).serialize();
+
+            $.ajax({
+                url: $(formId).attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                },
+                error: function(xhr, status, error) {
+                    // AIZ.plugins.notify('danger', 'Something went wrong');
+                }
+            });
+        }
+
+        function updateFeatureSettings(el, type) {
+            if ($(el).is(':checked')) {
+                var value = 1;
+            } else {
+                var value = 0;
+            }
+
+            $.post('{{ route('business_settings.update.activation') }}', {
+                _token: '{{ csrf_token() }}',
+                type: type,
+                value: value
+            }, function(data) {
+                if (data == '1') {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                } else {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
+            });
+        }
+    </script>
+
+    {{-- cart settings --}}
+    <script type="text/javascript">
+        function updateCartSettings(el, type) {
+            if ($(el).is(':checked')) {
+                var value = 1;
+            } else {
+                var value = 0;
+            }
+            $.post('{{ route('cart.settings.update') }}', {
+                _token: '{{ csrf_token() }}',
+                type: type,
+                value: value
+            }, function(data) {
+                if (data == 1) {
+                    AIZ.plugins.notify('success', '{{ translate('Cart Settings updated successfully') }}');
+                } else {
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+
+        function toggleCartCustomField(el) {
+            if ($(el).is(':checked')) {
+                $('#customFieldSettings').removeClass('d-none');
+                $('#customFieldSettings').addClass('d-block');
+                updateCartSettings(el, 'custom_field');
+            } else {
+                $('#customFieldSettings').removeClass('d-block');
+                $('#customFieldSettings').addClass('d-none');
+                updateCartSettings(el, 'custom_field');
+            }
+        }
+    </script>
+
+    {{-- payment method --}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var paymentFormIds = [
                 '#bkash_form',
                 '#nagad_form',
                 '#sslcommerz_form',
@@ -238,56 +394,69 @@
                 '#toyyibpay_form',
                 '#myfatoorah_form',
                 '#flutterwave_form',
-                '#payfast_form',
+                '#payfast_form'
             ];
 
-            formIds.forEach(function(formId) {
-                $(`${formId} input, ${formId} select`).on('change', function() {
-                    handleFormSubmission(formId);
+            paymentFormIds.forEach(function(formId) {
+                $(formId + ' input').change(function(event) {
+                    handlePaymentFormSubmission(formId);
                 });
             });
         });
 
-        // Handle form submission via AJAX
-        function handleFormSubmission(formId) {
-            const formData = $(formId).serialize();
-            const actionUrl = $(formId).attr('action');
+        $("#toggleOnlinepayment").on("click", function() {
+            $("#online_payment_card_body").slideToggle(300);
+            const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+            $(this).text(buttonText);
+        });
+
+        $("#toggleManualPayment").on("click", function() {
+            $("#manual_payment_card_body").slideToggle(300);
+            const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+            $(this).text(buttonText);
+        });
+
+        $("#toggleLinkPayment").on("click", function() {
+            $("#link_payment_card_body").slideToggle(300);
+            const buttonText = $(this).text() === "Show" ? "Hide" : "Show";
+            $(this).text(buttonText);
+        });
+
+        function handlePaymentFormSubmission(formId) {
+            var formData = $(formId).serialize();
 
             $.ajax({
-                url: actionUrl,
+                url: $(formId).attr('action'),
                 type: 'POST',
                 data: formData,
-                success: function() {
-                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                success: function(response) {
+                    AIZ.plugins.notify('success',
+                        '{{ translate('Settings updated successfully') }}');
                 },
-                error: function() {
-                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
-                },
+                error: function(xhr, status, error) {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
             });
         }
 
-        // Update settings for checkbox inputs
-        function updateSettings(el, type, route) {
-            const value = $(el).is(':checked') ? 1 : 0;
+        function updatePaymentSettings(el, type) {
+            if ($(el).is(':checked')) {
+                var value = 1;
+            } else {
+                var value = 0;
+            }
 
-            $.post(route, {
+            $.post('{{ route('business_settings.update.activation') }}', {
                 _token: '{{ csrf_token() }}',
                 type: type,
-                value: value,
-            }).done(function(data) {
-                const status = data == '1' ? 'success' : 'danger';
-                const message = data == '1' ?
-                    '{{ translate('Settings updated successfully') }}' :
-                    '{{ translate('Something went wrong') }}';
-                AIZ.plugins.notify(status, message);
+                value: value
+            }, function(data) {
+                if (data == '1') {
+                    AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
+                } else {
+                    AIZ.plugins.notify('danger', 'Something went wrong');
+                }
             });
-        }
-
-        // Toggle custom field settings visibility
-        function toggleCustomField(el) {
-            const isChecked = $(el).is(':checked');
-            $('#customFieldSettings').toggleClass('d-none', !isChecked).toggleClass('d-block', isChecked);
-            updateSettings(el, 'custom_field', '{{ route('cart.settings.update') }}');
         }
     </script>
 @endsection

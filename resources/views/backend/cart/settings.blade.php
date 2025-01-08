@@ -101,7 +101,7 @@
                     <h5 class="mb-0 h6 text-center">{{ translate('Custom Field') }}</h5>
 
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" id="customFieldToggle" onchange="toggleCustomField(this)"
+                        <input type="checkbox" id="customFieldToggle" onchange="toggleCartCustomField(this)"
                             {{ get_cart_setting('custom_field') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>

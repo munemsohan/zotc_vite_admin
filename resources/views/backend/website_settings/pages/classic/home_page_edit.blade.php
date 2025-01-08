@@ -97,7 +97,7 @@
 
         </div>
         <label class="aiz-switch aiz-switch-success mb-0">
-            <input type="checkbox" onchange="updateSettings(this, 'show_categories_sliders')"
+            <input type="checkbox" onchange="updateHomePageSettings(this, 'show_categories_sliders')"
                 onclick="checkCategoryStatus(this)"
                 {{ get_business_setting('show_categories_sliders') == 1 ? 'checked' : '' }}>
             <span class="slider round"></span>
@@ -111,7 +111,7 @@
             <h3 class="mb-0 h6 text-center ml-2 text-center ml-2">{{ translate('Show Full Sliders') }}</h3>
         </div>
         <label class="aiz-switch aiz-switch-success mb-0">
-            <input type="checkbox" onchange="updateSettings(this, 'show_full_sliders')"
+            <input type="checkbox" onchange="updateHomePageSettings(this, 'show_full_sliders')"
                 {{ get_business_setting('show_full_sliders') == 1 ? 'checked' : '' }}>
             <span class="slider round"></span>
         </label>
@@ -290,7 +290,7 @@
                             class="div_toggle_btn btn btn-soft-blue btn-sm show_div"></button>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_scrolling_text')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_scrolling_text')"
                             onclick="checkScrollTextStatus(this)"
                             {{ get_business_setting('show_scrolling_text') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
@@ -341,7 +341,7 @@
                     </div>
 
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_4element')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_4element')"
                             {{ get_business_setting('show_4element') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -637,7 +637,7 @@
                             target="_blank">Flash Deals</a>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_flash_deal')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_flash_deal')"
                             {{ get_business_setting('show_flash_deal') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -670,7 +670,7 @@
                             class="div_toggle_btn btn btn-soft-blue btn-sm show_div"></button>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_todays_deal')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_todays_deal')"
                             {{ get_business_setting('show_todays_deal') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -831,7 +831,7 @@
                     </div>
 
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_featured_categories')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_featured_categories')"
                             {{ get_business_setting('show_featured_categories') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -865,7 +865,7 @@
                             class="div_toggle_btn btn btn-soft-blue btn-sm show_div"></button>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_home_banner1_images')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_banner1_images')"
                             {{ get_business_setting('show_home_banner1_images') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -1011,7 +1011,7 @@
                 <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Home Banner2 Images') }}</h3>
             </div>
             <label class="aiz-switch aiz-switch-success mb-0">
-                <input type="checkbox" onchange="updateSettings(this, 'show_home_banner2_images')"
+                <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_banner2_images')"
                     {{ get_business_setting('show_home_banner2_images') == 1 ? 'checked' : '' }}>
                 <span class="slider round"></span>
             </label>
@@ -1036,7 +1036,7 @@
                 <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Home Banner3 Images') }}</h3>
             </div>
             <label class="aiz-switch aiz-switch-success mb-0">
-                <input type="checkbox" onchange="updateSettings(this, 'show_home_banner3_images')"
+                <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_banner3_images')"
                     {{ get_business_setting('show_home_banner3_images') == 1 ? 'checked' : '' }}>
                 <span class="slider round"></span>
             </label>
@@ -1066,7 +1066,7 @@
                         </div>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_best_selling')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_best_selling')"
                             {{ get_business_setting('show_best_selling') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -1091,7 +1091,7 @@
                         <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show New Products') }}</h3>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_new_products')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_new_products')"
                             {{ get_business_setting('show_new_products') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -1124,7 +1124,7 @@
                             class="div_toggle_btn btn btn-soft-blue btn-sm show_div"></button>
                     </div>
                     <label class="aiz-switch aiz-switch-success mb-0">
-                        <input type="checkbox" onchange="updateSettings(this, 'show_home_categories')"
+                        <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_categories')"
                             {{ get_business_setting('show_home_categories') == 1 ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
@@ -1267,7 +1267,7 @@
             </form>
         </div>
         <label class="aiz-switch aiz-switch-success mb-0">
-            <input type="checkbox" onchange="updateSettings(this, 'show_brands')"
+            <input type="checkbox" onchange="updateHomePageSettings(this, 'show_brands')"
                 {{ get_business_setting('show_brands') == 1 ? 'checked' : '' }}>
             <span class="slider round"></span>
         </label>
@@ -1320,79 +1320,4 @@
             }
         });
     });
-</script>
-<script>
-    $(document).ready(function() {
-        var hash = document.location.hash;
-        if (hash) {
-            $('.nav-tabs a[href="' + hash + '"]').tab('show');
-        } else {
-            $('.nav-tabs a[href="#home_slider"]').tab('show');
-        }
-
-        // Change hash for page-reload
-        $('.nav-tabs a').on('shown.bs.tab', function(e) {
-            window.location.hash = e.target.hash;
-        });
-
-        $('#brand_count').change(function() {
-            handleFormSubmission('#brand_count_form');
-        });
-
-        $('#featured_category_count').change(function() {
-            handleFormSubmission('#featured_category_count_form');
-        });
-    });
-
-    function handleFormSubmission(formId) {
-        var formData = $(formId).serialize();
-
-        $.ajax({
-            url: $(formId).attr('action'),
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
-            },
-            error: function(xhr, status, error) {
-                AIZ.plugins.notify('danger', 'Something went wrong');
-            }
-        });
-    }
-
-    function updateSettings(el, type) {
-        if ($(el).is(':checked')) {
-            var value = 1;
-        } else {
-            var value = 0;
-        }
-
-        $.post('{{ route('business_settings.update.activation') }}', {
-            _token: '{{ csrf_token() }}',
-            type: type,
-            value: value
-        }, function(data) {
-            if (data == '1') {
-                AIZ.plugins.notify('success', '{{ translate('Settings updated successfully') }}');
-            } else {
-                AIZ.plugins.notify('danger', 'Something went wrong');
-            }
-        });
-    }
-
-    function checkCategoryStatus(checkbox) {
-        if (checkbox.checked) {
-            $('#full_slider_div').removeClass('d-none').addClass('d-flex justify-content-between align-items-center');
-        } else {
-            $('#full_slider_div').addClass('d-none').removeClass('d-flex justify-content-between align-items-center');
-        }
-    }
-
-    function checkScrollTextStatus(checkbox) {
-        if (checkbox.checked) {
-            $('#scroll_text_div').removeClass('d-none').addClass('d-block');
-        } else {
-            $('#scroll_text_div').addClass('d-none').removeClass('d-block');
-        }
-    }
 </script>
