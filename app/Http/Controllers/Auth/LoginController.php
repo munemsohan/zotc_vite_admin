@@ -273,15 +273,16 @@ class LoginController extends Controller
         } elseif (auth()->user()->user_type == 'seller') {
             return redirect()->route('seller.dashboard');
         } else {
-            $this->guard()->logout();
+            return redirect()->route('dashboard');
+            // $this->guard()->logout();
 
-            // Invalidate the user's session and regenerate the CSRF token
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            // // Invalidate the user's session and regenerate the CSRF token
+            // $request->session()->invalidate();
+            // $request->session()->regenerateToken();
 
-            // Redirect to the login page
-            flash('Invalid login credentials')->error();
-            return redirect(url('/login'));
+            // // Redirect to the login page
+            // flash('Invalid login credentials')->error();
+            // return redirect(url('/login'));
         }
     }
 
