@@ -1261,6 +1261,14 @@
                                     </a>
                                 </li>
                             @endcan --}}
+                            @can('payment_methods_configurations')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('payment_method.index') }}" class="aiz-side-nav-link">
+                                        <span class="aiz-side-nav-text"
+                                            data-key="Payment Methods">{{ translate('Payment Methods') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
                             @can('language_setup')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('languages.index') }}"

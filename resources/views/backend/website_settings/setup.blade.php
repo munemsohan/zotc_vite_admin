@@ -112,27 +112,6 @@
             </div>
         </div>
 
-        {{-- Payment Methods --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="payment_method_div">
-                    <h6>{{ translate('Payment Methods') }}</h6>
-                </div>
-            </div>
-        </div>
-
-        {{-- Toggleable Divs --}}
-        <div id="social_media_div" class="col-md-12 showcase d-none">
-            @include('backend.setup_configurations.social_login')
-        </div>
-
-        <div id="payment_method_div" class="col-md-12 showcase d-none">
-            @include('backend.setup_configurations.payment_method')
-        </div>
-    </div>
-
-    {{-- row 5 --}}
-    <div class="row">
         {{-- Pages --}}
         <div class="col-md-6">
             <div class="card">
@@ -142,6 +121,14 @@
             </div>
         </div>
 
+        {{-- Toggleable Divs --}}
+        <div id="social_media_div" class="col-md-12 showcase d-none">
+            @include('backend.setup_configurations.social_login')
+        </div>
+    </div>
+
+    {{-- row 5 --}}
+    <div class="row">
         {{-- Domain --}}
         <div class="col-md-6">
             <div class="card">
