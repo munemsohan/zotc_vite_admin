@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Google Login Credential') }}</h5>
             </div>
@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Facebook Login Credential') }}</h5>
             </div>
@@ -86,7 +86,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Twitter Login Credential') }}</h5>
             </div>
@@ -123,7 +123,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Apple Login Credential') }}</h5>
             </div>
@@ -178,7 +178,7 @@
 {{-- facebook chat --}}
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Facebook Chat Setting') }}</h5>
             </div>
@@ -243,7 +243,7 @@
 <div class="row">
     {{-- Tawk Settings --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Tawk Setting') }}</h5>
             </div>
@@ -282,7 +282,7 @@
 
     {{-- Whatsapp Settings --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('whatsapp_setting') }}</h5>
             </div>
@@ -322,7 +322,7 @@
 
     <div class="col-md-6">
         <!-- Help line number -->
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Helpline Number') }}</h5>
             </div>
@@ -353,7 +353,7 @@
 {{-- facebook comment --}}
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Facebook Comment Setting') }}</h5>
             </div>
@@ -426,7 +426,7 @@
 <div class="row">
     {{-- Facebook Pixel --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Facebook Pixel Setting') }}</h5>
             </div>
@@ -507,7 +507,7 @@
 
     {{-- Facebook Domain Verification --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Facebook Domain Verification') }}</h5>
             </div>
@@ -549,7 +549,7 @@
     </div>
 
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('G-tag Setting') }}</h5>
             </div>
@@ -588,7 +588,7 @@
 
     {{-- google analytics  --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Google Analytics Setting') }}</h5>
             </div>
@@ -628,7 +628,7 @@
 
     {{-- google firebase --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h3 class="mb-0 h6">{{ translate('Google Firebase Setting') }}</h3>
             </div>
@@ -666,10 +666,60 @@
         </div>
     </div>
 
+    {{-- google recaptcha --}}
+    <div class="col-md-6">
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h3 class="mb-0 h6">{{ translate('Google reCAPTCHA Setting') }}</h3>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('google_recaptcha.update') }}" method="POST">
+                    @csrf
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label class="control-label">{{ translate('Google reCAPTCHA') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="aiz-switch aiz-switch-success mb-0">
+                                <input value="1" name="google_recaptcha" type="checkbox"
+                                    @if (get_business_setting('google_recaptcha') == 1) checked @endif>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="CAPTCHA_KEY">
+                        <div class="col-md-4">
+                            <label class="control-label">{{ translate('Site KEY') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="CAPTCHA_KEY"
+                                value="{{ env('CAPTCHA_KEY') }}" placeholder="{{ translate('Site KEY') }}"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="RECAPTCHA_SECRET_KEY">
+                        <div class="col-md-4">
+                            <label class="control-label">{{ translate('SECRET KEY') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="RECAPTCHA_SECRET_KEY"
+                                value="{{ env('RECAPTCHA_SECRET_KEY') }}"
+                                placeholder="{{ translate('SECRET KEY') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{ translate('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     {{-- google map --}}
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h3 class="mb-0 h6">{{ translate('Google Map Setting') }}</h3>
             </div>
@@ -712,7 +762,7 @@
                 <h3 class="mb-0 h6">{{ translate('Google Map Configuration Notes') }}</h3>
             </div>
             <div class="card-body">
-                <ul class="list-group mar-no">
+                <ul class="list-group mb-2">
                     <li class="list-group-item text-dark">
                         1. {{ translate('Enable Google map ') }}
                     </li>
@@ -728,7 +778,7 @@
     </div>
     @if (get_business_setting('google_map') == 1)
         <div class="col-md-8 mx-auto">
-            <div class="card">
+            <div class="card shadow-none bg-light">
                 <div class="card-header">
                     <h3 class="mb-0 h6">{{ translate('Default Location Setting') }}</h3>
                 </div>
@@ -777,58 +827,6 @@
             </div>
         </div>
     @endif
-
-
-    {{-- google recaptcha --}}
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0 h6">{{ translate('Google reCAPTCHA Setting') }}</h3>
-            </div>
-            <div class="card-body">
-                <form class="form-horizontal" action="{{ route('google_recaptcha.update') }}" method="POST">
-                    @csrf
-                    <div class="form-group row">
-                        <div class="col-md-4">
-                            <label class="control-label">{{ translate('Google reCAPTCHA') }}</label>
-                        </div>
-                        <div class="col-md-8">
-                            <label class="aiz-switch aiz-switch-success mb-0">
-                                <input value="1" name="google_recaptcha" type="checkbox"
-                                    @if (get_business_setting('google_recaptcha') == 1) checked @endif>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="types[]" value="CAPTCHA_KEY">
-                        <div class="col-md-4">
-                            <label class="control-label">{{ translate('Site KEY') }}</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="CAPTCHA_KEY"
-                                value="{{ env('CAPTCHA_KEY') }}" placeholder="{{ translate('Site KEY') }}"
-                                required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <input type="hidden" name="types[]" value="RECAPTCHA_SECRET_KEY">
-                        <div class="col-md-4">
-                            <label class="control-label">{{ translate('SECRET KEY') }}</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="RECAPTCHA_SECRET_KEY"
-                                value="{{ env('RECAPTCHA_SECRET_KEY') }}"
-                                placeholder="{{ translate('SECRET KEY') }}" required>
-                        </div>
-                    </div>
-                    <div class="form-group mb-0 text-right">
-                        <button type="submit" class="btn btn-sm btn-primary">{{ translate('Save') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 @if (get_business_setting('google_map') == 1)

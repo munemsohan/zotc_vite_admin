@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="d-flex justify-content-between p-2">
                 <h5 class="mb-0 h6 text-center">{{ translate('HTTPS Activation') }}</h5>
 
@@ -166,7 +166,7 @@
                     <span class="slider round"></span>
                 </label>
             </div>
-            <div class="px-2 py-1">
+            <div class="px-2 py-1 mt-2">
                 <form id="phone_number_after_buy_now_form" action="{{ route('business_settings.update') }}"
                     method="POST" enctype="multipart/form-data">
                     @csrf
@@ -183,11 +183,10 @@
                 </form>
             </div>
         </div>
-
     </div>
 
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow-none bg-light">
             <div class="d-flex justify-content-between p-2">
                 <h3 class="mb-0 h6 text-center">{{ translate('Maintenance Mode Activation') }}</h3>
 
@@ -399,7 +398,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 

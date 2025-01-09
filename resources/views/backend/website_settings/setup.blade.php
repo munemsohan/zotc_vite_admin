@@ -11,129 +11,147 @@
         }
     </style>
 
-    {{-- row 1 --}}
-    <div class="row">
-        {{-- Homepage Settings --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="homepage_settings_div">
-                    <h6>{{ translate('Homepage Settings') }}</h6>
+    <!-- Language Bar -->
+    <ul class="nav nav-tabs nav-fill border-light language-bar">
+        @foreach (get_all_active_language() as $key => $language)
+            <li class="nav-item">
+                <a class="nav-link text-reset @if ($language->code == $lang) active @else bg-soft-dark border-light border-left-0 @endif py-3"
+                    href="{{ route('website-setup', ['lang' => $language->code]) }}">
+                    <img src="{{ static_asset('assets/img/flags/' . $language->code . '.png') }}" height="11"
+                        class="mr-1">
+                    <span>{{ $language->name }}</span>
+                </a>
+            </li>
+        @endforeach
+    </ul>
+
+    <div class="mt-2">
+        {{-- row 1 --}}
+        <div class="row">
+            {{-- Homepage Settings --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="homepage_settings_div">
+                        <h6>{{ translate('Homepage Settings') }}</h6>
+                    </div>
                 </div>
+            </div>
+
+            {{-- Appearance --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="appearance_div">
+                        <h6>{{ translate('Appearance') }}</h6>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Homepage Settings Div --}}
+            <div id="homepage_settings_div" class="col-md-12 showcase d-none">
+                @include('backend.website_settings.pages.classic.home_page_edit')
+            </div>
+
+            {{-- Appearance Div --}}
+            <div id="appearance_div" class="col-md-12 showcase d-none">
+                @include('backend.website_settings.appearance')
             </div>
         </div>
 
-        {{-- Header --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="header_div">
-                    <h6>{{ translate('Header') }}</h6>
+        {{-- row 2 --}}
+        <div class="row">
+            {{-- Header --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="header_div">
+                        <h6>{{ translate('Header') }}</h6>
+                    </div>
                 </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="footer_div">
+                        <h6>{{ translate('Footer') }}</h6>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Header Div --}}
+            <div id="header_div" class="col-md-12 showcase d-none">
+                @include('backend.website_settings.header')
+            </div>
+
+            {{-- Footer Div --}}
+            <div id="footer_div" class="col-md-12 showcase d-none">
+                @include('backend.website_settings.footer')
             </div>
         </div>
 
-        {{-- Toggleable Divs --}}
-        <div id="homepage_settings_div" class="col-md-12 showcase d-none">
-            @include('backend.website_settings.pages.classic.home_page_edit')
-        </div>
-
-        <div id="header_div" class="col-md-12 showcase d-none">
-            @include('backend.website_settings.header')
-        </div>
-    </div>
-
-    {{-- row 2 --}}
-    <div class="row">
-        {{-- Appearance --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="appearance_div">
-                    <h6>{{ translate('Appearance') }}</h6>
+        {{-- row 3 --}}
+        <div class="row">
+            {{-- Cart Settings --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="cart_settings_div">
+                        <h6>{{ translate('Cart Settings') }}</h6>
+                    </div>
                 </div>
+            </div>
+
+            {{-- Features --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="features_activation_div">
+                        <h6>{{ translate('Features') }}</h6>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Toggleable Divs --}}
+            <div id="cart_settings_div" class="col-md-12 showcase d-none">
+                @include('backend.cart.settings')
+            </div>
+
+            <div id="features_activation_div" class="col-md-12 showcase d-none">
+                @include('backend.setup_configurations.activation')
             </div>
         </div>
 
-        {{-- Footer --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="footer_div">
-                    <h6>{{ translate('Footer') }}</h6>
+        {{-- row 4 --}}
+        <div class="row">
+            {{-- Social Media / Analytics --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-div="social_media_div">
+                        <h6>{{ translate('social_media_analytics') }}</h6>
+                    </div>
                 </div>
+            </div>
+
+            {{-- Pages --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-url="{{ route('website.pages') }}">
+                        <h6>{{ translate('Pages') }}</h6>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Toggleable Divs --}}
+            <div id="social_media_div" class="col-md-12 showcase d-none">
+                @include('backend.setup_configurations.social_login')
             </div>
         </div>
 
-        {{-- Toggleable Divs --}}
-        <div id="appearance_div" class="col-md-12 showcase d-none">
-            @include('backend.website_settings.appearance')
-        </div>
-
-        <div id="footer_div" class="col-md-12 showcase d-none">
-            @include('backend.website_settings.footer')
-        </div>
-    </div>
-
-    {{-- row 3 --}}
-    <div class="row">
-        {{-- Cart Settings --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="cart_settings_div">
-                    <h6>{{ translate('Cart Settings') }}</h6>
-                </div>
-            </div>
-        </div>
-
-        {{-- Features --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="features_activation_div">
-                    <h6>{{ translate('Features') }}</h6>
-                </div>
-            </div>
-        </div>
-
-        {{-- Toggleable Divs --}}
-        <div id="cart_settings_div" class="col-md-12 showcase d-none">
-            @include('backend.cart.settings')
-        </div>
-
-        <div id="features_activation_div" class="col-md-12 showcase d-none">
-            @include('backend.setup_configurations.activation')
-        </div>
-    </div>
-
-    {{-- row 4 --}}
-    <div class="row">
-        {{-- Social Media / Analytics --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-div="social_media_div">
-                    <h6>{{ translate('social_media_analytics') }}</h6>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pages --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-url="{{ route('website.pages') }}">
-                    <h6>{{ translate('Pages') }}</h6>
-                </div>
-            </div>
-        </div>
-
-        {{-- Toggleable Divs --}}
-        <div id="social_media_div" class="col-md-12 showcase d-none">
-            @include('backend.setup_configurations.social_login')
-        </div>
-    </div>
-
-    {{-- row 5 --}}
-    <div class="row">
-        {{-- Domain --}}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header clickable-header" data-url="{{ route('domain') }}">
-                    <h6>{{ translate('Domain') }}</h6>
+        {{-- row 5 --}}
+        <div class="row">
+            {{-- Domain --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header clickable-header" data-url="{{ route('domain') }}">
+                        <h6>{{ translate('Domain') }}</h6>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,6 +182,8 @@
 
     {{-- home page settings --}}
     <script>
+        AIZ.plugins.bootstrapSelect('refresh');
+
         $(document).ready(function() {
             var hash = document.location.hash;
             if (hash) {

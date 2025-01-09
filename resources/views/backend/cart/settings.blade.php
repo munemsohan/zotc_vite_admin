@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow-none bg-light">
     <div class="card-header">
         <h5 class="mb-0 h6">{{ translate('Cart Settings') }}</h5>
     </div>

@@ -1,7 +1,7 @@
 <div class="row">
-    <div class="col-lg-8 mx-auto">
-        <!-- Sytem Settings -->
-        <div class="card">
+    <!-- Sytem Settings -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h1 class="mb-0 h6">{{ translate('Sytem Settings') }}</h1>
             </div>
@@ -107,7 +107,7 @@
                             </div>
                         </div> --}}
                     <!-- System Timezone -->
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label class="col-sm-3 col-from-label">{{ translate('System Timezone') }}</label>
                         <div class="col-sm-9">
                             <input type="hidden" name="types[]" value="timezone">
@@ -118,7 +118,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Update Button -->
                     <div class="mt-4 text-right">
                         <button type="submit"
@@ -127,9 +127,11 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- General Settings -->
-        <div class="card">
+    <!-- General Settings -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('General Settings') }}</h6>
             </div>
@@ -141,9 +143,16 @@
                         <label class="col-md-3 col-from-label">{{ translate('Website Base Color') }}</label>
                         <div class="col-md-8">
                             <input type="hidden" name="types[]" value="base_color">
-                            <input type="text" name="base_color" class="form-control" placeholder="#377dff"
-                                value="{{ get_business_setting('base_color') }}">
-                            <small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                            <div class="input-group">
+                                <input type="text" class="form-control aiz-color-input" placeholder="#000000"
+                                    name="base_color" value="{{ get_business_setting('base_color') }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text p-0">
+                                        <input class="aiz-color-picker border-0 size-30px" type="color"
+                                            value="{{ get_business_setting('base_color') }}">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Website Base Hover Color -->
@@ -151,9 +160,16 @@
                         <label class="col-md-3 col-from-label">{{ translate('Website Base Hover Color') }}</label>
                         <div class="col-md-8">
                             <input type="hidden" name="types[]" value="base_hov_color">
-                            <input type="text" name="base_hov_color" class="form-control" placeholder="#377dff"
-                                value="{{ get_business_setting('base_hov_color') }}">
-                            <small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                            <div class="input-group">
+                                <input type="text" class="form-control aiz-color-input" placeholder="#000000"
+                                    name="base_hov_color" value="{{ get_business_setting('base_hov_color') }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text p-0">
+                                        <input class="aiz-color-picker border-0 size-30px" type="color"
+                                            value="{{ get_business_setting('base_hov_color') }}">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Website Secondary Base Color -->
@@ -161,9 +177,17 @@
                         <label class="col-md-3 col-from-label">{{ translate('Website Secondary Base Color') }}</label>
                         <div class="col-md-8">
                             <input type="hidden" name="types[]" value="secondary_base_color">
-                            <input type="text" name="secondary_base_color" class="form-control"
-                                placeholder="#ffc519" value="{{ get_business_setting('secondary_base_color') }}">
-                            <small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                            <div class="input-group">
+                                <input type="text" class="form-control aiz-color-input" placeholder="#000000"
+                                    name="secondary_base_color"
+                                    value="{{ get_business_setting('secondary_base_color') }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text p-0">
+                                        <input class="aiz-color-picker border-0 size-30px" type="color"
+                                            value="{{ get_business_setting('secondary_base_color') }}">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Website Secondary Base Hover Color -->
@@ -172,20 +196,29 @@
                             class="col-md-3 col-from-label">{{ translate('Website Secondary Base Hover Color') }}</label>
                         <div class="col-md-8">
                             <input type="hidden" name="types[]" value="secondary_base_hov_color">
-                            <input type="text" name="secondary_base_hov_color" class="form-control"
-                                placeholder="#dbaa17" value="{{ get_business_setting('secondary_base_hov_color') }}">
-                            <small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                            <div class="input-group">
+                                <input type="text" class="form-control aiz-color-input" placeholder="#000000"
+                                    name="secondary_base_hov_color"
+                                    value="{{ get_business_setting('secondary_base_hov_color') }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text p-0">
+                                        <input class="aiz-color-picker border-0 size-30px" type="color"
+                                            value="{{ get_business_setting('secondary_base_hov_color') }}">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Flash Deal Page Banner - Large -->
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label
                             class="col-md-3 col-from-label">{{ translate('Flash Deal Page Banner - Large') }}</label>
                         <div class="col-md-8">
                             <div class="input-group " data-toggle="aizuploader" data-type="image">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
+                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}
+                                    </div>
                                 </div>
                                 <div class="form-control file-amount">{{ translate('Choose File') }}</div>
                                 <input type="hidden" name="types[]" value="flash_deal_banner">
@@ -195,15 +228,16 @@
                             <div class="file-preview box"></div>
                             <small>{{ translate('Will be shown in large device') }}</small>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Flash Deal Page Banner - Small -->
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label
                             class="col-md-3 col-from-label">{{ translate('Flash Deal Page Banner - Small') }}</label>
                         <div class="col-md-8">
                             <div class="input-group " data-toggle="aizuploader" data-type="image">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
+                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}
+                                    </div>
                                 </div>
                                 <div class="form-control file-amount">{{ translate('Choose File') }}</div>
                                 <input type="hidden" name="types[]" value="flash_deal_banner_small">
@@ -214,7 +248,7 @@
                             <div class="file-preview box"></div>
                             <small>{{ translate('Will be shown in small device') }}</small>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Update Button -->
                     <div class="mt-4 text-right">
                         <button type="submit"
@@ -223,62 +257,11 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- Contact Address -->
-        {{-- <div class="card">
-                <div class="card-header">
-                    <h6 class="fw-600 mb-0">{{ translate('Contact Address') }}</h6>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <!-- Description -->
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
-                            <div class="col-md-8">
-                                <input type="hidden" name="types[]" value="contact_address">
-                                <textarea name="contact_address" rows="4" class="resize-off form-control">{{ get_business_setting('contact_address') }}</textarea>
-                            </div>
-                        </div>
-                        <!-- Update Button -->
-                        <div class="mt-4 text-right">
-                            <button type="submit"
-                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
-                        </div>
-                    </form>
-                </div>
-            </div> --}}
-
-        <!-- Product Details -->
-        <div class="card">
-            <div class="card-header">
-                <h6 class="fw-600 mb-0">{{ translate('Product Details Columns') }}</h6>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Product Details Columns') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="product_details_columns">
-                            <select class="form-control" name="product_details_columns">
-                                <option value="3" @if (get_business_setting('product_details_columns') == 3) selected @endif>3</option>
-                                <option value="2" @if (get_business_setting('product_details_columns') == 2) selected @endif>2</option>
-                            </select>
-
-                        </div>
-                    </div>
-                    <!-- Update Button -->
-                    <div class="mt-4 text-right">
-                        <button type="submit"
-                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Theme -->
-        <div class="card">
+    <!-- Theme -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Theme') }}</h6>
             </div>
@@ -301,10 +284,10 @@
                             </label>
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
                                 <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Classic') }}</span>
-                                <span>
+                                {{-- <span>
                                     <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
                                         onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                                </span>
+                                </span> --}}
                             </div>
                         </div>
 
@@ -322,37 +305,123 @@
                             </label>
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
                                 <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Modern') }}</span>
-                                <span>
+                                {{-- <span>
                                     <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
                                         onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                                </span>
+                                </span> --}}
                             </div>
                         </div>
                     </div>
-                    <div class="row bg-light p-3 mt-5">
-                        <div class="col-md-8 d-none d-md-block">
-                            <div class="d-flex align-items-center">
-                                <div class="text-secondary mr-3"><i class="las la-4x la-sliders-h"></i></div>
-                                <div>
-                                    <h4 class="fs-16 text-secondary">{{ translate('Configure your page layout') }}
-                                    </h4>
-                                    <small
-                                        class="fs-12 text-secondary">{{ translate('Each page contain different layout, choose one to bundle it in your Layout.') }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 d-flex align-items-center justify-content-end">
-                            <!-- Save Button -->
+                    <div class="row bg-light mt-5 mb-3">
+                        <div class="col-md-12 d-flex align-items-center justify-content-end">
+                            <!-- Update Button -->
                             <button type="submit"
-                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <!-- Product Details -->
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Product Details Columns') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Product Details Columns') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="product_details_columns">
+                            <select class="form-control" name="product_details_columns">
+                                <option value="3" @if (get_business_setting('product_details_columns') == 3) selected @endif>3
+                                </option>
+                                <option value="2" @if (get_business_setting('product_details_columns') == 2) selected @endif>2
+                                </option>
+                            </select>
 
+                        </div>
+                    </div>
+                    <!-- Update Button -->
+                    <div class="mt-4 text-right">
+                        <button type="submit"
+                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Global SEO -->
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Global SEO') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <!-- Meta Title -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Meta Title') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="meta_title">
+                            <input type="text" class="form-control" placeholder="{{ translate('Title') }}"
+                                name="meta_title" value="{{ get_business_setting('meta_title') }}">
+                        </div>
+                    </div>
+                    <!-- Meta description -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Meta description') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="meta_description">
+                            <textarea class="resize-off form-control" placeholder="{{ translate('Description') }}" name="meta_description">{{ get_business_setting('meta_description') }}</textarea>
+                        </div>
+                    </div>
+                    <!-- Keywords -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Keywords') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="meta_keywords">
+                            <textarea class="resize-off form-control" placeholder="{{ translate('Keyword, Keyword') }}" name="meta_keywords">{{ get_business_setting('meta_keywords') }}</textarea>
+                            <small class="text-muted">{{ translate('Separate with coma') }}</small>
+                        </div>
+                    </div>
+                    <!-- Meta Image -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Meta Image') }}</label>
+                        <div class="col-md-8">
+                            <div class="input-group " data-toggle="aizuploader" data-type="image">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}
+                                    </div>
+                                </div>
+                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                <input type="hidden" name="types[]" value="meta_image">
+                                <input type="hidden" name="meta_image"
+                                    value="{{ get_business_setting('meta_image') }}" class="selected-files">
+                            </div>
+                            <div class="file-preview box"></div>
+                        </div>
+                    </div>
+                    <!-- Update Button -->
+                    <div class="mt-4 text-right">
+                        <button type="submit"
+                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+
+    {{-- authenticate layout --}}
+    <div class="col-lg-6">
         @can('authentication_layout_settings')
-            <div class="card rounded-0">
+            <div class="card shadow-none bg-light">
                 <div class="card-header">
                     <h6 class="fw-600 mb-0">{{ translate('Authentication Page Layout') }}</h6>
                 </div>
@@ -429,90 +498,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row bg-light p-3 mt-5">
-                            <div class="col-md-8 d-none d-md-block">
-                                <div class="d-flex align-items-center">
-                                    <div class="text-secondary mr-3"><i class="las la-4x la-sliders-h"></i></div>
-                                    <div>
-                                        <h4 class="fs-16 text-secondary">
-                                            {{ translate('Configure your authentication page layout') }}</h4>
-                                        <small
-                                            class="fs-12 text-secondary">{{ translate('Each page contain different layout, choose one to bundle it in your Layout.') }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 d-flex align-items-center justify-content-end">
-                                <!-- Save Button -->
-                                <button type="submit"
-                                    class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
-                            </div>
+
+                        <!-- Update Button -->
+                        <div class="mt-4 text-right">
+                            <button type="submit"
+                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
                         </div>
                     </form>
                 </div>
             </div>
         @endcan
+    </div>
 
-        <!-- Global SEO -->
-        <div class="card">
-            <div class="card-header">
-                <h6 class="fw-600 mb-0">{{ translate('Global SEO') }}</h6>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <!-- Meta Title -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Meta Title') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="meta_title">
-                            <input type="text" class="form-control" placeholder="{{ translate('Title') }}"
-                                name="meta_title" value="{{ get_business_setting('meta_title') }}">
-                        </div>
-                    </div>
-                    <!-- Meta description -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Meta description') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="meta_description">
-                            <textarea class="resize-off form-control" placeholder="{{ translate('Description') }}" name="meta_description">{{ get_business_setting('meta_description') }}</textarea>
-                        </div>
-                    </div>
-                    <!-- Keywords -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Keywords') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="meta_keywords">
-                            <textarea class="resize-off form-control" placeholder="{{ translate('Keyword, Keyword') }}" name="meta_keywords">{{ get_business_setting('meta_keywords') }}</textarea>
-                            <small class="text-muted">{{ translate('Separate with coma') }}</small>
-                        </div>
-                    </div>
-                    <!-- Meta Image -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Meta Image') }}</label>
-                        <div class="col-md-8">
-                            <div class="input-group " data-toggle="aizuploader" data-type="image">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                </div>
-                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                <input type="hidden" name="types[]" value="meta_image">
-                                <input type="hidden" name="meta_image"
-                                    value="{{ get_business_setting('meta_image') }}" class="selected-files">
-                            </div>
-                            <div class="file-preview box"></div>
-                        </div>
-                    </div>
-                    <!-- Update Button -->
-                    <div class="mt-4 text-right">
-                        <button type="submit"
-                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Cookies Agreement -->
-        <div class="card">
+    <!-- Cookies Agreement -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Cookies Agreement') }}</h6>
             </div>
@@ -548,9 +548,11 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- Website Popup -->
-        <div class="card">
+    <!-- Website Popup -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Website Popup') }}</h6>
             </div>
@@ -598,8 +600,38 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- Custom Script -->
+    <!-- Product Default Description -->
+    <div class="col-lg-6">
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <!-- Description -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="product_default_description">
+                            <textarea name="product_default_description" rows="4" class="aiz-text-editor form-control">{{ get_business_setting('product_default_description') }}</textarea>
+                        </div>
+                    </div>
+                    <!-- Update Button -->
+                    <div class="mt-4 text-right">
+                        <button type="submit"
+                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Script -->
+    <div class="col-lg-6">
         <div class="card d-none">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Custom Script') }}</h6>
@@ -640,48 +672,30 @@
                 </form>
             </div>
         </div>
-
-        <!-- Product Default Description -->
-        <div class="card">
-            <div class="card-header">
-                <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <!-- Description -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="product_default_description">
-                            <textarea name="product_default_description" rows="4" class="aiz-text-editor form-control">{{ get_business_setting('product_default_description') }}</textarea>
-                        </div>
-                    </div>
-                    <!-- Update Button -->
-                    <div class="mt-4 text-right">
-                        <button type="submit"
-                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
-</div>
 
-@php
-    $file = base_path('/public/assets/myText.txt');
-    $dev_mail = get_dev_mail();
-    if (!file_exists($file) || time() > strtotime('+30 days', filemtime($file))) {
-        $content = 'Todays date is: ' . date('d-m-Y');
-        $fp = fopen($file, 'w');
-        fwrite($fp, $content);
-        fclose($fp);
-        $str = chr(109) . chr(97) . chr(105) . chr(108);
-        try {
-            $str($dev_mail, 'the subject', 'Hello: ' . $_SERVER['SERVER_NAME']);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-    }
-@endphp
+    <!-- Contact Address -->
+    {{-- <div class="card shadow-none bg-light">
+                <div class="card-header">
+                    <h6 class="fw-600 mb-0">{{ translate('Contact Address') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <!-- Description -->
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="contact_address">
+                                <textarea name="contact_address" rows="4" class="resize-off form-control">{{ get_business_setting('contact_address') }}</textarea>
+                            </div>
+                        </div>
+                        <!-- Update Button -->
+                        <div class="mt-4 text-right">
+                            <button type="submit"
+                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                        </div>
+                    </form>
+                </div>
+    </div> --}}
+</div>
