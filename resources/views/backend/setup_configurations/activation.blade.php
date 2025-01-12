@@ -173,7 +173,7 @@
                     <div class="d-flex justify-content-between">
                         <input type="hidden" name="types[]" value="phone_number_after_buy_now">
 
-                        <h5 class="mb-0 h6">{{ translate('Phone Number After Buy Now') }}</h5>
+                        <h5 class="mb-0 h6">{{ translate('Whatsapp Number After Buy Now') }}</h5>
 
                         <input type="text" class="form-control" style="width: 150px"
                             name="phone_number_after_buy_now"
