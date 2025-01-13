@@ -1320,7 +1320,7 @@
         </div>
 
         <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success" id="update-order-btn">Update</button>
+            <button class="btn btn-success" id="update-order-btn">{{ translate("Save") }}</button>
         </div>
     </div>
 </div>
