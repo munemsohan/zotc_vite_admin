@@ -44,6 +44,12 @@
                             <input type="text" placeholder="{{translate('Phone')}}" id="phone" name="phone" value="{{ $pickup_point->phone }}" class="form-control" required>
                         </div>
                     </div>
+                    <div class="form-group row row">
+                        <label class="col-sm-3 col-from-label" for="cost">{{translate('Pickup Cost')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="{{translate('Cost')}}" id="cost" name="cost" class="form-control" value="{{ $pickup_point->cost }}" required>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label">{{translate('Pickup Point Status')}}</label>
                         <div class="col-sm-3">

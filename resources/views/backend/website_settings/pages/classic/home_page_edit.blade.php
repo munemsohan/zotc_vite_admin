@@ -295,8 +295,8 @@
                     </div>
                 @elseif($section == 'fourElements')
                     <!-- Show 4 Element -->
-                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center"
-                        id="fourElements" style="cursor: grab;">
+                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" id="fourElements"
+                        style="cursor: grab;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center">
@@ -793,8 +793,8 @@
                     </div>
                 @elseif($section == 'featuredCategory')
                     <!-- Show Featured Categories -->
-                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center"
-                        id="featuredCategory" style="cursor: grab;">
+                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" id="featuredCategory"
+                        style="cursor: grab;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center">
@@ -1021,6 +1021,55 @@
                             </form>
                         </div>
                     </div>
+
+                    {{-- <!-- Show Home Banner2 Images -->
+    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" style="cursor: grab;">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                    <g id="Group_28009" data-name="Group 28009" transform="translate(0 16) rotate(-90)">
+                        <rect id="Rectangle_18283" data-name="Rectangle 18283" width="2" height="7"
+                            rx="1" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_16236" data-name="Rectangle_16236" width="2" height="11"
+                            rx="1" transform="translate(14)" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_18284" data-name="Rectangle_18284" width="2" height="16"
+                            rx="1" transform="translate(7)" fill="#9da3ae"></rect>
+                    </g>
+                </svg>
+                <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Home Banner2 Images') }}</h3>
+            </div>
+            <label class="aiz-switch aiz-switch-success mb-0">
+                <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_banner2_images')"
+                    {{ get_business_setting('show_home_banner2_images') == 1 ? 'checked' : '' }}>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+
+    <!-- Show Home Banner3 Images -->
+    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" style="cursor: grab;">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                    <g id="Group_28009" data-name="Group 28009" transform="translate(0 16) rotate(-90)">
+                        <rect id="Rectangle_18283" data-name="Rectangle 18283" width="2" height="7"
+                            rx="1" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_16236" data-name="Rectangle_16236" width="2" height="11"
+                            rx="1" transform="translate(14)" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_18284" data-name="Rectangle_18284" width="2" height="16"
+                            rx="1" transform="translate(7)" fill="#9da3ae"></rect>
+                    </g>
+                </svg>
+                <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Home Banner3 Images') }}</h3>
+            </div>
+            <label class="aiz-switch aiz-switch-success mb-0">
+                <input type="checkbox" onchange="updateHomePageSettings(this, 'show_home_banner3_images')"
+                    {{ get_business_setting('show_home_banner3_images') == 1 ? 'checked' : '' }}>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div> --}}
                 @elseif($section == 'bestSelling')
                     <!-- Show Best Selling -->
                     <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" id="bestSelling"
@@ -1085,8 +1134,8 @@
                     </div>
                 @elseif($section == 'homeCategory')
                     <!-- Show Home Categories -->
-                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center"
-                        id="homeCategory" style="cursor: grab;">
+                    <div class="draggable-section bg-white mt-2 border-dotted p-2 align-items-center" id="homeCategory"
+                        style="cursor: grab;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center">
@@ -1194,89 +1243,88 @@
                                                         'child_category' => $childCategory,
                                                     ])
                                                 @endforeach
-                                @endforeach
-                                </select>
-                            </div>
-                            </div>
-                            <div class="col-auto">
-                            <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger"
-                                data-toggle="remove-parent" data-parent=".remove-parent">
-                                <i class="las la-times"></i>
-                            </button>
-                            </div>
-                            </div>
-                            </div>' data-target=".home-categories-target">
-                    <i class="las la-2x text-success la-plus-circle"></i>
-                    <span class="ml-2">{{ translate('Add New') }}</span>
-                    </button>
-                    </div>
-                    </div>
-                    <!-- Save Button -->
-                    <div class="mt-4 text-right">
-                        <button type="submit"
-                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
-                    </div>
-                    </div>
-                    </form>
-                    </div>
-                    </div>
-                                    @elseif($section == 'brand')
-                                    <!-- Show Brands -->
-                                    <div class="draggable-section bg-white my-2 border-dotted p-2 align-items-center" id="brand"
-                                        style="cursor: grab;">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                                                        <g id="Group_28009" data-name="Group 28009" transform="translate(0 16) rotate(-90)">
-                                                            <rect id="Rectangle_18283" data-name="Rectangle 18283" width="2" height="7"
-                                                                rx="1" fill="#9da3ae"></rect>
-                                                            <rect id="Rectangle_16236" data-name="Rectangle_16236" width="2" height="11"
-                                                                rx="1" transform="translate(14)" fill="#9da3ae"></rect>
-                                                            <rect id="Rectangle_18284" data-name="Rectangle_18284" width="2" height="16"
-                                                                rx="1" transform="translate(7)" fill="#9da3ae"></rect>
-                                                        </g>
-                                                    </svg>
-                                                    <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Brands') }}</h3>
-                                                </div>
-
-                                                <form id="brand_count_form" class="form-horizontal ml-3"
-                                                    action="{{ route('business_settings.update') }}" method="POST">
-                                                    @csrf
-                                                    <div class="form-group row mb-0">
-                                                        <input type="hidden" name="types[]" value="brand_count">
-                                                        <div class="input-group mx-2">
-                                                            <select name="brand_count" id="brand_count" class="form-control py-1">
-                                                                <option value="8"
-                                                                    {{ get_business_setting('brand_count') == '8' ? 'selected' : '' }}>
-                                                                    8
-                                                                </option>
-                                                                <option value="6"
-                                                                    {{ get_business_setting('brand_count') == '6' ? 'selected' : '' }}>
-                                                                    6
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <label class="aiz-switch aiz-switch-success mb-0">
-                                                <input type="checkbox" onchange="updateHomePageSettings(this, 'show_brands')"
-                                                    {{ get_business_setting('show_brands') == 1 ? 'checked' : '' }}>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    {{-- <div class="d-flex justify-content-end my-3">
-                                        <button class="btn btn-success btn-sm">Update</button>
-                                    </div> --}}
-
-                        </div>
-                        </div>
-
-            @endforeach
+                @endforeach
+                </select>
+        </div>
     </div>
+    <div class="col-auto">
+        <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger"
+            data-toggle="remove-parent" data-parent=".remove-parent">
+            <i class="las la-times"></i>
+        </button>
+    </div>
+</div>
+</div>' data-target=".home-categories-target">
+<i class="las la-2x text-success la-plus-circle"></i>
+<span class="ml-2">{{ translate('Add New') }}</span>
+</button>
+</div>
+</div>
+<!-- Save Button -->
+<div class="mt-4 text-right">
+    <button type="submit"
+        class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+@elseif($section == 'brand')
+<!-- Show Brands -->
+<div class="draggable-section bg-white my-2 border-dotted p-2 align-items-center" id="brand" style="cursor: grab;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                    <g id="Group_28009" data-name="Group 28009" transform="translate(0 16) rotate(-90)">
+                        <rect id="Rectangle_18283" data-name="Rectangle 18283" width="2" height="7"
+                            rx="1" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_16236" data-name="Rectangle_16236" width="2" height="11"
+                            rx="1" transform="translate(14)" fill="#9da3ae"></rect>
+                        <rect id="Rectangle_18284" data-name="Rectangle_18284" width="2" height="16"
+                            rx="1" transform="translate(7)" fill="#9da3ae"></rect>
+                    </g>
+                </svg>
+                <h3 class="mb-0 h6 text-center ml-2">{{ translate('Show Brands') }}</h3>
+            </div>
+
+            <form id="brand_count_form" class="form-horizontal ml-3"
+                action="{{ route('business_settings.update') }}" method="POST">
+                @csrf
+                <div class="form-group row mb-0">
+                    <input type="hidden" name="types[]" value="brand_count">
+                    <div class="input-group mx-2">
+                        <select name="brand_count" id="brand_count" class="form-control py-1">
+                            <option value="8"
+                                {{ get_business_setting('brand_count') == '8' ? 'selected' : '' }}>
+                                8
+                            </option>
+                            <option value="6"
+                                {{ get_business_setting('brand_count') == '6' ? 'selected' : '' }}>
+                                6
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <label class="aiz-switch aiz-switch-success mb-0">
+            <input type="checkbox" onchange="updateHomePageSettings(this, 'show_brands')"
+                {{ get_business_setting('show_brands') == 1 ? 'checked' : '' }}>
+            <span class="slider round"></span>
+        </label>
+    </div>
+</div>
+
+{{-- <div class="d-flex justify-content-end my-3">
+    <button class="btn btn-success btn-sm">Update</button>
+</div> --}}
+
+</div>
+</div>
+@endif
+@endforeach
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 

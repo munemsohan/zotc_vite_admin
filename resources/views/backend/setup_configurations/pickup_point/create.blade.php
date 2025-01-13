@@ -30,6 +30,12 @@
                         </div>
                     </div>
                     <div class="form-group row row">
+                        <label class="col-sm-3 col-from-label" for="cost">{{translate('Pickup Cost')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="{{translate('Cost')}}" id="cost" name="cost" class="form-control" value="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group row row">
                         <label class="col-sm-3 col-from-label">{{translate('Pickup Point Status')}}</label>
                         <div class="col-sm-3">
                             <label class="aiz-switch aiz-switch-success mb-0" style="margin-top:5px;">
