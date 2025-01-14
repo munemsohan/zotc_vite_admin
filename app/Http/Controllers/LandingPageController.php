@@ -452,7 +452,7 @@ class LandingPageController extends Controller
     public function builderStore(Request $request)
     {
         // Sanitize and format the slug
-        $slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
+        $slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', trim($request->slug)));
 
         // Check if the slug is already in use
         if (Page::where('slug', $slug)->exists() || LandingPage::where('slug', $slug)->exists()) {
@@ -464,7 +464,7 @@ class LandingPageController extends Controller
 
         if ($slug && $template_id !== null) {
             // Get the correct file path
-            $jsonFilePath = public_path('modules/zillapage/assets/landingpage/json/templates.json');
+            $jsonFilePath = public_path("modules/zillapage/assets/landingpage/json/pages/template-{$template_id}.json");
 
             // Check if the file exists
             if (!file_exists($jsonFilePath)) {
@@ -472,26 +472,14 @@ class LandingPageController extends Controller
                 return back();
             }
 
-            // Read the JSON file content
-            $jsonContent = file_get_contents($jsonFilePath);
-
-            // Decode JSON into an array
-            $templates = json_decode($jsonContent, true);
-
             // Find the template by ID
-            $template = null;
-            foreach ($templates as $temp) {
-                if (isset($temp['id']) && $temp['id'] == $template_id) {
-                    $template = $temp;
-                    break; // Exit the loop once the template is found
-                }
-            }
+            $template = json_decode(file_get_contents($jsonFilePath));
 
             // Check if the template was found
             if ($template) {
-                $landingPage                = new LandingPage;
-                $landingPage->title         = $request->title;
-                $landingPage->slug          = $slug;
+                $landingPage = new LandingPage;
+                $landingPage->title = $request->title;
+                $landingPage->slug = $slug;
                 $landingPage->shipping_type = $request->shipping_type;
 
                 // Determine shipping info based on the shipping type
@@ -511,97 +499,49 @@ class LandingPageController extends Controller
                 $landingPage->type = 'builder';
                 $landingPage->save();
 
-                //landing page products save
+                // Landing page products save
                 if (!empty($request->product_id)) {
                     foreach ($request->product_id as $product_id) {
-                        $landingPageProduct                  = new LandingPageProduct;
+                        $landingPageProduct = new LandingPageProduct;
                         $landingPageProduct->landing_page_id = $landingPage->id;
-                        $landingPageProduct->product_id      = $product_id;
+                        $landingPageProduct->product_id = $product_id;
                         $landingPageProduct->save();
                     }
                 }
 
-                //first check if zilla_landing_pages table is available, if not create by sql file
-
-                $template = replaceVarContentStyle($template); // Process the template
+                // Check if the table exists, if not create by SQL file
+                $template = replaceVarContentStyle($template);
 
                 // Check if the zilla_landing_pages table exists before proceeding
                 if (!Schema::hasTable('zilla_landing_pages')) {
-                    // Optionally, you can create the table via migration or load from an SQL file
-                    // For example, if using a SQL file:
                     DB::unprepared(file_get_contents(public_path('modules/zillapage/builder.sql')));
                 }
 
                 $imgSlug = get_zotc_setting('img_slug') ?: 'all';
-
-                // Define the storage path
                 $path = public_path("uploads/{$imgSlug}/content_media");
 
-                // Ensure the directory exists
-                if (!file_exists($path)) {
-                    // Try to create the directory and log if there's a failure
-                    if (!mkdir($path, 0777, true)) {
-                        error_log("Failed to create directory: {$path}");
-                        return;
-                    }
-
-                    error_log("Directory created: {$path}");
-
-                    // Define the source directory
-                    $sourceDir = public_path('modules/zillapage/assets/images/content_media');
-
-                    // Log source directory path for verification
-                    error_log("Source directory: {$sourceDir}");
-
-                    // Check if source directory exists and is readable
-                    if (is_dir($sourceDir) && is_readable($sourceDir)) {
-                        // Recursive function to copy files and folders
-                        function copyDir($source, $destination)
-                        {
-                            // Ensure the destination directory exists
-                            if (!file_exists($destination)) {
-                                mkdir($destination, 0777, true);
-                            }
-
-                            // Get the list of files and directories
-                            $items = scandir($source);
-
-                            foreach ($items as $item) {
-                                // Skip '.' and '..' directory entries
-                                if ($item !== '.' && $item !== '..') {
-                                    $sourceItem = $source . '/' . $item;
-                                    $destinationItem = $destination . '/' . $item;
-
-                                    // If it's a directory, recurse into it
-                                    if (is_dir($sourceItem)) {
-                                        copyDir($sourceItem, $destinationItem);
-                                    } else {
-                                        // If it's a file, copy it
-                                        if (is_file($sourceItem)) {
-                                            error_log("Copying file: {$sourceItem} to {$destinationItem}");
-                                            if (!copy($sourceItem, $destinationItem)) {
-                                                error_log("Failed to copy file: {$sourceItem}");
-                                            } else {
-                                                error_log("Successfully copied file: {$sourceItem}");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // Call the recursive copy function
-                        copyDir($sourceDir, $path);
-                    }
+                // Ensure the directory exists or create it
+                if (!is_dir($path) && !mkdir($path, 0777, true)) {
+                    error_log("Failed to create directory: {$path}");
+                    return back();
                 }
 
-                // Create a new ZillaLandingPage record (renaming the variable to avoid overwriting)
+                // Define the source directory
+                $sourceDir = public_path('modules/zillapage/assets/images/content_media');
+
+                // Check if the source directory exists and is readable
+                if (is_dir($sourceDir) && is_readable($sourceDir)) {
+                    // Copy files recursively
+                    $this->copyDir($sourceDir, $path);
+                }
+
+                // Create a new ZillaLandingPage record
                 $zillaLandingPage = new ZillaLandingPage();
                 $zillaLandingPage->landing_page_id = $landingPage->id;
                 $zillaLandingPage->code = $slug;
                 $zillaLandingPage->name = $request->title;
-                $zillaLandingPage->html = $template['content'];
-                $zillaLandingPage->css = $template['style'];
+                $zillaLandingPage->html = $template->content;
+                $zillaLandingPage->css = $template->style;
 
                 // Save the ZillaLandingPage
                 if ($zillaLandingPage->save()) {
@@ -609,17 +549,48 @@ class LandingPageController extends Controller
                     return redirect()->route('landing-pages.index');
                 } else {
                     flash(translate('Failed to add landing page'))->error();
-                    return back(); // Return early if saving fails
+                    return back();
                 }
             } else {
                 flash(translate('Template not found'))->error();
-                return back(); // Return early if the template is not found
+                return back();
             }
         }
 
         // Handle missing name or template ID
         flash('Name and Template is required')->error();
         return redirect()->route('landing-pages.builder.create');
+    }
+
+    private function copyDir($source, $destination)
+    {
+        // Ensure the destination directory exists
+        if (!is_dir($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        // Get the list of files and directories
+        $items = scandir($source);
+
+        foreach ($items as $item) {
+            // Skip '.' and '..' directory entries
+            if ($item !== '.' && $item !== '..') {
+                $sourceItem = $source . '/' . $item;
+                $destinationItem = $destination . '/' . $item;
+
+                // If it's a directory, recurse into it
+                if (is_dir($sourceItem)) {
+                    $this->copyDir($sourceItem, $destinationItem);
+                } else {
+                    // If it's a file, copy it
+                    if (is_file($sourceItem)) {
+                        if (!copy($sourceItem, $destinationItem)) {
+                            error_log("Failed to copy file: {$sourceItem}");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function builder($code)
@@ -864,21 +835,21 @@ class LandingPageController extends Controller
     public function getBlockCss()
     {
         // Path to the settings.json file
-        $jsonFilePath = public_path('modules/zillapage/assets/landingpage/json/settings.json'); // Adjust path if necessary
+        $jsonFilePath = public_path('modules/zillapage/assets/landingpage/json/settings.json');
 
         // Use file_get_contents to read the JSON content
         $jsonContent = file_get_contents($jsonFilePath);
 
         // Decode JSON into an array
-        $settings = json_decode($jsonContent, true); // Decoding the JSON into an array
+        $settings = json_decode($jsonContent, true);
 
         $all_icons = null;
 
         // Loop through the settings array to find the row where the 'key' is 'app-icons'
         foreach ($settings as $setting) {
             if (isset($setting['key']) && $setting['key'] === 'blockscss') {
-                $all_icons = $setting['value']; // Get the 'value' field for 'app-icons'
-                break; // Exit loop once found
+                $all_icons = $setting['value'];
+                break;
             }
         }
 
