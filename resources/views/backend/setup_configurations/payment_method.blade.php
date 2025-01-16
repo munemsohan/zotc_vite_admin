@@ -99,7 +99,7 @@
                                                     placeholder="{{ translate('BKASH CHECKOUT PASSWORD') }}">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        {{-- <div class="form-group row">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Bkash Sandbox Mode') }}</label>
                                             </div>
@@ -110,7 +110,7 @@
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </form>
                                 </div>
                             </div>
