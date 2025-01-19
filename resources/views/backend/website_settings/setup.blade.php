@@ -274,7 +274,6 @@
                 '#order_minimum_pay_type_form',
                 '#minimum_order_form',
                 '#phone_number_after_buy_now_form',
-                '#no_of_decimals',
                 '#order_minimum_payment_amount_form',
                 '#monthly_sales_form',
                 '#monthly_order_form',
