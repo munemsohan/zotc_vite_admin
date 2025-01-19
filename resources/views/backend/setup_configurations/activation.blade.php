@@ -183,16 +183,16 @@
                 </form>
             </div>
             <div class="px-2 py-1 mt-2">
-                <form id="price_decimal_places" action="{{ route('business_settings.update') }}" method="POST"
+                <form id="no_of_decimals" action="{{ route('business_settings.update') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="types[]" value="price_decimal_places">
+                    <input type="hidden" name="types[]" value="no_of_decimals">
 
                     <!-- Decimal Places Input -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0 h6">{{ translate('Decimal Places for Price') }}</h5>
-                        <input type="number" name="price_decimal_places" class="form-control" style="width: 150px"
-                            value="{{ get_business_setting('price_decimal_places') ?? '2' }}" placeholder="Decimal places"
+                        <input type="number" name="no_of_decimals" class="form-control" style="width: 150px"
+                            value="{{ get_business_setting('no_of_decimals') }}" placeholder="Decimal places"
                             required>
                     </div>
                 </form>
