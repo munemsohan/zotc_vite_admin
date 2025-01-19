@@ -182,6 +182,31 @@
                     </div>
                 </form>
             </div>
+            <div class="px-2 py-1 mt-2">
+                <form id="price_decimal_places" action="{{ route('business_settings.update') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="types[]" value="price_decimal_places">
+
+                    <!-- Decimal Places Input -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0 h6">{{ translate('Decimal Places for Price') }}</h5>
+                        <input type="number" name="price_decimal_places" class="form-control" style="width: 150px"
+                            value="{{ get_business_setting('price_decimal_places') ?? '2' }}" placeholder="Decimal places"
+                            required>
+                    </div>
+                </form>
+
+                <!-- Round Up Prices (Ceil) -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 h6">{{ translate('Round Up Prices (Ceil)') }}</h5>
+                    <label class="aiz-switch aiz-switch-success mb-0">
+                        <input type="checkbox" onchange="updateFeatureSettings(this, 'price_round_up')"
+                            {{ get_business_setting('price_round_up') == 1 ? 'checked' : '' }}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 
