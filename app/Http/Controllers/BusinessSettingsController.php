@@ -392,20 +392,30 @@ class BusinessSettingsController extends Controller
     public function facebook_pixel_update(Request $request)
     {
         if ($request->has('FACEBOOK_PIXEL_ID')) {
-            // Check if the value is a script or just an ID
+            // Check if the value is a script, URL, or just an ID
             $pixel_id = $request->FACEBOOK_PIXEL_ID;
-
-            if (strpos($pixel_id, 'fbq(\'init\', ') !== false) {
+        
+            if (filter_var($pixel_id, FILTER_VALIDATE_URL)) {
+                // Extract the Pixel ID from the URL
+                $url_components = parse_url($pixel_id);
+                if (isset($url_components['query'])) {
+                    parse_str($url_components['query'], $query_params);
+                    if (isset($query_params['id'])) {
+                        $pixel_id = $query_params['id'];
+                    }
+                }
+            } elseif (strpos($pixel_id, 'fbq(\'init\', ') !== false) {
                 // Extract the Pixel ID from the script
                 preg_match("/fbq\('init', '(\d+)'/", $pixel_id, $matches);
                 if (isset($matches[1])) {
                     $pixel_id = $matches[1];
                 }
             }
-
+        
             // Update the FACEBOOK_PIXEL_ID in the request to the correct value
             $request->merge(['FACEBOOK_PIXEL_ID' => $pixel_id]);
         }
+        
 
         // Overwrite environment file with provided types
         foreach ($request->types as $key => $type) {
