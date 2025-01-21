@@ -391,23 +391,40 @@ class BusinessSettingsController extends Controller
 
     public function facebook_pixel_update(Request $request)
     {
+        if ($request->has('FACEBOOK_PIXEL_ID')) {
+            // Check if the value is a script or just an ID
+            $pixel_id = $request->FACEBOOK_PIXEL_ID;
+
+            if (strpos($pixel_id, 'fbq(\'init\', ') !== false) {
+                // Extract the Pixel ID from the script
+                preg_match("/fbq\('init', '(\d+)'/", $pixel_id, $matches);
+                if (isset($matches[1])) {
+                    $pixel_id = $matches[1];
+                }
+            }
+
+            // Update the FACEBOOK_PIXEL_ID in the request to the correct value
+            $request->merge(['FACEBOOK_PIXEL_ID' => $pixel_id]);
+        }
+
+        // Overwrite environment file with provided types
         foreach ($request->types as $key => $type) {
             $this->overWriteEnvFile($type, $request[$type]);
         }
 
+        // Retrieve or create business settings for Facebook Pixel
         $business_settings = BusinessSetting::where('type', 'facebook_pixel')->first();
 
+        // Update the business settings with the new Facebook Pixel ID
         if ($request->has('facebook_pixel')) {
-            $business_settings->value = 1;
-            $business_settings->save();
-        } else {
-            $business_settings->value = 0;
+            $business_settings->value = $request->facebook_pixel;
             $business_settings->save();
         }
 
+        // Clear cache and show success message
         Artisan::call('cache:clear');
-
         flash(translate("Settings updated successfully"))->success();
+
         return back();
     }
 
