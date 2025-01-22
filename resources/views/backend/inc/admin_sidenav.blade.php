@@ -1201,7 +1201,7 @@
                                         transform="translate(-112.375 -73.625)" fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text" data-key="Settings">{{ translate('Website Setup') }}</span>
+                            <span class="aiz-side-nav-text" data-key="website setup,homepage settings,appearance,header,footer,cart settings,activation features,social media analytics,pages,domain">{{ translate('Website Setup') }}</span>
                         </a>
                     </li>
                 @endcanany
