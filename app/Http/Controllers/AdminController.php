@@ -265,17 +265,17 @@ class AdminController extends Controller
         $planId = $planSettingsArray[0];
 
         // Establish a connection to the dynamic database
-        $sitesConnection = DB::connection('dynamic_db');
-        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+        // $sitesConnection = DB::connection('dynamic_db');
+        // $sitesConnection->getPdo()->exec("USE zotc_nazmart");
 
         // Retrieve the current plan details
-        $currentPlan = $sitesConnection->table('price_plans')->where('id', $planId)->first();
+        // $currentPlan = $sitesConnection->table('price_plans')->where('id', $planId)->first();
 
         $domains = json_decode(get_setting('domains'));
         $free_domain = $domains->free_domain;
 
-        $bdt_amount = (int)($currentPlan->price_bdt * $count);
-        $usd_amount = (int)($currentPlan->price * $count);
+        $bdt_amount = 0;
+        $usd_amount = 0;
 
         $token = Str::random(6);
         $sitesConnection->table('gateway_transactions')->insert([
