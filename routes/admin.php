@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbandonedCartController;
 use App\Http\Controllers\AddonController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
@@ -230,6 +231,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/bulk-customer-delete', 'bulk_customer_delete')->name('bulk-customer-delete');
     });
 
+    // Abandoned Cart Routes
+    Route::get('abandoned_cart', [AbandonedCartController::class, 'index'])->name('abandoned_cart.index');
+    Route::get('abandoned_cart/view/{id}', [AbandonedCartController::class, 'show'])->name('abandoned_cart.show');
+    Route::get('abandoned_cart/destroy/{id}', [AbandonedCartController::class, 'destroy'])->name('abandoned_cart.destroy');
+
     // Newsletter
     Route::controller(NewsletterController::class)->group(function () {
         Route::get('/newsletter', 'index')->name('newsletters.index');
@@ -261,7 +267,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         //homapage order
         Route::post('/homepage-order/update', 'homepage_order_update')->name('homepage_order.update');
-        
+
         //google settings
         Route::get('/google-analytics', 'google_analytics')->name('google_analytics.index');
         Route::get('/google-recaptcha', 'google_recaptcha')->name('google_recaptcha.index');
