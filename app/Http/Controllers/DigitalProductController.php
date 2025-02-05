@@ -14,6 +14,7 @@ use App\Services\ProductTaxService;
 use App\Services\ProductStockService;
 use App\Services\FrequentlyBoughtProductService;
 use Artisan;
+use Str;
 
 class DigitalProductController extends Controller
 {
@@ -68,10 +69,41 @@ class DigitalProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        $thumbnail_img = null;
+        if (!is_null($request->photos)) {
+            $images = explode(',', $request->photos);
+            $thumbnail_img = (int)$images[0];
+
+            foreach ($images as $image_id) {
+                $imageUpload = Upload::find($image_id);
+
+                // Ensure the image exists in the database
+                if ($imageUpload) {
+                    $originalImagePath = $imageUpload->file_name;
+
+                    // Process main image if it exists and needs resizing
+                    $imageUpload->file_name = processImage($originalImagePath, 500);
+
+                    // Process thumbnail
+                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250);
+                    $imageUpload->save();
+
+                    // Delete original image file if it's not a WebP
+                    deleteImageIfNotWebp($originalImagePath);
+                }
+            }
+        }
+
+        $request->merge(['thumbnail_img' => $thumbnail_img]);
+
         // Product Store
         $product = (new ProductService)->store($request->except([
-            '_token', 'tax_id', 'tax', 'tax_type'
+            '_token',
+            'tax_id',
+            'tax',
+            'tax_type'
         ]));
+
 
         $request->merge(['product_id' => $product->id, 'current_stock' => 0]);
 
@@ -80,25 +112,36 @@ class DigitalProductController extends Controller
 
         //Product Stock
         (new ProductStockService)->store($request->only([
-            'unit_price', 'current_stock', 'product_id'
+            'unit_price',
+            'current_stock',
+            'product_id'
         ]), $product);
 
         //VAT & Tax
         if ($request->tax_id) {
             (new ProductTaxService)->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
+                'tax_id',
+                'tax',
+                'tax_type',
+                'product_id'
             ]));
         }
 
         // Frequently Bought Products
         (new FrequentlyBoughtProductService)->store($request->only([
-            'product_id', 'frequently_bought_selection_type', 'fq_brought_product_ids', 'fq_brought_product_category_id'
+            'product_id',
+            'frequently_bought_selection_type',
+            'fq_brought_product_ids',
+            'fq_brought_product_category_id'
         ]));
 
         // Product Translations
         $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
         ProductTranslation::create($request->only([
-            'lang', 'name', 'description', 'product_id'
+            'lang',
+            'name',
+            'description',
+            'product_id'
         ]));
 
         flash(translate('Product has been inserted successfully'))->success();
@@ -145,39 +188,77 @@ class DigitalProductController extends Controller
      */
     public function update(ProductRequest $request, $id)
     {
-        $product                    = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
+
+        $thumbnail_img = null;
+        if (!is_null($request->photos)) {
+            $images = explode(',', $request->photos);
+            $thumbnail_img = (int)$images[0];
+
+            foreach ($images as $image_id) {
+                $imageUpload = Upload::find($image_id);
+
+                // Ensure the image exists in the database
+                if ($imageUpload) {
+                    $originalImagePath = $imageUpload->file_name;
+
+                    // Process main image if it exists and needs resizing
+                    $imageUpload->file_name = processImage($originalImagePath, 500);
+
+                    // Process thumbnail
+                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250);
+                    $imageUpload->save();
+
+                    // Delete original image file if it's not a WebP
+                    deleteImageIfNotWebp($originalImagePath);
+                }
+            }
+        }
+
+        $request->merge(['thumbnail_img' => $thumbnail_img]);
 
         //Product Update
         $product = (new ProductService)->update($request->except([
-             '_token', 'tax_id', 'tax', 'tax_type'
-         ]), $product);
+            '_token',
+            'tax_id',
+            'tax',
+            'tax_type'
+        ]), $product);
 
         //Product Stock
         foreach ($product->stocks as $key => $stock) {
             $stock->delete();
         }
 
-        $request->merge(['product_id' => $product->id,'current_stock' => 0]);
+        $request->merge(['product_id' => $product->id, 'current_stock' => 0]);
 
         //Product categories
         $product->categories()->sync($request->category_ids);
 
         (new ProductStockService)->store($request->only([
-            'unit_price', 'current_stock', 'product_id'
+            'unit_price',
+            'current_stock',
+            'product_id'
         ]), $product);
 
         //VAT & Tax
         if ($request->tax_id) {
             ProductTax::where('product_id', $product->id)->delete();
             (new ProductTaxService)->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
+                'tax_id',
+                'tax',
+                'tax_type',
+                'product_id'
             ]));
         }
 
         // Frequently Bought Products
         $product->frequently_bought_products()->delete();
         (new FrequentlyBoughtProductService)->store($request->only([
-            'product_id', 'frequently_bought_selection_type', 'fq_brought_product_ids', 'fq_brought_product_category_id'
+            'product_id',
+            'frequently_bought_selection_type',
+            'fq_brought_product_ids',
+            'fq_brought_product_category_id'
         ]));
 
         // Product Translations
@@ -201,12 +282,12 @@ class DigitalProductController extends Controller
      */
     public function destroy($id)
     {
-       (new ProductService)->destroy($id);
+        (new ProductService)->destroy($id);
 
         flash(translate('Product has been deleted successfully'))->success();
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
-        
+
         return back();
     }
 

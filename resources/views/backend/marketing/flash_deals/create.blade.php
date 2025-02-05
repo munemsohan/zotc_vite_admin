@@ -33,7 +33,7 @@
                             </select>
                         </div>
                     </div> --}}
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="signinSrEmail">{{translate('Banner')}}</label>
                         <div class="col-md-9">
                             <div class="input-group" data-toggle="aizuploader" data-type="image">
@@ -47,7 +47,7 @@
                             </div>
                             <span class="small text-muted">{{ translate('This image is shown as cover banner in flash deal details page.') }}</span>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-group row">
                         <label class="col-sm-3 control-label" for="start_date">{{translate('Date')}}</label>
                         <div class="col-sm-9">

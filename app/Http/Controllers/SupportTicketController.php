@@ -8,6 +8,8 @@ use App\Models\User;
 use Auth;
 use App\Models\TicketReply;
 use App\Mail\SupportMailManager;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 class SupportTicketController extends Controller
@@ -87,7 +89,8 @@ class SupportTicketController extends Controller
         $array['details'] = $ticket->details;
         try {
             Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new SupportMailManager($array));
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
 
     public function send_support_reply_email_to_user($ticket, $tkt_reply)
@@ -102,7 +105,8 @@ class SupportTicketController extends Controller
 
         try {
             Mail::to($ticket->user->email)->queue(new SupportMailManager($array));
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
 
     public function admin_store(Request $request)
@@ -199,5 +203,59 @@ class SupportTicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function facebook_boost()
+    {
+        return view('backend.support.facebook-boost');
+    }
+
+    public function facebook_boost_store(Request $request)
+    {
+        try {
+            // Validate the request input
+            $request->validate([
+                'profile_link' => 'required|string',
+                'phone' => 'required|numeric',
+                'amount' => 'required|numeric',
+                'comment' => 'nullable|string',
+            ]);
+
+            // Use the dynamic database connection
+            $sitesConnection = DB::connection('dynamic_db');
+            $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+
+            // Extract the tenant ID from the domain
+            $tenant_id = str_replace('.zo.tc', '', get_domain());
+
+            // Retrieve the tenant record
+            $tenant = $sitesConnection->table('tenants')->where('id', $tenant_id)->first();
+
+            if (!$tenant) {
+                return redirect()->back()->withErrors(['error' => 'Tenant not found.']);
+            }
+
+            // Insert a new support ticket
+            $sitesConnection->table('support_tickets')->insert([
+                'title' => "{$request->phone}, $" . $request->amount,
+                'user_agent' => $request->header('User-Agent'),
+                'description' => $request->comment,
+                'subject' => $request->profile_link,
+                'status' => 'open',
+                'priority' => 'medium',
+                'user_id' => $tenant->user_id,
+                'department_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Show success message
+            flash(translate('Order created successfully'))->success();
+            return redirect()->route('facebook-boost.index');
+        } catch (\Exception $e) {
+            // Show error message
+            flash(translate('Order creation failed !'))->error();
+            return redirect()->route('facebook-boost.index');
+        }
     }
 }

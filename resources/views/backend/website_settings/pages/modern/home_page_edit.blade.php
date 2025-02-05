@@ -445,7 +445,7 @@
                                         </div>
                                         <div class="ml-2 text-gray">
                                             <div class="mb-2">
-                                                {{ translate('Width 1100px and Height 320px for side categories with banner, or Width 1370px and Height 320px for full banner.') }}
+                                                {{ translate('Width 1230px and Height 380px for side categories with banner, or Width 1530px and Height 380px for full banner.') }}
                                             </div>
                                             <div>
                                                 {{ translate('Only jpg, png, gif and webp with maximum 1MB file Size') }}

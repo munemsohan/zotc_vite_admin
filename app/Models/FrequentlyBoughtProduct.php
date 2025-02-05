@@ -9,6 +9,11 @@ class FrequentlyBoughtProduct extends Model
 {
     use HasFactory;
     
+    protected $fillable = [
+        'product_id',
+        'frequently_bought_product_id',
+        'category_id',
+        ];
 
     public function product()
     {

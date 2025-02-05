@@ -52,50 +52,50 @@
                                         @csrf
                                         <input type="hidden" name="payment_method" value="bkash">
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_APP_KEY">
+                                            <input type="hidden" name="types[]" value="bkash_checkout_app_key">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('BKASH CHECKOUT APP KEY') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="BKASH_CHECKOUT_APP_KEY"
-                                                    value="{{ env('BKASH_CHECKOUT_APP_KEY') }}"
+                                                <input type="text" class="form-control" name="bkash_checkout_app_key"
+                                                    value="{{ get_zotc_setting('bkash_checkout_app_key') }}"
                                                     placeholder="{{ translate('BKASH CHECKOUT APP KEY') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_APP_SECRET">
+                                            <input type="hidden" name="types[]" value="bkash_checkout_app_secret">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('BKASH CHECKOUT APP SECRET') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="BKASH_CHECKOUT_APP_SECRET"
-                                                    value="{{ env('BKASH_CHECKOUT_APP_SECRET') }}"
+                                                <input type="text" class="form-control" name="bkash_checkout_app_secret"
+                                                    value="{{ get_zotc_setting('bkash_checkout_app_secret') }}"
                                                     placeholder="{{ translate('BKASH CHECKOUT APP SECRET') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_USER_NAME">
+                                            <input type="hidden" name="types[]" value="bkash_checkout_user_name">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('BKASH CHECKOUT USER NAME') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="BKASH_CHECKOUT_USER_NAME"
-                                                    value="{{ env('BKASH_CHECKOUT_USER_NAME') }}"
+                                                <input type="text" class="form-control" name="bkash_checkout_user_name"
+                                                    value="{{ get_zotc_setting('bkash_checkout_user_name') }}"
                                                     placeholder="{{ translate('BKASH CHECKOUT USER NAME') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_PASSWORD">
+                                            <input type="hidden" name="types[]" value="bkash_checkout_password">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('BKASH CHECKOUT PASSWORD') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="BKASH_CHECKOUT_PASSWORD"
-                                                    value="{{ env('BKASH_CHECKOUT_PASSWORD') }}"
+                                                <input type="text" class="form-control" name="bkash_checkout_password"
+                                                    value="{{ get_zotc_setting('bkash_checkout_password') }}"
                                                     placeholder="{{ translate('BKASH CHECKOUT PASSWORD') }}">
                                             </div>
                                         </div>

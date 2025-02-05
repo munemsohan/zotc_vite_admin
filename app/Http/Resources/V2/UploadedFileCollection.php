@@ -9,10 +9,10 @@ class UploadedFileCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => $this->collection->map(function($data) {
+            'data' => $this->collection->map(function ($data) {
                 return [
                     'id' => $data->id,
-                    'file_original_name' =>$data->file_original_name,
+                    'file_original_name' => $data->file_original_name,
                     'file_name' => $data->file_name,
                     'url' => uploaded_asset($data->id),
                     'file_size' => $data->file_size,

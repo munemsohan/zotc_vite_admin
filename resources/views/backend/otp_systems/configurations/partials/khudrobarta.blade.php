@@ -13,51 +13,51 @@
                 <input type="hidden" name="otp_method" value="khudrobarta">
                 @csrf
                 <div class="form-group row">
-                    <input type="hidden" name="types[]" value="KHUDROBARTA_API_KEY">
+                    <input type="hidden" name="types[]" value="khudrobarta_api_key">
                     <div class="col-lg-3">
                         <label class="col-from-label">{{ translate('API KEY') }}</label>
                     </div>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="KHUDROBARTA_API_KEY" id="khudrobarta_api_key"
-                            value="{{ env('KHUDROBARTA_API_KEY') }}" placeholder="190|EQav......." required>
+                        <input type="text" class="form-control" name="khudrobarta_api_key" id="khudrobarta_api_key"
+                            value="{{ get_zotc_setting('khudrobarta_api_key') }}" placeholder="190|EQav......." required>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <input type="hidden" name="types[]" value="KHUDROBARTA_SENDER_ID">
+                    <input type="hidden" name="types[]" value="khudrobarta_sender_id">
                     <div class="col-lg-3">
                         <label class="col-from-label">{{ translate('SENDER ID') }}</label>
                     </div>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" name="KHUDROBARTA_SENDER_ID"
-                            value="{{ env('KHUDROBARTA_SENDER_ID') }}" placeholder="sms" required>
+                        <input type="text" class="form-control" name="khudrobarta_sender_id"
+                            value="{{ get_zotc_setting('khudrobarta_sender_id') }}" placeholder="sms" required>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <input type="hidden" name="types[]" value="KHUDROBARTA_LANGUAGE">
+                    <input type="hidden" name="types[]" value="khudrobarta_language">
                     <div class="col-lg-3">
                         <label class="col-from-label">{{ translate('LANGUAGE ') }}</label>
                     </div>
                     <div class="col-lg-8">
-                        <select name="KHUDROBARTA_LANGUAGE" class="form-control aiz-selectpicker">
-                            <option value="english" {{ env('KHUDROBARTA_LANGUAGE') === 'english' ? 'selected' : '' }}>
+                        <select name="khudrobarta_language" class="form-control aiz-selectpicker">
+                            <option value="english" {{ get_zotc_setting('khudrobarta_language') === 'english' ? 'selected' : '' }}>
                                 ENGLISH</option>
-                            <option value="unicode" {{ env('KHUDROBARTA_LANGUAGE') === 'unicode' ? 'selected' : '' }}>
+                            <option value="unicode" {{ get_zotc_setting('khudrobarta_language') === 'unicode' ? 'selected' : '' }}>
                                 UNICODE</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <input type="hidden" name="types[]" value="KHUDROBARTA_SMS_TYPE">
+                    <input type="hidden" name="types[]" value="khudrobarta_sms_type">
                     <div class="col-lg-3">
                         <label class="col-from-label">{{ translate('SMS TYPE') }}</label>
                     </div>
                     <div class="col-lg-8">
-                        <select name="KHUDROBARTA_SMS_TYPE" class="form-control aiz-selectpicker">
-                            <option value="sms" {{ env('KHUDROBARTA_SMS_TYPE') === 'sms' ? 'selected' : '' }}>SMS
+                        <select name="khudrobarta_sms_type" class="form-control aiz-selectpicker">
+                            <option value="sms" {{ get_zotc_setting('khudrobarta_sms_type') === 'sms' ? 'selected' : '' }}>SMS
                             </option>
                             <option value="whatsapp"
-                                {{ env('KHUDROBARTA_SMS_TYPE') === 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
-                            <option value="both" {{ env('KHUDROBARTA_SMS_TYPE') === 'both' ? 'selected' : '' }}>BOTH
+                                {{ get_zotc_setting('khudrobarta_sms_type') === 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
+                            <option value="both" {{ get_zotc_setting('khudrobarta_sms_type') === 'both' ? 'selected' : '' }}>BOTH
                             </option>
                         </select>
                         <small>

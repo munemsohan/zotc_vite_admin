@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-
 @php
-    $rtl = get_session_language()->rtl;
+    $language = \App\Models\Language::where('code', Session::get('locale', Config::get('app.locale')))->first();
+    $isRtl = $language ? $language->rtl == 1 : false;
 @endphp
 
-@if ($rtl == 1)
+@if ($isRtl)
     <html dir="rtl" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @else
     <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -32,7 +32,7 @@
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
-    @if ($rtl == 1)
+    @if ($isRtl)
         <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
     <link rel="stylesheet" href="{{ static_asset('assets/css/core.css?v=') }}{{ rand(1000, 9999) }}">

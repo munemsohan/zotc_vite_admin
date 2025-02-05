@@ -19,14 +19,13 @@ class SendSMSUtility
             $sms_balance_usd = ZotcSetting::where('type', 'sms_balance_usd')->first();
 
             $api_key = '287|kKlmNPhVFFVBqKJYROeXad1xP4FqE6k4k7HdXHn835bc486a';
-            $sender_id = env('ZOTC_SENDER_ID');
-            $smsType = env('ZOTC_SMS_TYPE');
+            $sender_id = get_zotc_setting('zotc_sender_id', 'sms');
+            $smsType = get_zotc_setting('zotc_sms_type', 'sms');
             $url_base = "https://sms.one9.one/sms/api?action=send-sms&api_key={$api_key}&to=" . urlencode($to) . "&from={$sender_id}";
 
             if (($currency->value == 'BDT' && $sms_balance_bdt->value >= $total_cost) ||
                 ($currency->value == 'USD' && $sms_balance_usd->value >= $total_cost)
             ) {
-
                 if ($smsType == 'sms' || $smsType == 'both') {
                     $curl = curl_init();
                     curl_setopt($curl, CURLOPT_URL, $url_base . "&sms=" . urlencode($text));

@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-@if(get_system_language()->rtl == 1)
+@php
+    $language = \App\Models\Language::where('code', Session::get('locale', Config::get('app.locale')))->first();
+    $isRtl = $language ? $language->rtl == 1 : false;
+@endphp
+
+@if($isRtl)
 <html dir="rtl" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @else
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -41,7 +46,7 @@
         <meta property="og:image" content="{{ uploaded_asset(get_setting('meta_image')) }}" />
         <meta property="og:description" content="{{ get_setting('meta_description') }}" />
         <meta property="og:site_name" content="{{ env('APP_NAME') }}" />
-        <meta property="fb:app_id" content="{{ env('FACEBOOK_PIXEL_ID') }}">
+        <meta property="fb:app_id" content="{{ get_business_setting('facebook_pixel_id') }}">
     @endif
 
     <!-- Favicon -->
@@ -54,11 +59,12 @@
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
-    @if(get_system_language()->rtl == 1)
+
+    @if($isRtl)
     <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
-    <link rel="stylesheet" href="{{ static_asset('assets/css/core.css') }}">
 
+    <link rel="stylesheet" href="{{ static_asset('assets/css/core.css') }}">
 
     <script>
         var AIZ = AIZ || {};

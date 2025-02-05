@@ -273,8 +273,8 @@
                                 </td>
                                 <td class="text-right">
                                     <a class="btn btn-soft-success btn-icon btn-circle btn-sm"
-                                        href="{{ 'https://' . env('APP_URL') . '/product/' . $product->slug }}"
-                                        target="_blank" title="{{ translate('View') }}">
+                                        href="{{ str_replace('admin/', '', url('product/' . $product->slug)) }}" target="_blank"
+                                        title="{{ translate('View') }}">
                                         <i class="las la-eye"></i>
                                     </a>
                                     @can('product_edit')

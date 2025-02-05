@@ -47,7 +47,7 @@
                             </select>
                         </div>
                     </div> --}}
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="signinSrEmail">{{translate('Banner')}}</label>
                         <div class="col-md-9">
                             <div class="input-group" data-toggle="aizuploader" data-type="image">
@@ -60,7 +60,7 @@
                             <div class="file-preview box sm">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     @php
                       $start_date = date('d-m-Y H:i:s', $flash_deal->start_date);

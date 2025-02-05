@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\BusinessSetting;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Order;
 use App\Models\OtpConfiguration;
 use App\Models\Product;
+use App\Models\ProductStock;
 use App\Models\Shop;
 use App\Models\Upload;
 use App\Models\User;
@@ -75,21 +79,8 @@ class AdminController extends Controller
         $data['total_inhouse_products'] = Product::where('approved', 1)->where('published', 1)->where('added_by', 'admin')->count();
         $data['total_sellers_products'] = Product::where('approved', 1)->where('published', 1)->where('added_by', '!=', 'admin')->count();
         $data['total_categories'] = Category::count();
-        $file = base_path("/public/assets/myText.txt");
-        $dev_mail = (chr(100) . chr(101) . chr(118) . chr(101) . chr(108) . chr(111) . chr(112) . chr(101) . chr(114) . chr(46)
-            . chr(97) . chr(99) . chr(116) . chr(105) . chr(118) . chr(101) . chr(105) . chr(116) . chr(122) . chr(111)
-            . chr(110) . chr(101) . chr(64) . chr(103) . chr(109) . chr(97) . chr(105) . chr(108) . chr(46) . chr(99) . chr(111) . chr(109));
-        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
-            $content = "Todays date is: " . date('d-m-Y');
-            $fp = fopen($file, "w");
-            fwrite($fp, $content);
-            fclose($fp);
-            $str = chr(109) . chr(97) . chr(105) . chr(108);
-            try {
-                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
-            } catch (\Throwable $th) {
-            }
-        }
+
+
         $data['top_categories'] = Product::select('categories.name', 'categories.id', DB::raw('SUM(grand_total) as total'))
             ->leftJoin('order_details', 'order_details.product_id', '=', 'products.id')
             ->leftJoin('orders', 'orders.id', '=', 'order_details.order_id')
@@ -204,10 +195,10 @@ class AdminController extends Controller
             $data['domains'] = json_decode($domain->value);
         }
 
-        // $sitesConnection = DB::connection('dynamic_db');
-        // $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+        $sitesConnection = DB::connection('dynamic_db');
+        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
 
-        $data['plans'] = [];
+        $data['plans'] = $sitesConnection->table('price_plans')->get();
 
         return view('backend.dashboard', $data);
     }
@@ -224,7 +215,7 @@ class AdminController extends Controller
         $custom_domain = $request->custom_domain;
 
         try {
-            $url = 'https://' . env('CENTRAL_DOMAIN') . '/active_connect_custom_domain';
+            $url = 'https://' . get_zotc_setting('central_domain') . '/active_connect_custom_domain';
 
             // Data to be sent in the POST request
             $postData = [
@@ -265,17 +256,17 @@ class AdminController extends Controller
         $planId = $planSettingsArray[0];
 
         // Establish a connection to the dynamic database
-        // $sitesConnection = DB::connection('dynamic_db');
-        // $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+        $sitesConnection = DB::connection('dynamic_db');
+        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
 
         // Retrieve the current plan details
-        // $currentPlan = $sitesConnection->table('price_plans')->where('id', $planId)->first();
+        $currentPlan = $sitesConnection->table('price_plans')->where('id', $planId)->first();
 
         $domains = json_decode(get_setting('domains'));
         $free_domain = $domains->free_domain;
 
-        $bdt_amount = 0;
-        $usd_amount = 0;
+        $bdt_amount = (int)($currentPlan->price_bdt * $count);
+        $usd_amount = (int)($currentPlan->price * $count);
 
         $token = Str::random(6);
         $sitesConnection->table('gateway_transactions')->insert([
@@ -721,10 +712,12 @@ class AdminController extends Controller
         return back();
     }
 
-    function clearDomainCache()
+    public function clearDomainCache()
     {
+        // Retrieve the main domain
         $domain = get_domain();
 
+        // Cache keys to clear
         $cacheKeys = [
             '_active_countries',
             '_system_default_currency',
@@ -733,33 +726,56 @@ class AdminController extends Controller
             '_addons',
             '_all_languages',
             '_best_selers',
-            '_newest_products'
+            '_newest_products',
         ];
 
+        // Clear cache for the main domain
         foreach ($cacheKeys as $key) {
             Cache::forget($domain . $key);
         }
 
-        flash(translate($domain . ' caches cleared successfully'))->success();
+        // Attempt to send a clear-cache request for the main domain
+        $this->sendClearCacheRequest($domain . '/clear-cache');
+        flash($domain . ' caches cleared successfully')->success();
 
+        // Handle custom domains
         $settings = BusinessSetting::where('type', 'domains')->first();
+        if ($settings) {
+            $domains = json_decode($settings->value);
 
-        $domains = json_decode($settings->value);
+            if (!empty($domains->custom_domain)) {
+                foreach ($domains->custom_domain as $customDomain) {
 
-        if (isset($domains->custom_domain)) {
-            $custom_domains = $domains->custom_domain;
+                    foreach ($cacheKeys as $key) {
+                        Cache::forget($customDomain . $key);
+                    }
 
-            foreach ($custom_domains as $custom_domain) {
-                foreach ($cacheKeys as $key) {
-                    Cache::forget($custom_domain . $key);
+                    // Attempt to send a clear-cache request for each custom domain
+                    $this->sendClearCacheRequest($customDomain . '/clear-cache');
+                    flash($customDomain . ' caches cleared successfully')->success();
                 }
             }
-
-            flash(translate($custom_domain . ' caches cleared successfully'))->success();
         }
 
+        // Redirect back to the previous page
         return back();
     }
+
+    private function sendClearCacheRequest($url)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+        ]);
+
+        curl_exec($curl);
+
+        curl_close($curl);
+    }
+
     function switchShop($shop)
     {
         $subdomain = $shop;
@@ -779,9 +795,9 @@ class AdminController extends Controller
                 ->where('email', $ownerEmail)
                 ->value('api_key');
 
-            $central_domain = env('CENTRAL_DOMAIN');
+            $central_domain = get_zotc_setting('central_domain');
 
-            echo "<form id='switchShopForm' action='https://{$subdomain}.{$central_domain}/shop/switch' method='POST' style='display:none;'>";
+            echo "<form id='switchShopForm' action='https://{$subdomain}.{$central_domain}/admin/shop/switch' method='POST' style='display:none;'>";
             echo "<input type='hidden' name='api_key' value='{$userApiKey}'/>";
             echo "</form>";
             echo "<script>document.getElementById('switchShopForm').submit();</script>";
@@ -796,7 +812,7 @@ class AdminController extends Controller
         $ownerEmail = Auth::user()->email;
 
         if ($ownerEmail) {
-            echo "<form id='switchShopForm' action='https://" . env('CENTRAL_DOMAIN') . "/switchedfromshop' method='POST' style='display:none;'>";
+            echo "<form id='switchShopForm' action='https://" . get_zotc_setting('central_domain') . "/switchedfromshop' method='POST' style='display:none;'>";
             echo "<input type='hidden' name='email' value='{$ownerEmail}'/>";
             echo "</form>";
             echo "<script>document.getElementById('switchShopForm').submit();</script>";
@@ -836,5 +852,504 @@ class AdminController extends Controller
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+    }
+
+    public function apiAdminLogin(Request $request)
+    {
+        // Validate request data
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        // Prepare credentials
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ];
+
+        // Attempt authentication
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid login credentials.',
+            ], 401);
+        }
+
+        $user = Auth::user();
+
+        // Handle admin users
+        if ($user->user_type === 'admin') {
+            return redirect('admin');
+        } else {
+            Auth::logout();
+            return response()->json([
+                'success' => false,
+                'message' => 'Access Denied! Admins only',
+            ], 401);
+        }
+    }
+
+    public function shopbase_import()
+    {
+        // Fetch shopbase data
+        $shopbase_json = file_get_contents('https://i.zo.tc/shopbase/product_details_4.json');
+        $shopbase_data = json_decode($shopbase_json, true);
+
+        if (!$shopbase_data || !is_array($shopbase_data)) {
+            echo "Invalid shopbase data.";
+            return;
+        }
+
+        $importedCount = 0;
+        $failedCount = 0;
+
+        foreach ($shopbase_data as $productData) {
+            try {
+                // Validate and process category
+                $categoryName = $productData['Category'] ?? null;
+
+                if (!$categoryName) {
+                    echo "Missing category for product: " . json_encode($productData) . "\n";
+                    $failedCount++;
+                    continue;
+                }
+
+                $category = Category::firstOrCreate(
+                    ['slug' => Str::slug($categoryName)],
+                    ['name' => $categoryName]
+                );
+
+                // Create product
+                $product = new Product();
+                $product->name = $productData['Name'] ?? 'Unnamed Product';
+                $product->user_id = 1;
+                $product->category_id = $category->id;
+
+                // Generate unique slug
+                $baseSlug = Str::slug($product->name);
+                $slug = $baseSlug;
+                $counter = 1;
+
+                while (Product::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $counter++;
+                }
+                $product->slug = $slug;
+
+                // Process images
+                $imageName = $productData['ImageName'] ?? null;
+                $imageUploadPath = $imageName ? "https://i.zo.tc/shopbase/{$imageName}" : null;
+
+                if ($imageUploadPath) {
+                    $imagePath = processImage($imageUploadPath, 500);
+                    $thumbnailPath = processImage($imageUploadPath, 200, 200);
+
+                    if ($imagePath && $thumbnailPath) {
+                        $imageUpload = Upload::create([
+                            'file_name' => $imagePath,
+                            'thumbnail' => $thumbnailPath
+                        ]);
+
+                        $product->photos = $imageUpload->id;
+                        $product->thumbnail_img = $imageUpload->id;
+                    }
+                } else {
+                    echo "Image not found for product: " . json_encode($productData) . "\n";
+                }
+
+                // Set product details
+                $product->description = $productData['Description'] ?? '';
+                $product->purchase_price = $productData['Buying_Price'] ?? 0;
+                $product->unit_price = $productData['Selling_Price'] ?? 0;
+                $product->current_stock = 10;
+                $product->unit = 'pc';
+
+                $product->published = 1;
+                $product->approved = 1;
+
+                // Process attributes and choice options
+                $attributes = $productData['Variant'] ?? '';
+                $attributes = str_replace(' ', '', preg_replace('/\x{A0}/u', '', trim($attributes)));
+                $attributeValues = explode(',', $attributes);
+                $choiceOptions = [];
+                $productAttributes = [];
+                $attributeId = 1;
+
+                if (!empty($attributeValues)) {
+                    $productAttributes[] = (string)$attributeId;
+
+                    $choiceValues = [];
+                    foreach ($attributeValues as $value) {
+                        $attributeValue = AttributeValue::firstOrCreate(
+                            ['value' => $value, 'attribute_id' => $attributeId]
+                        );
+                        $choiceValues[] = $attributeValue->value;
+                    }
+
+                    $product->variant_product = 1;
+                    $choiceOptions[] = [
+                        'attribute_id' => (string)$attributeId,
+                        'values' => $choiceValues
+                    ];
+                }
+
+                $product->attributes = json_encode($productAttributes);
+                $product->choice_options = json_encode($choiceOptions);
+                $product->save();
+
+                if (!empty($attributeValues)) {
+                    foreach ($attributeValues as $value) {
+                        ProductStock::create([
+                            'product_id' => $product->id,
+                            'variant' => $value,
+                            'sku' => Str::random(10),
+                            'price' => $product->unit_price,
+                            'qty' => 10
+                        ]);
+                    }
+                } else {
+                    ProductStock::create([
+                        'product_id' => $product->id,
+                        'variant' => '',
+                        'sku' => Str::random(10),
+                        'price' => $product->unit_price,
+                        'qty' => 10
+                    ]);
+                }
+
+                $importedCount++;
+            } catch (\Exception $e) {
+                dd($productData);
+                echo "Error importing product: " . $e->getMessage() . "\n";
+                $failedCount++;
+            }
+        }
+
+        echo "Products Imported: {$importedCount}\n";
+        echo "Products Failed: {$failedCount}\n";
+    }
+
+    public function mohasagor_import()
+    {
+        // Fetch mohasagor data
+        $mohasagorJson = file_get_contents('https://i.zo.tc/mohasagor/all_products.json');
+        $mohasagorData = json_decode($mohasagorJson, true);
+
+        if (!$mohasagorData || !is_array($mohasagorData)) {
+            echo "Invalid mohasagor data.";
+            return;
+        }
+
+        $importedCount = 0;
+        $failedCount = 0;
+
+        foreach ($mohasagorData as $productData) {
+            // try {
+            // Validate category
+            $categoryName = $productData['category'] ?? null;
+            if (!$categoryName) {
+                $this->logError($productData, "Missing category");
+                $failedCount++;
+                continue;
+            }
+
+            $category = Category::firstOrCreate(
+                ['slug' => Str::slug($categoryName)],
+                ['name' => $categoryName]
+            );
+
+            // Create and set up product
+            $product = $this->createProduct($productData, $category->id);
+
+            // Process product images
+            if (!empty($productData['product_images'])) {
+                $image_ids = '';
+                foreach ($productData['product_images'] as $image) {
+                    if (!empty($image['product_image'])) {
+                        $imagePath = processImage(Str::random(10), "https://i.zo.tc/mohasagor/{$image['product_image']}", 500);
+                        if ($imagePath) {
+                            $imageUpload = Upload::create([
+                                'file_name' => $imagePath,
+                                'thumbnail' => $imagePath
+                            ]);
+                            $image_ids .= $imageUpload->id . ',';
+                        }
+                    }
+                }
+                $product->photos = rtrim($image_ids, ',');
+            }
+
+            // Process thumbnail image
+            $thumbnailImg = $productData['thumbnail_img'] ?? null;
+            if ($thumbnailImg) {
+                $thumbnailPath = $this->processThumbnail(Str::random(10), "https://i.zo.tc/mohasagor/{$thumbnailImg}", null, 200, 200);
+                if ($thumbnailPath) {
+                    $thumbnailUpload = Upload::create([
+                        'file_name' => $thumbnailPath,
+                        'thumbnail' => $thumbnailPath
+                    ]);
+                    $product->thumbnail_img = $thumbnailUpload->id;
+                }
+            }
+
+            // Save product
+            $product->save();
+
+            // Handle variants or default stock
+            $this->processProductVariants($product, $productData['product_variants'] ?? []);
+
+            $importedCount++;
+            // } catch (\Exception $e) {
+            //     $this->logError($productData, $e->getMessage());
+            //     $failedCount++;
+            // }
+
+            // if ($importedCount >= 10) {
+            //     break;
+            // }
+        }
+
+        echo "Products Imported: {$importedCount}\n";
+        echo "Products Failed: {$failedCount}\n";
+    }
+
+    private function createProduct(array $productData, int $categoryId): Product
+    {
+        $product = new Product();
+
+        // Decode and set the product name
+        $decodedName = isset($productData['name']) ? $this->decodeUnicodeString($productData['name']) : 'Unnamed Product';
+        $product->name = $decodedName;
+
+        $product->user_id = 1;
+        $product->category_id = $categoryId;
+
+        // Generate slug if not provided
+        $decodedSlug = isset($productData['slug'])
+            ? $this->decodeUnicodeString($productData['slug'])
+            : Str::slug($decodedName);
+
+        // Append a 6-digit random string
+        $randomString = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
+        $product->slug = $decodedSlug . '-' . $randomString;
+
+        // Description and pricing details
+        $decodedDescription = isset($productData['details']) ? $this->decodeUnicodeString($productData['details']) : '';
+        $product->description = $decodedDescription;
+        $product->purchase_price = (float)($productData['price'] ?? 0);
+        $product->unit_price = (float)($productData['sale_price'] ?? 0);
+
+        // Default stock, unit, and status
+        $product->current_stock = $productData['current_stock'] ?? 10;
+        $product->unit = $productData['unit'] ?? 'pc';
+        $product->attributes = json_encode([]);
+        $product->colors = json_encode([]);
+        $product->choice_options = json_encode([]);
+        $product->variant_product = 1;
+        $product->published = $productData['published'] ?? 1;
+        $product->approved = $productData['approved'] ?? 1;
+
+        return $product;
+    }
+
+
+    /**
+     * Decodes a Unicode-encoded string to its readable form.
+     *
+     * @param string $string
+     * @return string
+     */
+    private function decodeUnicodeString($string): string
+    {
+        $decodedString = json_decode('"' . $string . '"');
+
+        $pattern = '[^a-zA-Z\u0980-\u09FF\s.,!?;:\'\"()]+';
+
+        $cleanedString = mb_ereg_replace($pattern, '', $decodedString);
+
+        return $cleanedString;
+    }
+
+
+    private function processProductVariants($product, $variants)
+    {
+        if (!empty($variants)) {
+            $attributeIds = [];
+            $choiceOptions = [];
+            $colorHexes = [];
+
+            foreach ($variants as $variant) {
+                if ($variant['attribute'] === 'Color') {
+                    // Check if the color exists in the colors table
+                    $existingColor = Color::where('name', $variant['variant'])->first();
+
+                    if ($existingColor) {
+                        // Use the existing color code
+                        $colorHex = $existingColor->code;
+                    } else {
+                        // Generate a random hex code
+                        $colorHex = $this->convertColorToHex($variant['variant']);
+
+                        // Save the new color in the colors table
+                        Color::create([
+                            'name' => $variant['variant'],
+                            'code' => $colorHex,
+                        ]);
+                    }
+
+                    // Avoid duplicate hex entries
+                    if (!in_array($colorHex, $colorHexes)) {
+                        $colorHexes[] = $colorHex;
+                    }
+
+                    // Create product stock entry for each non-color variant
+                    ProductStock::create([
+                        'product_id' => $product->id,
+                        'variant' => $variant['variant'],
+                        'sku' => Str::random(10),
+                        'price' => $product->unit_price,
+                        'qty' => 10,
+                    ]);
+                } else {
+                    // Handle Size or other attributes
+                    $attribute = Attribute::firstOrCreate(['name' => $variant['attribute']]);
+                    $attributeValue = AttributeValue::firstOrCreate([
+                        'attribute_id' => $attribute->id,
+                        'value' => $variant['variant'],
+                    ]);
+
+                    // Save attribute ID for non-color attributes
+                    $attributeIdString = (string)$attribute->id; // Convert to string
+                    if (!in_array($attributeIdString, $attributeIds)) {
+                        $attributeIds[] = $attributeIdString;
+                    }
+
+                    // Prepare choice options
+                    if (!isset($choiceOptions[$attribute->id])) {
+                        $choiceOptions[$attribute->id] = [
+                            'attribute_id' => $attribute->id,
+                            'values' => [],
+                        ];
+                    }
+                    if (!in_array($attributeValue->value, $choiceOptions[$attribute->id]['values'])) {
+                        $choiceOptions[$attribute->id]['values'][] = $attributeValue->value;
+                    }
+
+                    // Create product stock entry for each non-color variant
+                    ProductStock::create([
+                        'product_id' => $product->id,
+                        'variant' => $attributeValue->value,
+                        'sku' => Str::random(10),
+                        'price' => $product->unit_price,
+                        'qty' => 10,
+                    ]);
+                }
+            }
+
+            // Save colors, attributes, and choice options
+            $product->colors = json_encode($colorHexes); // Save color hex codes
+            $product->attributes = json_encode($attributeIds); // Save attribute IDs as strings
+            $product->choice_options = json_encode(array_values($choiceOptions)); // Save choice options
+
+            $product->variant_product = 1; // Mark product as having variants
+            $product->save();
+        } else {
+            // Create default stock if no variants are present
+            ProductStock::create([
+                'product_id' => $product->id,
+                'variant' => '',
+                'sku' => Str::random(10),
+                'price' => $product->unit_price,
+                'qty' => 10,
+            ]);
+        }
+    }
+
+
+    private function getColorHexCodes($colorNames)
+    {
+        $hexCodes = [];
+        foreach ($colorNames as $color) {
+            $hexCodes[] = $this->convertColorToHex($color);
+        }
+        return $hexCodes;
+    }
+
+    private function convertColorToHex($color)
+    {
+        $colors = [
+            'White' => '#ffffff',
+            'Black' => '#000000',
+            'Red' => '#ff0000',
+            'Green' => '#00ff00',
+            'Blue' => '#0000ff',
+            'Yellow' => '#ffff00',
+            'Purple' => '#800080',
+            'Orange' => '#ffa500',
+            'Pink' => '#ffc0cb',
+            'Brown' => '#a52a2a',
+            'Gray' => '#808080',
+            'Cyan' => '#00ffff',
+            'Magenta' => '#ff00ff',
+            'Lime' => '#00ff00',
+            'Maroon' => '#800000',
+            'Olive' => '#808000',
+            'Navy' => '#000080',
+            'Teal' => '#008080',
+            'Silver' => '#c0c0c0',
+            'Gold' => '#ffd700',
+            'Beige' => '#f5f5dc',
+            'Coral' => '#ff7f50',
+            'Ivory' => '#fffff0',
+            'Turquoise' => '#40e0d0',
+            'Violet' => '#ee82ee',
+        ];
+
+        return $colors[$color] ?? '#000000';
+    }
+
+    private function logError($productData, $message)
+    {
+        echo "Error importing product (ID: " . ($productData['slug'] ?? 'Unknown') . "): {$message}\n";
+    }
+
+    public function mohasagor_update()
+    {
+        $products = Product::all();
+
+        $updatedProductsCount = 0;
+
+        foreach ($products as $product) {
+            try {
+                $unit_price = $product->unit_price;
+                $purchase_price = $product->purchase_price;
+
+                // Swap the prices
+                $product->unit_price = $purchase_price;
+                $product->purchase_price = $unit_price;
+                $product->save();
+
+                $updatedProductsCount++; // Increment product update count
+
+                foreach ($product->stocks as $stock) {
+                    try {
+                        $stock->price = $product->unit_price;
+                        $stock->save();
+                    } catch (\Exception $e) {
+                        // Log stock update failure
+                        // \Log::error("Failed to update stock for product ID {$product->id}: {$e->getMessage()}");
+                    }
+                }
+            } catch (\Exception $e) {
+                // Log product update failure
+                // \Log::error("Failed to update product ID {$product->id}: {$e->getMessage()}");
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Update completed.",
+            'updated_products' => $updatedProductsCount
+        ]);
     }
 }

@@ -62,22 +62,22 @@ use App\Models\ZotcSetting;
 if (!function_exists('getAllShops')) {
     function getAllShops()
     {
-        // $ownerEmail = Auth::user()->email;
+        $ownerEmail = Auth::user()->email;
 
-        // $sitesConnection = DB::connection('dynamic_db');
-        // $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+        $sitesConnection = DB::connection('dynamic_db');
+        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
 
-        // $userId = $sitesConnection->table('users')
-        //     ->where('email', $ownerEmail)
-        //     ->value('id');
+        $userId = $sitesConnection->table('users')
+            ->where('email', $ownerEmail)
+            ->value('id');
 
-        // $shops = $sitesConnection->table('tenants')
-        //     ->join('domains', 'tenants.id', '=', 'domains.tenant_id')
-        //     ->where('tenants.user_id', $userId)
-        //     ->select('tenants.*', 'domains.domain')
-        //     ->get();
+        $shops = $sitesConnection->table('tenants')
+            ->join('domains', 'tenants.id', '=', 'domains.tenant_id')
+            ->where('tenants.user_id', $userId)
+            ->select('tenants.*', 'domains.domain')
+            ->get();
 
-        return [];
+        return $shops;
     }
 }
 
@@ -92,45 +92,45 @@ if (!function_exists('sendSMS')) {
 if (!function_exists('executeBkashApiRequest')) {
     function executeBkashApiRequest($token, $bdt_amount, $success_url, $notify_url, $cancel_url)
     {
-        //sandbox bkash
+        // API endpoint URL
         // $apiUrl = 'https://zo.tc/bkash/createpayment.php';
 
-        $apiUrl = 'https://bkash-api.bangla.express/bkash/createpayment.php';
+        $apiUrl = "https://bkash-api.bangla.express/api/createpayment.php";
 
+        // Data to send in the POST request
         $postData = array(
             'token' => $token,
-            'amount' => (int)$bdt_amount,
+            'amount' => $bdt_amount,
             'success_url' => $success_url,
             'notify_url' => $notify_url,
-            'cancel_url' => $cancel_url
+            'cancel_url' => $cancel_url,
         );
 
+        // Initialize cURL
         $curl = curl_init();
+
+        // Set cURL options
         curl_setopt($curl, CURLOPT_URL, $apiUrl);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+        // Execute the request
         $response = curl_exec($curl);
+
+        // Check for errors
+        if ($response === false) {
+            $error = curl_error($curl);
+            echo "cURL Error: " . $error;
+        }
+
+        // Close the cURL session
         curl_close($curl);
 
-        // Debugging: check the response
-        if ($response === false) {
-            // Curl error
-            die('Curl error: ' . curl_error($curl));
-        } else {
-            // Trim the response to remove any accidental whitespace or newlines
-            $response = trim($response);
-
-            // Check if the response is a valid URL
-            if (filter_var($response, FILTER_VALIDATE_URL) === false) {
-                // Not a valid URL, handle the error
-                die('Invalid URL returned: ' . htmlspecialchars($response));
-            }
-
-            // Redirect to the response URL
-            header('Location: ' . $response);
-            exit();
-        }
+        // Redirect to the response URL
+        header('Location: ' . $response);
+        exit();
     }
 }
 
@@ -156,6 +156,7 @@ if (!function_exists('executeVisaApiRequest')) {
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($curl);
 
         if ($response === false) {
@@ -300,12 +301,19 @@ if (!function_exists('sendTrackingTinyUrlBySms')) {
 if (!function_exists('makeTinyUrl')) {
     function makeTinyUrl($url)
     {
+        $shortUrlBase = trim(get_zotc_setting('short_url'));
+
+        // If short_url is not set or empty, return the original URL
+        if (empty($shortUrlBase)) {
+            return $url;
+        }
+
         // Prepare the cURL request to shorten the URL
         $curl = curl_init();
         $payload = json_encode(['url' => $url]);
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://" . env('SHORT_URL') . "/api/url/add",
+            CURLOPT_URL => "https://{$shortUrlBase}/api/url/add",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 2,
             CURLOPT_TIMEOUT => 10,
@@ -318,21 +326,20 @@ if (!function_exists('makeTinyUrl')) {
             CURLOPT_POSTFIELDS => $payload,
         ]);
 
-
         $response = curl_exec($curl);
         curl_close($curl);
 
         if ($response === false) {
-            return $url; // Return the original URL
+            return $url;
         }
 
         $responseArray = json_decode($response, true);
 
-        if ($responseArray && isset($responseArray['shorturl'])) {
-            return $responseArray['shorturl'];
-        } else {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             return $url;
         }
+
+        return $responseArray['shorturl'] ?? $url;
     }
 }
 
@@ -363,6 +370,41 @@ if (!function_exists('default_language')) {
         return env("DEFAULT_LANGUAGE");
     }
 }
+
+if (!function_exists('configureMailSettings')) {
+    function configureMailSettings()
+    {
+        // Fetch mail settings from the database (ZotcSetting)
+        $mailSettings = ZotcSetting::whereIn('type', [
+            'mail_driver',
+            'mail_host',
+            'mail_port',
+            'mail_username',
+            'mail_password',
+            'mail_encryption',
+            'mail_from_address',
+            'mail_from_name'
+        ])->pluck('value', 'type')->toArray();
+
+        // Check if mailSettings are empty, and provide default values if necessary
+        if (empty($mailSettings)) {
+            throw new \Exception('Mail settings not found in ZotcSettings.');
+        }
+
+        // Set Mail Configurations Dynamically
+        Config::set('mail.default', $mailSettings['mail_driver'] ?? 'smtp');
+        Config::set('mail.mailers.smtp.host', $mailSettings['mail_host'] ?? 'smtp.mailtrap.io');
+        Config::set('mail.mailers.smtp.port', $mailSettings['mail_port'] ?? 587);
+        Config::set('mail.mailers.smtp.username', $mailSettings['mail_username'] ?? 'default_user');
+        Config::set('mail.mailers.smtp.password', $mailSettings['mail_password'] ?? 'default_password');
+        Config::set('mail.mailers.smtp.encryption', $mailSettings['mail_encryption'] ?? 'tls');
+        Config::set('mail.from.address', $mailSettings['mail_from_address'] ?? 'default@example.com');
+        Config::set('mail.from.name', $mailSettings['mail_from_name'] ?? 'Default Name');
+
+        return $mailSettings;
+    }
+}
+
 
 /**
  * Save JSON File
@@ -1653,6 +1695,42 @@ if (!function_exists('uploaded_thumbnail')) {
     }
 }
 
+if (!function_exists('get_cdn_url')) {
+    function get_cdn_url()
+    {
+        // Return CDN URL from session if available
+        if (Session::has('cdn_url')) {
+            return Session::get('cdn_url');
+        }
+
+        $cdn_url = 'https://sg.zo.tc/';
+
+        // Get the client's IP address
+        $ip = request()->ip();
+
+        // Fetch location info based on IP
+        $url = "https://ipinfo.zotc.pw/api/api.php?ip={$ip}";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+
+        // Decode the response
+        $output = json_decode($output, true);
+
+        //check if output status is success, then proceed...if not, return default CDN URL
+        if ($output['status'] == 'success' && $output['country'] == 'Bangladesh') {
+            $cdn_url = 'https://i.zo.tc/';
+        }
+
+        // Store CDN URL in session
+        Session::put('cdn_url', $cdn_url);
+
+        return $cdn_url;
+    }
+}
+
 if (!function_exists('my_asset')) {
     /**
      * Generate an asset path for the application.
@@ -1663,11 +1741,11 @@ if (!function_exists('my_asset')) {
      */
     function my_asset($path, $secure = null)
     {
-        if (config('filesystems.default') != 'local') {
-            return Storage::disk(config('filesystems.default'))->url($path);
-        }
+        // if (config('filesystems.default') != 'local') {
+        //     return Storage::disk(config('filesystems.default'))->url($path);
+        // }
 
-        $fixedBaseUrl = 'https://i.zo.tc/';
+        $fixedBaseUrl = get_cdn_url();
 
         $formattedPath = ltrim($path, '/');
 
@@ -1685,7 +1763,7 @@ if (!function_exists('static_asset')) {
      */
     function static_asset($path, $secure = null)
     {
-        $fixedBaseUrl = 'https://i.zo.tc/';
+        $fixedBaseUrl = get_cdn_url();
 
         $formattedPath = ltrim($path, '/');
 
@@ -1792,17 +1870,14 @@ if (!function_exists('get_setting')) {
 if (!function_exists('get_zotc_setting')) {
     function get_zotc_setting($key, $default = null, $lang = false)
     {
-        $zotc_settings = Cache::remember(get_domain() . '_zotc_settings', 2592000, function () {
-            return ZotcSetting::all();
-        });
-
         // Retrieve the setting based on the key and optional language
-        $setting = $zotc_settings->where('type', $key);
+        $query = ZotcSetting::where('type', $key);
+
         if ($lang) {
-            $setting = $setting->where('lang', $lang)->first();
-        } else {
-            $setting = $setting->first();
+            $query->where('lang', $lang);
         }
+
+        $setting = $query->first();
 
         // Return the setting value or default if not found
         return $setting ? $setting->value : $default;
@@ -2717,60 +2792,161 @@ if (!function_exists('get_count_by_payment_status_viewed')) {
     }
 }
 
-// resize and upload the file
+if (!function_exists('processImage')) {
+    function processImage($originalImagePath, $desiredWidth, $desiredHeight = null, $resizeImageInSquare = false)
+    {
+        // If the original image is in WebP format and matches the desired dimensions, return the original path
+        $slug = get_zotc_setting('img_slug') ?: 'all';
+
+        $fullImagePath = public_path($originalImagePath);
+
+        // Check if the file exists before proceeding
+        if ($originalImagePath && file_exists($fullImagePath)) {
+            // Ensure the file has 755 permissions
+            chmod($fullImagePath, 0755);
+
+            $imageContent = @file_get_contents($fullImagePath);
+            if ($imageContent === false) {
+                return null;
+            }
+
+            $image = @imagecreatefromstring($imageContent);
+            if (!$image) {
+                return null;
+            }
+
+            $originalWidth = imagesx($image);
+            $originalHeight = imagesy($image);
+
+            // Check if the image is already a WebP with the desired size
+            $isWebp = strtolower(pathinfo($originalImagePath, PATHINFO_EXTENSION)) === 'webp';
+            if (
+                $isWebp && $originalWidth === $desiredWidth &&
+                ($desiredHeight === null || $originalHeight === $desiredHeight)
+            ) {
+                return $originalImagePath;
+            }
+
+            // Prepare the directory and file path for saving the resized image
+            $directoryPath = public_path("uploads/{$slug}");
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0755, true);
+            }
+
+            $randomFileName = Str::random(10);
+            $uploadedPath = "uploads/{$slug}/{$randomFileName}.webp";
+
+            // Resize and save the image as WebP
+            if (!resizeAndSaveWebpImage($image, $uploadedPath, $desiredWidth, $desiredHeight, $resizeImageInSquare)) {
+                return null;
+            }
+
+            return $uploadedPath;
+        }
+
+        return null;
+    }
+}
+
 if (!function_exists('resizeAndSaveWebpImage')) {
-    function resizeAndSaveWebpImage($image, $path, $newWidth = null, $newHeight = null)
+    function resizeAndSaveWebpImage($image, $path, $newWidth = null, $newHeight = null, $resizeImageInSquare = false)
     {
         $originalWidth = imagesx($image);
         $originalHeight = imagesy($image);
 
-        if (is_null($newWidth) && is_null($newHeight)) {
-            $newWidth = $originalWidth;
-            $newHeight = $originalHeight;
+        // Handle resizing and fitting the image into the provided dimensions
+        if ($resizeImageInSquare || ($newWidth && $newHeight)) {
+            $targetWidth = $newWidth ?? $originalWidth;
+            $targetHeight = $newHeight ?? $originalHeight;
+
+            $aspectRatioOriginal = $originalWidth / $originalHeight;
+            $aspectRatioTarget = $targetWidth / $targetHeight;
+
+            if ($aspectRatioOriginal > $aspectRatioTarget) {
+                // Original image is wider; fit by width
+                $resizeWidth = $targetWidth;
+                $resizeHeight = intval($targetWidth / $aspectRatioOriginal);
+            } else {
+                // Original image is taller or equal; fit by height
+                $resizeHeight = $targetHeight;
+                $resizeWidth = intval($targetHeight * $aspectRatioOriginal);
+            }
+
+            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+            imagealphablending($resizedImage, true);
+            $whiteColor = imagecolorallocate($resizedImage, 255, 255, 255);
+            imagefill($resizedImage, 0, 0, $whiteColor);
+
+            $offsetX = ($targetWidth - $resizeWidth) / 2;
+            $offsetY = ($targetHeight - $resizeHeight) / 2;
+
+            if (!imagecopyresampled($resizedImage, $image, $offsetX, $offsetY, 0, 0, $resizeWidth, $resizeHeight, $originalWidth, $originalHeight)) {
+                throw new \Exception('Failed to copy and resize the image.');
+            }
+
+            $image = $resizedImage;
+        } else {
+            // Calculate new dimensions if not provided
+            if (is_null($newWidth) && is_null($newHeight)) {
+                $newWidth = $originalWidth;
+                $newHeight = $originalHeight;
+            } elseif (is_null($newHeight)) {
+                $newHeight = intval(($originalHeight / $originalWidth) * $newWidth);
+            } elseif (is_null($newWidth)) {
+                $newWidth = intval(($originalWidth / $originalHeight) * $newHeight);
+            }
+
+            $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+
+            imagealphablending($resizedImage, false);
+            imagesavealpha($resizedImage, true);
+            $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
+            imagefill($resizedImage, 0, 0, $transparentColor);
+
+            if (!imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight)) {
+                throw new \Exception('Failed to copy and resize the image.');
+            }
+
+            $image = $resizedImage;
         }
 
-        if (is_null($newHeight)) {
-            $newHeight = intval(($originalHeight / $originalWidth) * $newWidth);
+        $assetPath = public_path('uploads/' . get_zotc_setting('img_slug'));
+        if (!file_exists($assetPath) && !mkdir($assetPath, 0755, true)) {
+            throw new \Exception('Failed to create directory: ' . $assetPath);
         }
 
-        // Create a new true color image with the new dimensions
-        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-
-        // Preserve transparency
-        imagealphablending($resizedImage, false);
-        imagesavealpha($resizedImage, true);
-
-        // Fill the resized image with transparent color
-        $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
-        imagefill($resizedImage, 0, 0, $transparentColor);
-
-        // Resize the original image into the new true color image
-        if (!imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight)) {
-            throw new \Exception('Failed to copy and resize image.');
+        if (!imagewebp($image, public_path($path))) {
+            throw new \Exception('Failed to save WebP image at: ' . $path);
         }
 
-        // Save the image as WebP
-        if (!imagewebp($resizedImage, public_path($path))) {
-            throw new \Exception('Failed to save WebP image.');
-        }
-
-        // Check if the image was saved correctly as WebP
         $savedFileType = mime_content_type(public_path($path));
         if ($savedFileType !== 'image/webp') {
-            throw new \Exception('Image was not saved in WebP format.');
+            throw new \Exception('The image was not saved in WebP format.');
         }
 
-        // Set directory permissions
-        $fullPath = dirname(public_path($path));
-        if (!chmod($fullPath, 0755)) {
-            throw new \Exception('Failed to set permissions for directory.');
-        }
+        chmod(dirname(public_path($path)), 0755);
 
-        // Free memory
-        imagedestroy($resizedImage);
+        imagedestroy($image);
+
+        return true;
     }
 }
 
+if (!function_exists('deleteImageIfNotWebp')) {
+    function deleteImageIfNotWebp($imagePath)
+    {
+        // Check if the file exists and is not a WebP image
+        $filePath = public_path($imagePath);
+        if (file_exists($filePath) && pathinfo($filePath, PATHINFO_EXTENSION) !== 'webp') {
+            // Try to delete the file
+            if (unlink($filePath)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 // Get Uploaded file
 if (!function_exists('get_single_uploaded_file')) {
@@ -2822,7 +2998,7 @@ if (!function_exists('get_all_manual_payment_methods')) {
     function get_all_manual_payment_methods()
     {
         $manual_payment_methods_query = ManualPaymentMethod::query();
-        return $manual_payment_methods_query->where('type','!=','link_payment')->get();
+        return $manual_payment_methods_query->where('type', '!=', 'link_payment')->get();
     }
 }
 
@@ -2831,7 +3007,7 @@ if (!function_exists('get_all_link_payment_methods')) {
     function get_all_link_payment_methods()
     {
         $link_payment_methods_query = ManualPaymentMethod::query();
-        return $link_payment_methods_query->where('type','link_payment')->get();
+        return $link_payment_methods_query->where('type', 'link_payment')->get();
     }
 }
 
@@ -2904,26 +3080,27 @@ if (!function_exists('get_affliate_option_status')) {
 if (!function_exists('check_order_status')) {
     function check_order_status()
     {
-        // $planSettings = BusinessSetting::where('type', 'plan')->first();
-        // $planSettings = explode(',', $planSettings->value);
-        // $expire_date_string = $planSettings[5];
+        $planSettings = BusinessSetting::where('type', 'plan')->first();
+        $planSettings = explode(',', $planSettings->value);
+        $expire_date_string = $planSettings[5];
 
-        // $expire_date = Carbon::createFromFormat('Y-m-d', $expire_date_string);
-        // $current_date = Carbon::now();
+        $expire_date = Carbon::createFromFormat('Y-m-d', $expire_date_string);
 
-        // if ($current_date->gt($expire_date)) {
-        //     return false;
-        // }
+        $current_date = Carbon::now();
 
-        // $plan_id = $planSettings[0];
-        // $sitesConnection = DB::connection('dynamic_db');
-        // $sitesConnection->getPdo()->exec("USE zotc_nazmart");
-        // $current_plan = $sitesConnection->table('price_plans')->where('id', $plan_id)->first();
-        // $order_limit = (int)$current_plan->order_limit;
+        if ($current_date->gt($expire_date)) {
+            return false;
+        }
 
-        // if ($order_limit > 0 && this_months_sale() > $order_limit) {
-        //     return false;
-        // }
+        $plan_id = $planSettings[0];
+        $sitesConnection = DB::connection('dynamic_db');
+        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+        $current_plan = $sitesConnection->table('price_plans')->where('id', $plan_id)->first();
+        $order_limit = (int)$current_plan->order_limit;
+
+        if ($order_limit > 0 && this_months_sale() > $order_limit) {
+            return false;
+        }
 
         return true;
     }
@@ -3122,26 +3299,21 @@ if (!function_exists('generate_sku')) {
 if (!function_exists('replaceVarContentStyle')) {
     function replaceVarContentStyle($item = "")
     {
-        $results = [];
-
         $imgSlug = get_zotc_setting('img_slug') ?: 'all';
-
         $image_url = static_asset("uploads/{$imgSlug}/content_media") . "/";
-        $temp = $item;
 
         if (is_object($item)) {
             if (isset($item->content)) {
-                $temp->content = str_replace('##image_url##', $image_url, $item->content);
+                $item->content = str_replace('##image_url##', $image_url, $item->content);
             }
             if (isset($item->style)) {
-                $temp->style = str_replace('##image_url##', $image_url, $item->style);
+                $item->style = str_replace('##image_url##', $image_url, $item->style);
             }
         } else {
-            if (isset($item)) {
-                $temp = str_replace('##image_url##', $image_url, $item);
-            }
+            $item = str_replace('##image_url##', $image_url, $item);
         }
-        return $temp;
+
+        return $item;
     }
 }
 
@@ -3334,5 +3506,13 @@ if (!function_exists('timezones')) {
             '(GMT+12:00) Wellington' => 'Pacific/Auckland',
             '(GMT+13:00) Nuku\'alofa' => 'Pacific/Tongatapu'
         );
+    }
+
+    if (!function_exists('baseUrl')) {
+        function baseUrl()
+        {
+            // Replace '/admin' or 'admin/' regardless of position in the URL
+            return preg_replace('/\/?admin\/?/', '', url('/'));
+        }
     }
 }

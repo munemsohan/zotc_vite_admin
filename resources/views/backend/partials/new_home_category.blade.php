@@ -16,7 +16,8 @@
             </select>
         </div>
         <div class="col-auto">
-            <button type="button" class="btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
+            <button type="button" class="btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent"
+                data-parent=".remove-parent">
                 <i class="las la-times"></i>
             </button>
         </div>

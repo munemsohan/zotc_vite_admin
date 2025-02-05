@@ -11,96 +11,89 @@
                     <form class="form-horizontal" action="{{ route('mail_update.update') }}" method="POST">
                         @csrf
                         <div class="form-group row">
-                            <input type="hidden" name="types[]" value="MAIL_DRIVER">
+                            <input type="hidden" name="types[]" value="mail_driver">
                             <label class="col-md-3 col-form-label">{{ translate('Type') }}</label>
                             <div class="col-md-9">
-                                <select class="form-control aiz-selectpicker mb-2 mb-md-0" name="MAIL_DRIVER"
+                                <select class="form-control aiz-selectpicker mb-2 mb-md-0" name="mail_driver"
                                     onchange="checkMailDriver()">
-                                    <option value="sendmail" @if (env('MAIL_DRIVER') == 'sendmail') selected @endif>
+                                    <option value="sendmail" @if (get_zotc_setting('mail_driver') == 'sendmail') selected @endif>
                                         {{ translate('Sendmail') }}</option>
-                                    <option value="smtp" @if (env('MAIL_DRIVER') == 'smtp') selected @endif>
+                                    <option value="smtp" @if (get_zotc_setting('mail_driver') == 'smtp') selected @endif>
                                         {{ translate('SMTP') }}</option>
-                                    <option value="mailgun" @if (env('MAIL_DRIVER') == 'mailgun') selected @endif>
+                                    <option value="mailgun" @if (get_zotc_setting('mail_driver') == 'mailgun') selected @endif>
                                         {{ translate('Mailgun') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div id="smtp">
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_HOST">
+                                <input type="hidden" name="types[]" value="mail_host">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL HOST') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_HOST"
-                                        value="{{ env('MAIL_HOST') }}"
-                                        placeholder="{{ env('MAIL_HOST') != '' ? '*****' : '' }}">
+                                    <input type="text" class="form-control" name="mail_host" value=""
+                                        placeholder="{{ get_zotc_setting('mail_host') ? '**********' : '' }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_PORT">
+                                <input type="hidden" name="types[]" value="mail_port">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL PORT') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_PORT"
-                                        value="{{ env('MAIL_PORT') }}"
-                                        placeholder="{{ env('MAIL_PORT') != '' ? '*****' : '' }}">
+                                    <input type="text" class="form-control" name="mail_port" value=""
+                                        placeholder="{{ get_zotc_setting('mail_port') ? '**********' : '' }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_USERNAME">
+                                <input type="hidden" name="types[]" value="mail_username">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL USERNAME') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_USERNAME"
-                                        value="{{ env('MAIL_USERNAME') }}"
-                                        placeholder="{{ env('MAIL_USERNAME') != '' ? '*****' : '' }}">
+                                    <input type="text" class="form-control" name="mail_username" value=""
+                                        placeholder="{{ get_zotc_setting('mail_username') ? '**********' : '' }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_PASSWORD">
+                                <input type="hidden" name="types[]" value="mail_password">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL PASSWORD') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_PASSWORD"
-                                        value="{{ env('MAIL_PASSWORD') }}"
-                                        placeholder="{{ env('MAIL_PASSWORD') != '' ? '*****' : '' }}">
+                                    <input type="text" class="form-control" name="mail_password" value=""
+                                        placeholder="{{ get_zotc_setting('mail_password') ? '**********' : '' }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_ENCRYPTION">
+                                <input type="hidden" name="types[]" value="mail_encryption">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL ENCRYPTION') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_ENCRYPTION"
-                                        value="{{ env('MAIL_ENCRYPTION') }}"
-                                        placeholder="{{ env('MAIL_ENCRYPTION') != '' ? '*****' : '' }}">
+                                    <input type="text" class="form-control" name="mail_encryption" value=""
+                                        placeholder="{{ get_zotc_setting('mail_encryption') ? '**********' : '' }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_FROM_ADDRESS">
+                                <input type="hidden" name="types[]" value="mail_from_address">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL FROM ADDRESS') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="email" class="form-control" name="MAIL_FROM_ADDRESS"
-                                        value="{{ env('MAIL_FROM_ADDRESS') }}"
-                                        placeholder="{{ translate('MAIL FROM ADDRESS') }}">
+                                    <input type="email" class="form-control" name="mail_from_address" value=""
+                                        placeholder="{{ get_zotc_setting('mail_from_address') }}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MAIL_FROM_NAME">
+                                <input type="hidden" name="types[]" value="mail_from_name">
                                 <div class="col-md-3">
                                     <label class="col-from-label">{{ translate('MAIL FROM NAME') }}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="MAIL_FROM_NAME"
-                                        value="{{ env('MAIL_FROM_NAME') }}"
-                                        placeholder="{{ translate('MAIL FROM NAME') }}">
+                                    <input type="text" class="form-control" name="mail_from_name" value=""
+                                        placeholder="{{ get_zotc_setting('mail_from_name') }}">
                                 </div>
                             </div>
                         </div>

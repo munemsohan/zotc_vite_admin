@@ -79,6 +79,8 @@ class WholesaleProductController extends Controller
     }
 
 
+
+
     public function product_update(WholesaleProductRequest $request, $id)
     {
         (new WholesaleService)->update($request, $id);

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ZotcSetting;
 use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use App\Models\Upload;
-use App\Models\ZotcSetting;
 use Artisan;
 use CoreComponentRepository;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Str;
@@ -140,7 +141,7 @@ class BusinessSettingsController extends Controller
     public function payment_method_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteZotcSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', $request->payment_method . '_sandbox')->first();
@@ -168,7 +169,7 @@ class BusinessSettingsController extends Controller
     public function google_analytics_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', 'google_analytics')->first();
@@ -262,7 +263,7 @@ class BusinessSettingsController extends Controller
     public function facebook_chat_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', 'facebook_chat')->first();
@@ -284,7 +285,7 @@ class BusinessSettingsController extends Controller
     public function tawk_chat_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', 'tawk_chat')->first();
@@ -307,7 +308,7 @@ class BusinessSettingsController extends Controller
     {
         foreach ($request->types as $key => $type) {
             $request[$type] = formatPhoneNumberWithoutPlus($request[$type]);
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', 'whatsapp')->first();
@@ -359,7 +360,7 @@ class BusinessSettingsController extends Controller
     public function gtag_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         $business_settings = BusinessSetting::where('type', 'gtag')->first();
@@ -391,10 +392,10 @@ class BusinessSettingsController extends Controller
 
     public function facebook_pixel_update(Request $request)
     {
-        if ($request->has('FACEBOOK_PIXEL_ID')) {
+        if ($request->has('facebook_pixel_id')) {
             // Check if the value is a script, URL, or just an ID
-            $pixel_id = $request->FACEBOOK_PIXEL_ID;
-        
+            $pixel_id = $request->facebook_pixel_id;
+
             if (filter_var($pixel_id, FILTER_VALIDATE_URL)) {
                 // Extract the Pixel ID from the URL
                 $url_components = parse_url($pixel_id);
@@ -411,15 +412,15 @@ class BusinessSettingsController extends Controller
                     $pixel_id = $matches[1];
                 }
             }
-        
-            // Update the FACEBOOK_PIXEL_ID in the request to the correct value
-            $request->merge(['FACEBOOK_PIXEL_ID' => $pixel_id]);
+
+            // Update the facebook_pixel_id in the request to the correct value
+            $request->merge(['facebook_pixel_id' => $pixel_id]);
         }
-        
+
 
         // Overwrite environment file with provided types
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteBusinessSetting($type, $request[$type]);
         }
 
         // Retrieve or create business settings for Facebook Pixel
@@ -441,7 +442,36 @@ class BusinessSettingsController extends Controller
     public function facebook_domain_verification_update(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            // Extract the actual verification code from the value
+            $value = $request[$type];
+
+            // If the value contains a <meta> tag, extract the content attribute
+            if (preg_match('/content="([^"]+)"/', $value, $matches)) {
+                $value = $matches[1];
+            }
+
+            $this->overWriteBusinessSetting($type, $value);
+        }
+
+        Artisan::call('cache:clear');
+
+        flash(translate("Settings updated successfully"))->success();
+        return back();
+    }
+
+    public function google_site_verification_update(Request $request)
+    {
+        foreach ($request->types as $key => $type) {
+            // Extract the actual verification code from the value
+            $value = $request[$type];
+
+            // If the value contains a <meta> tag, extract the content attribute
+            if (preg_match('/content="([^"]+)"/', $value, $matches)) {
+                $value = $matches[1];
+            }
+
+            // Overwrite the .env file with the clean value
+            $this->overWriteBusinessSetting($type, $value);
         }
 
         Artisan::call('cache:clear');
@@ -473,34 +503,61 @@ class BusinessSettingsController extends Controller
      */
     public function overWriteEnvFile($type, $val)
     {
-        // Ensure the function doesn't execute in demo mode
-        if (env('DEMO_MODE') === 'On') {
-            return;
-        }
+        $domain = request()->getHost();
 
-        $envFile = base_path('.env');
+        $envFile = base_path("env/.env.{$domain}");
 
-        if (file_exists($envFile)) {
-            $val = '"' . trim($val) . '"';
-            if (is_numeric(strpos(file_get_contents($envFile), $type)) && strpos(file_get_contents($envFile), $type) >= 0) {
-                file_put_contents($envFile, str_replace(
-                    $type . '="' . env($type) . '"',
-                    $type . '=' . $val,
-                    file_get_contents($envFile)
-                ));
-            } else {
-                file_put_contents($envFile, file_get_contents($envFile) . "\r\n" . $type . '=' . $val);
+        if (env('DEMO_MODE') != 'On') {
+
+            if (file_exists($envFile)) {
+
+                $val = '"' . trim($val) . '"';
+                $envContents = file_get_contents($envFile);
+
+                // Check if the key already exists in the .env file
+                if (preg_match("/^{$type}=.*$/m", $envContents)) {
+                    // Update the existing key with the new value
+                    $updatedEnvContents = preg_replace(
+                        "/^{$type}=.*$/m",
+                        "{$type}={$val}",
+                        $envContents
+                    );
+                } else {
+                    // Append the new key-value pair if it doesn't exist
+                    $updatedEnvContents = $envContents . "\r\n{$type}={$val}";
+                }
+
+                // Save the updated contents back to the file
+                file_put_contents($envFile, $updatedEnvContents);
             }
         }
     }
 
+    public function overWriteBusinessSetting($type, $val)
+    {
+        // Fetch existing setting or create a new instance
+        $business_settings = BusinessSetting::firstOrNew(['type' => $type]);
+
+        // Update the value of the setting
+        $business_settings->value = $val;
+        $business_settings->save();
+    }
+
+    public function overWriteZotcSetting($type, $val)
+    {
+        // Fetch existing setting or create a new instance
+        $zotc_settings = ZotcSetting::firstOrNew(['type' => $type]);
+
+        // Update the value of the setting
+        $zotc_settings->value = $val;
+        $zotc_settings->save();
+    }
+
     public function mail_update(Request $request)
     {
-
         foreach ($request->types as $key => $type) {
-
             if ($request[$type] != NULL) {
-                $this->overWriteEnvFile($type, $request[$type]);
+                $this->overWriteZotcSetting($type, $request[$type]);
             }
         }
 
@@ -544,7 +601,6 @@ class BusinessSettingsController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->all());
         foreach ($request->types as $key => $type) {
             if ($type == 'site_name') {
                 $this->overWriteEnvFile('APP_NAME', $request[$type]);
@@ -565,32 +621,51 @@ class BusinessSettingsController extends Controller
                     foreach ($request->home_slider_images as $image_id) {
                         $imageUpload = Upload::find($image_id);
 
+
+
                         // Ensure the image exists in the database
                         if ($imageUpload) {
-                            $imagePath = $imageUpload->file_name;
-                            $thumbnailPath = $imageUpload->thumbnail;
-
-                            $randomFilename = Str::random(10);
+                            $originalImagePath = $imageUpload->file_name;
 
                             // Process main image if it exists and needs resizing
-                            $processedImagePath = $this->processImage($randomFilename, $imagePath, 1370, 320);
+                            $processedImagePath = processImage($originalImagePath, 1530, 380);
                             if ($processedImagePath) {
                                 $imageUpload->file_name = $processedImagePath;
-                                $imageUpload->save();
                             }
 
-                            // Process thumbnail
-                            $processedThumbnailPath = $this->processThumbnail($randomFilename, $imagePath, $thumbnailPath, 1100, 320);
+                            // Process thumbnail image if it exists and needs resizing
+                            $processedThumbnailPath = processImage($originalImagePath, 1230, 380);
                             if ($processedThumbnailPath) {
                                 $imageUpload->thumbnail = $processedThumbnailPath;
-                                $imageUpload->save();
                             }
 
-                            // Delete original image file if it's not a WebP
-                            if (pathinfo(public_path($imagePath), PATHINFO_EXTENSION) !== 'webp') {
-                                unlink(public_path($imagePath));
-                            }
+                            $imageUpload->save();
+
+                            // Delete the image if it's not WebP
+                            deleteImageIfNotWebp($originalImagePath);
                         }
+                    }
+                }
+
+                if ($request->site_icon) {
+                    $imageUpload = Upload::find($request->site_icon);
+
+                    // Ensure the image exists in the database
+                    if ($imageUpload) {
+                        $originalImagePath = $imageUpload->file_name;
+
+                        // Process site icon
+                        $processedImagePath = processImage($originalImagePath, 32, 32);
+
+                        if ($processedImagePath) {
+                            $imageUpload->file_original_name = 'icon';
+                            $imageUpload->file_name = $processedImagePath;
+                            $imageUpload->thumbnail = $processedImagePath;
+                            $imageUpload->save();
+                        }
+
+                        // Delete original image file if it is not a WebP
+                        deleteImageIfNotWebp($originalImagePath);
                     }
                 }
 
@@ -599,22 +674,73 @@ class BusinessSettingsController extends Controller
 
                     // Ensure the image exists in the database
                     if ($imageUpload) {
-                        $imagePath = $imageUpload->file_name;
-                        $thumbnailPath = $imageUpload->thumbnail;
+                        $originalImagePath = $imageUpload->file_name;
 
-                        $randomFilename = Str::random(10);
+                        // Process main logo
+                        $processedImagePath = processImage($originalImagePath, 250, 50);
 
-                        // Process main image if it exists and needs resizing
-                        $processedImagePath = $this->processImage($randomFilename, $imagePath, 250, 40);
+                        // Process tall logo
+                        $processedThumbnailPath = processImage($originalImagePath, 150, 50);
+
+                        // Update the current logo details if main image processing was successful
                         if ($processedImagePath) {
                             $imageUpload->file_name = $processedImagePath;
+                            $imageUpload->thumbnail = $processedThumbnailPath;
                             $imageUpload->save();
                         }
 
-                        // Delete original image file if it's not a WebP
-                        if (pathinfo(public_path($imagePath), PATHINFO_EXTENSION) !== 'webp') {
-                            unlink(public_path($imagePath));
+                        // Process white logo
+                        $processedWhiteImagePath = $this->processWhiteLogo($imageUpload->file_name);
+
+                        $lastUpload = Upload::latest()->first();
+
+                        if ($lastUpload && $lastUpload->file_original_name !== 'logo-white') {
+                            // Save processed white logo if available
+                            if (!empty($processedWhiteImagePath)) {
+                                // Create a new Upload instance for the white logo
+                                $whiteLogoUpload = Upload::create([
+                                    'file_original_name' => 'logo-white',
+                                    'file_name' => $processedWhiteImagePath,
+                                    'thumbnail' => $processedWhiteImagePath,
+                                    'user_id' => Auth::id(),
+                                    'extension' => 'webp',
+                                    'type' => 'image',
+                                ]);
+
+                                // Update or create the BusinessSettings entry for the white logo
+                                if ($whiteLogoUpload) {
+                                    BusinessSetting::updateOrCreate(
+                                        ['type' => 'header_logo_white'],
+                                        ['value' => $whiteLogoUpload->id]
+                                    );
+                                }
+                            }
                         }
+
+                        // Delete original image file if it is not a WebP
+                        deleteImageIfNotWebp($originalImagePath);
+                    }
+                }
+
+                if ($request->footer_logo) {
+                    $imageUpload = Upload::find($request->footer_logo);
+
+                    // Ensure the image exists in the database
+                    if ($imageUpload) {
+                        $originalImagePath = $imageUpload->file_name;
+
+                        // Process footer logo
+                        $processedImagePath = processImage($originalImagePath, 250, 50);
+
+                        // Update the current logo details if main image processing was successful
+                        if ($processedImagePath) {
+                            $imageUpload->file_name = $processedImagePath;
+                            $imageUpload->thumbnail = $processedImagePath;
+                            $imageUpload->save();
+                        }
+
+                        // Delete original image file if it is not a WebP
+                        deleteImageIfNotWebp($originalImagePath);
                     }
                 }
 
@@ -679,8 +805,6 @@ class BusinessSettingsController extends Controller
 
         return redirect()->back();
     }
-
-
     public function updateCartCustom(Request $request)
     {
         // Remove the '' from keys
@@ -706,71 +830,6 @@ class BusinessSettingsController extends Controller
         Artisan::call('cache:clear');
         flash(translate('Cart Custom updated successfully'))->success();
         return back();
-    }
-
-    private function processImage($randomFilename, $imagePath, $desiredWidth, $desiredHeight)
-    {
-        $slug = get_zotc_setting('img_slug') ?: 'all';
-
-        if ($imagePath) {
-            $imageContent = file_get_contents(public_path($imagePath));
-            $imageContent = preg_replace('/\x{00}*\x{00}IHDR\x{00}*\x{00}(?=\x{00}*\xff)/', '', $imageContent);  // Attempt to strip out the ICC profile data from binary content
-
-            $image = @imagecreatefromstring($imageContent);
-
-            if ($image) {
-                $originalWidth = imagesx($image);
-                $originalHeight = imagesy($image);
-
-                // Check if the image is already a WebP with the desired size
-                $isWebp = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION)) === 'webp';
-
-                if (!($isWebp && $originalWidth == $desiredWidth && $originalHeight == $desiredHeight)) {
-                    $uploadedPath = "uploads/{$slug}/{$randomFilename}.webp";
-                    resizeAndSaveWebpImage($image, $uploadedPath, $desiredWidth, $desiredHeight);
-
-                    return $uploadedPath;
-                }
-
-                return $imagePath;
-            }
-        }
-
-        return null;
-    }
-
-    private function processThumbnail($randomFilename, $imagePath, $thumbnailPath, $desiredWidth, $desiredHeight)
-    {
-        $slug = get_zotc_setting('img_slug') ?: 'all';
-
-        if ($thumbnailPath && file_exists(public_path($thumbnailPath)) && is_file(public_path($thumbnailPath))) {
-            $thumbnailContent = file_get_contents(public_path($thumbnailPath));
-            $thumbnail = @imagecreatefromstring($thumbnailContent);
-
-            if ($thumbnail) {
-                $thumbnailWidth = imagesx($thumbnail);
-                $thumbnailHeight = imagesy($thumbnail);
-
-                if (!($thumbnailWidth == $desiredWidth && $thumbnailHeight == $desiredHeight)) {
-                    $uploadedPath = "uploads/{$slug}/{$randomFilename}x{$desiredWidth}.webp";
-                    resizeAndSaveWebpImage($thumbnail, $uploadedPath, $desiredWidth, $desiredHeight);
-
-                    return $uploadedPath;
-                }
-
-                return $thumbnailPath;
-            }
-        } else {
-            $imageContent = file_get_contents(public_path($imagePath));
-            $image = @imagecreatefromstring($imageContent);
-
-            $uploadedPath = "uploads/{$slug}/{$randomFilename}x{$desiredWidth}.webp";
-            resizeAndSaveWebpImage($image, $uploadedPath, $desiredWidth, $desiredHeight);
-
-            return $uploadedPath;
-        }
-
-        return null;
     }
 
     public function updateActivationSettings(Request $request)
@@ -1000,5 +1059,128 @@ class BusinessSettingsController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function processWhiteLogo($imagePath)
+    {
+        $randomFilename = Str::random(10) . '.webp';
+
+        // Resolve the input path dynamically
+        $absoluteInputPath = public_path($imagePath);
+
+        // Check if the input file exists
+        if (!file_exists($absoluteInputPath)) {
+            throw new \Exception('File does not exist: ' . $absoluteInputPath);
+        }
+
+        // Load the WebP image
+        $image = imagecreatefromwebp($absoluteInputPath);
+        if (!$image) {
+            throw new \Exception('Failed to load WebP image: ' . $absoluteInputPath);
+        }
+
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Create a new true color image with the same dimensions
+        $processedImage = imagecreatetruecolor($originalWidth, $originalHeight);
+
+        // Set background color to #eceff4 (RGB: 236, 239, 244)
+        $bgColor = imagecolorallocate($processedImage, 236, 239, 244);
+        imagefill($processedImage, 0, 0, $bgColor);
+
+        // Copy the original image onto the new background
+        if (!imagecopy($processedImage, $image, 0, 0, 0, 0, $originalWidth, $originalHeight)) {
+            throw new \Exception('Failed to copy image onto background.');
+        }
+
+        // Define the dynamic asset path
+        $slug = get_zotc_setting('img_slug');
+        $assetPath = 'uploads/' . $slug;
+        $absoluteAssetPath = public_path($assetPath);
+
+        // Ensure the directory exists
+        if (!file_exists($absoluteAssetPath) && !mkdir($absoluteAssetPath, 0755, true)) {
+            throw new \Exception('Failed to create directory: ' . $absoluteAssetPath);
+        }
+
+        // Define the full output path
+        $outputPath = $absoluteAssetPath . '/' . $randomFilename;
+
+        // Save the processed image as a WebP file
+        if (!imagewebp($processedImage, $outputPath)) {
+            throw new \Exception('Failed to save WebP image at: ' . $outputPath);
+        }
+
+        // Set permissions and clean up
+        chmod($outputPath, 0644);
+        imagedestroy($processedImage);
+        imagedestroy($image);
+
+        // Return the relative output path
+        return $assetPath . '/' . $randomFilename;
+    }
+
+    function resizeLogo($randomFileName, $imagePath, $newWidth, $newHeight)
+    {
+        // Resolve the absolute path of the input image
+        $absoluteImagePath = public_path($imagePath);
+
+        // Check if the file exists
+        if (!file_exists($absoluteImagePath)) {
+            throw new \Exception('File does not exist: ' . $absoluteImagePath);
+        }
+
+        // dd($absoluteImagePath);
+
+        // Load the WebP image
+        $image = imagecreatefromwebp($absoluteImagePath);
+        if (!$image) {
+            throw new \Exception('Failed to load WebP image: ' . $absoluteImagePath);
+        }
+
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Create a new true color image with the given dimensions
+        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Preserve transparency for WebP
+        imagealphablending($resizedImage, false);
+        imagesavealpha($resizedImage, true);
+
+        // Resize the image to the absolute dimensions
+        if (!imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight)) {
+            throw new \Exception('Failed to resize the image.');
+        }
+
+        // Define the output path dynamically using $randomFileName
+        if (!str_ends_with($randomFileName, '.webp')) {
+            $randomFileName .= '.webp';
+        }
+
+        $slug = get_zotc_setting('img_slug');
+        $assetPath = 'uploads/' . $slug;
+        $absoluteAssetPath = public_path($assetPath);
+
+        // Ensure the output directory exists
+        if (!file_exists($absoluteAssetPath) && !mkdir($absoluteAssetPath, 0755, true)) {
+            throw new \Exception('Failed to create directory: ' . $absoluteAssetPath);
+        }
+
+        $outputPath = $absoluteAssetPath . '/' . $randomFileName;
+
+        // Save the resized image as a WebP file
+        if (!imagewebp($resizedImage, $outputPath)) {
+            throw new \Exception('Failed to save resized WebP image at: ' . $outputPath);
+        }
+
+        // Set permissions and clean up
+        chmod($outputPath, 0644);
+        imagedestroy($resizedImage);
+        imagedestroy($image);
+
+        // Return the relative path to the resized image
+        return $assetPath . '/' . $randomFileName;
     }
 }

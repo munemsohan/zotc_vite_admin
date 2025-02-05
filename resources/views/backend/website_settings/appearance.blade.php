@@ -58,8 +58,10 @@
                     </div>
                     <!-- Header Logo -->
                     <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Header Logo') }} <br> <small>( 250 * 40
-                                )</small></label>
+                        <label class="col-md-3 col-from-label">
+                            {{ translate('Header Logo') }} <br>
+                            <small>( 250 * 50 )</small>
+                        </label>
                         <div class="col-md-8">
                             <div class=" input-group" data-toggle="aizuploader" data-type="image">
                                 <div class="input-group-prepend">
@@ -323,7 +325,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-6">
         <!-- Product Details -->
         <div class="card shadow-none bg-light">
@@ -416,7 +418,7 @@
         </div>
     </div>
 
-    
+
 
     {{-- authenticate layout --}}
     <div class="col-lg-6">
@@ -557,8 +559,7 @@
                 <h6 class="fw-600 mb-0">{{ translate('Website Popup') }}</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Show website popup -->
                     <div class="form-group row">
@@ -609,8 +610,7 @@
                 <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Description -->
                     <div class="form-group row">
@@ -637,8 +637,7 @@
                 <h6 class="fw-600 mb-0">{{ translate('Custom Script') }}</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Header custom script -->
                     <div class="form-group row">

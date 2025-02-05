@@ -56,7 +56,7 @@
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <select name="product_id[]" class="form-control aiz-selectpicker" data-live-search="true"
-                                    multiple>
+                                    multiple required>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                                     @endforeach
@@ -72,7 +72,7 @@
                                 <div class="input-group d-block d-md-flex">
                                     <div class="input-group-prepend ">
                                         <span
-                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ 'https://'.env('APP_URL').'/landing' }}/</span>
+                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ str_replace('admin/', '', url('landing')) }}</span>
                                     </div>
                                     <input type="text" class="form-control w-100 w-md-auto"
                                         placeholder="{{ translate('Slug') }}" name="slug" id="slug" required>

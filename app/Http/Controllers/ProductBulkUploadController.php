@@ -119,6 +119,7 @@ class ProductBulkUploadController extends Controller
         $commission_type = $request->input('commission_type');
         $commission_amount = $request->input('commission_amount');
 
+        // try {
         // Connect to the source database
         $sitesConnection = DB::connection('dynamic_db');
         $sitesConnection->getPdo()->exec("USE " . $db_source);
@@ -132,7 +133,13 @@ class ProductBulkUploadController extends Controller
             $product_count += $this->handleProduct($source_product, $db_source, $commission_type, $commission_amount, $sitesConnection);
         }
 
-        flash(translate($product_count . ' Products imported successfully.'))->success();
+        flash(translate("$product_count Products imported successfully."))->success();
+        // } catch (\Exception $e) {
+        //     // Handle exceptions gracefully and log errors
+        //     \Log::error("Error uploading dropship products: " . $e->getMessage());
+        //     flash(translate("An error occurred while importing products."))->error();
+        // }
+
         return back();
     }
 
@@ -142,23 +149,13 @@ class ProductBulkUploadController extends Controller
             ->where('remote_id', $source_product->id)
             ->first();
 
-        if ($existing_product) {
-            // Assuming $new_product is already defined and has id and category_id attributes
-            $productCategory = ProductCategory::firstOrNew(
-                ['product_id' => $existing_product->id]
-            );
-
-            $productCategory->category_id = $existing_product->category_id;
-            $productCategory->save();
-            return 0;
-        }
-
         $product_data = (array) $source_product;
         unset($product_data['id']); // Remove the ID to avoid conflicts
         $product_data['added_by'] = 'admin';
         $product_data['user_id'] = 1;
 
-        $this->handleCategory($product_data, $source_product->category_id, $sitesConnection); // Set the category ID
+        // Update or set related data
+        $this->handleCategory($product_data, $source_product->category_id, $sitesConnection);
         $this->handleProductBrand($product_data, $source_product->brand_id, $sitesConnection);
         $this->handleProductSlug($product_data, $source_product);
         $this->handleProductImages($product_data, $source_product, $sitesConnection);
@@ -168,108 +165,86 @@ class ProductBulkUploadController extends Controller
         $product_data['remote_id'] = $source_product->id;
         unset($product_data['tiny_url']);
 
-        $new_product = Product::create($product_data);
+        if ($existing_product) {
+            // Update the existing product
+            $existing_product->update($product_data);
 
-        // Assuming $new_product is already defined and has id and category_id attributes
-        $productCategory = ProductCategory::firstOrNew(
-            ['product_id' => $new_product->id]
-        );
+            $productCategory = ProductCategory::where('product_id', $existing_product->id)->first();
 
-        $productCategory->category_id = $new_product->category_id;
-        $productCategory->save();
+            if ($productCategory) {
+                // Update the existing record using a raw query
+                ProductCategory::where('product_id', $existing_product->id)
+                    ->update(['category_id' => $existing_product->category_id]);
+            } else {
+                // Create a new record
+                ProductCategory::create([
+                    'product_id' => $existing_product->id,
+                    'category_id' => $existing_product->category_id,
+                ]);
+            }
 
-        // Handle product stocks
-        $this->handleProductStocks($source_product, $new_product->id, $sitesConnection, $commission_type, $commission_amount);
+            // Update product stocks
+            $this->handleProductStocks($source_product, $existing_product->id, $sitesConnection, $commission_type, $commission_amount);
 
-        return 1;
+            return 0; // Indicate the product was updated
+        } else {
+            // Create a new product
+            $new_product = Product::create($product_data);
+
+            // Set the category relationship
+            ProductCategory::create([
+                'product_id' => $new_product->id,
+                'category_id' => $new_product->category_id,
+            ]);
+
+            // Handle product stocks
+            $this->handleProductStocks($source_product, $new_product->id, $sitesConnection, $commission_type, $commission_amount);
+
+            return 1; // Indicate the product was newly created
+        }
     }
 
     private function handleCategory(&$product_data, $source_category_id, $sitesConnection)
     {
-        // Fetch the category from the source database
         $source_category = $sitesConnection->table('categories')
             ->where('id', $source_category_id)
             ->first();
 
-        if (!$source_category) {
-            return null; // Handle case where category doesn't exist in source database
-        }
-
-        // Check if the category already exists in your main database
-        $existing_category = Category::where('slug', $source_category->slug)->first();
-
-        if ($existing_category) {
+        if ($source_category) {
+            $existing_category = Category::firstOrCreate(
+                ['slug' => $source_category->slug],
+                ['name' => $source_category->name]
+            );
             $product_data['category_id'] = $existing_category->id;
-        } else {
-            // Create new category if it doesn't exist
-            $category_data = (array) $source_category;
-            unset($category_data['id']); // Remove the ID to avoid conflicts
-            unset($category_data['parent_id']);
-            unset($category_data['level']);
-            unset($category_data['order_level']);
-            unset($category_data['commision_rate']);
-            unset($category_data['banner']);
-            unset($category_data['icon']);
-            unset($category_data['cover_image']);
-            unset($category_data['featured']);
-            unset($category_data['top']);
-            unset($category_data['created_at']);
-            unset($category_data['updated_at']);
-
-            $new_category = Category::create($category_data);
-            $product_data['category_id'] = $new_category->id;; // Return newly created category ID
         }
     }
 
-
     private function handleProductBrand(&$product_data, $source_brand_id, $sitesConnection)
     {
-        // Fetch the brand from the source database
         $source_brand = $sitesConnection->table('brands')
             ->where('id', $source_brand_id)
             ->first();
 
-        if (!$source_brand) {
-            return null; // Handle case where brand doesn't exist in source database
-        }
-
-        // Check if the brand already exists in your main database
-        $existing_brand = Brand::where('slug', $source_brand->slug)->first();
-
-        if ($existing_brand) {
+        if ($source_brand) {
+            $existing_brand = Brand::firstOrCreate(
+                ['slug' => $source_brand->slug],
+                ['name' => $source_brand->name]
+            );
             $product_data['brand_id'] = $existing_brand->id;
-        } else {
-            // Create new brand if it doesn't exist
-            $brand_data = (array) $source_brand;
-            unset($brand_data['id']); // Remove the ID to avoid conflicts
-            unset($brand_data['logo']);
-            unset($brand_data['top']);
-            unset($brand_data['created_at']);
-            unset($brand_data['updated_at']);
-
-            $new_brand = Brand::create($brand_data);
-            $product_data['brand_id'] = $new_brand->id;; // Return newly created brand ID
         }
     }
 
     private function handleProductSlug(&$product_data, $source_product)
     {
-        $existing_slug_product = Product::where('slug', $source_product->slug)->first();
-
-        if ($existing_slug_product) {
+        if (Product::where('slug', $source_product->slug)->exists()) {
             $product_data['slug'] = $source_product->slug . '-' . rand(100, 999);
         }
     }
 
     private function handleProductImages(&$product_data, $source_product, $sitesConnection)
     {
-        if ($source_product->photos) {
-            $product_data['photos'] = $this->copyImages($source_product->photos, $sitesConnection);
-        }
-
-        if ($source_product->thumbnail_img) {
-            $product_data['thumbnail_img'] = $this->copyImages($source_product->thumbnail_img, $sitesConnection);
-        }
+        $product_data['photos'] = $this->copyImages($source_product->photos, $sitesConnection);
+        $product_data['thumbnail_img'] = $this->copyImages($source_product->thumbnail_img, $sitesConnection);
     }
 
     private function copyImages($image_ids, $sitesConnection)
@@ -283,10 +258,7 @@ class ProductBulkUploadController extends Controller
                 ->first();
 
             if ($source_image) {
-                $image_data = (array) $source_image;
-                unset($image_data['id']); // Remove the ID to avoid conflicts
-                $image_data['user_id'] = 1;
-                $upload = Upload::create($image_data);
+                $upload = Upload::create(['file_name' => $source_image->file_name]);
                 $new_images_array[] = $upload->id;
             }
         }
@@ -298,16 +270,12 @@ class ProductBulkUploadController extends Controller
     {
         $unit_price = $source_product->unit_price;
 
-        if ($commission_type == 'amount') {
-            $adjusted_price = $unit_price + $commission_amount;
-        } else if ($commission_type == 'percent') {
-            $adjusted_price = $unit_price * (1 + $commission_amount / 100);
-        } else {
-            return; // Handle invalid commission type if necessary
+        if ($commission_type === 'amount') {
+            $product_data['unit_price'] = $unit_price + $commission_amount;
+        } elseif ($commission_type === 'percent') {
+            $product_data['unit_price'] = $unit_price * (1 + $commission_amount / 100);
         }
-
-        $product_data['unit_price'] = $adjusted_price;
-        $product_data['purchase_price'] = $adjusted_price;
+        $product_data['purchase_price'] = $product_data['unit_price'];
     }
 
     private function handleProductStocks($source_product, $new_product_id, $sitesConnection, $commission_type, $commission_amount)
@@ -318,13 +286,13 @@ class ProductBulkUploadController extends Controller
 
         foreach ($source_stocks as $source_stock) {
             $stock_data = (array) $source_stock;
-            unset($stock_data['id']); // Remove the ID to avoid conflicts
-            $stock_data['product_id'] = $new_product_id; // Set the new product ID
+            unset($stock_data['id']);
+            $stock_data['product_id'] = $new_product_id;
 
-            if ($commission_type == 'amount') {
-                $stock_data['price'] +=  $commission_amount;
-            } else if ($commission_type == 'percent') {
-                $stock_data['price'] = $stock_data['price'] * (1 + $commission_amount / 100);
+            if ($commission_type === 'amount') {
+                $stock_data['price'] += $commission_amount;
+            } elseif ($commission_type === 'percent') {
+                $stock_data['price'] *= (1 + $commission_amount / 100);
             }
 
             ProductStock::create($stock_data);

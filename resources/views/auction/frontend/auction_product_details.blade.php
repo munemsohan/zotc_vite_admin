@@ -31,7 +31,7 @@
     <meta property="og:site_name" content="{{ get_setting('meta_title') }}" />
     <meta property="og:price:amount" content="{{ single_price($detailedProduct->unit_price) }}" />
     <meta property="product:price:currency" content="{{ get_system_default_currency()->code }}" />
-    <meta property="fb:app_id" content="{{ env('FACEBOOK_PIXEL_ID') }}">
+    <meta property="fb:app_id" content="{{ get_business_setting('facebook_pixel_id') }}">
 @endsection
 
 @section('content')

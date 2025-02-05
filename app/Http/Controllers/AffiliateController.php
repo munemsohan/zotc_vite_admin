@@ -41,7 +41,7 @@ class AffiliateController extends Controller
     }
 
     public function affiliate_option_store(Request $request){
-        //dd($request->all());
+        // dd($request->all());
         $affiliate_option = AffiliateOption::where('type', $request->type)->first();
         if($affiliate_option == null){
             $affiliate_option = new AffiliateOption;
@@ -88,7 +88,7 @@ class AffiliateController extends Controller
         $affiliate_option->save();
 
         flash("This has been updated successfully")->success();
-        return back();
+        return redirect()->back();
     }
 
     public function configs(){
@@ -146,6 +146,7 @@ class AffiliateController extends Controller
     }
 
     public function store_affiliate_user(Request $request){
+        // dd($request->all());
         if(!Auth::check()){
             if(User::where('email', $request->email)->first() != null){
                 flash(translate('Email already exists!'))->error();
@@ -210,7 +211,7 @@ class AffiliateController extends Controller
         $affiliate_user->informations = json_encode($data);
         if($affiliate_user->save()){
             flash(translate('Your verification request has been submitted successfully!'))->success();
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
 
         flash(translate('Sorry! Something went wrong.'))->error();

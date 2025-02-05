@@ -242,9 +242,11 @@ class OrderController extends Controller
 
         if (!is_null($order->shipping_address)) {
             $order_shipping_address = json_decode($order->shipping_address);
-            $delivery_boys = User::where('city', $order_shipping_address->city)
-                ->where('user_type', 'delivery_boy')
-                ->get();
+            if (isset($order_shipping_address->city)) {
+                $delivery_boys = User::where('city', $order_shipping_address->city)
+                    ->where('user_type', 'delivery_boy')
+                    ->get();
+            }
         }
 
         $carriers = Carrier::where('status', 1)->get();
@@ -252,7 +254,10 @@ class OrderController extends Controller
         $order->editing = Auth::id();
         $order->viewed = 1;
         $order->save();
-        return view('backend.sales.show', compact('order', 'delivery_boys', 'carriers', 'products'));
+
+        $user_all_orders = Order::where('user_id', $order->user_id)->get();
+
+        return view('backend.sales.show', compact('order', 'delivery_boys', 'carriers', 'products', 'user_all_orders'));
     }
 
     /**
@@ -447,17 +452,17 @@ class OrderController extends Controller
         $planParts = explode(',', $plan);
 
         if ($planParts[0] == '11') {
-            $orderTotal = $combined_order->grand_total;
+            $orderTotal = (float) $combined_order->grand_total;
             $currency = get_zotc_setting('currency');
-            $percentageFromOrderTotal = (float)($orderTotal / 100);
+            $percent = (float) (get_zotc_setting('order_percentage') ?? 1);
 
-            if ($currency == 'BDT') {
-                $balanceKey = 'balance_bdt';
-            } else {
-                $balanceKey = 'balance';
-            }
+            $percentageFromOrderTotal = ($orderTotal * $percent) / 100;
 
-            $balance = (float)get_zotc_setting($balanceKey);
+            // Determine the balance key based on currency
+            $balanceKey = $currency === 'BDT' ? 'balance_bdt' : 'balance';
+
+            // Calculate the new balance
+            $balance = (float) get_zotc_setting($balanceKey);
             $deductedBalance = $balance - $percentageFromOrderTotal;
 
             $zotcSetting = ZotcSetting::where('type', $balanceKey)->first();
@@ -666,22 +671,29 @@ class OrderController extends Controller
 
     public function update_address(Request $request)
     {
+        // Retrieve the order
         $order = Order::findOrFail($request->order_id);
 
-        $shipping_address = json_decode($order->shipping_address, true);
+        // Prepare the shipping address
+        $shipping_address = [
+            'address' => $request->address,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ];
 
-        $shipping_address['address'] = $request->address;
-        $shipping_address['country'] = $request->country;
-        $shipping_address['state'] = $request->state;
-        $shipping_address['city'] = $request->city;
-        $shipping_address['postal_code'] = $request->postal_code;
-        $shipping_address['phone'] = $request->phone;
-
+        // Update and save the shipping address
         $order->shipping_address = json_encode($shipping_address);
-
         $order->save();
 
-        return 1;
+        // Return a JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Order address has been updated successfully.'
+        ], 200);
     }
 
     public function update_payment_status(Request $request)
@@ -1504,8 +1516,8 @@ class OrderController extends Controller
         }
 
         // Construct the URL with the user's phone number
-        $url = 'https://m.root6.xyz/wp-content/plugins/orderguard/orderguard.php';
-        $apiKey = '5467yujhgfred54erwsd'; // Ideally, this should be in a config file or .env
+        $url = 'https://www.root6.xyz/wp-content/plugins/orderguard2/orderguard.php';
+        $apiKey = '5467yujhgfred54erwsd';
         $fraudStatus = null;
 
         try {
@@ -1528,27 +1540,33 @@ class OrderController extends Controller
 
     private function formatFraudStatus($responseData)
     {
-        $carriers = ['Steadfast', 'RedX', 'Pathao', 'Paperfly'];
         $formattedStatus = [];
         $totalParcels = 0;
         $totalDelivered = 0;
         $totalCanceled = 0;
 
-        foreach ($carriers as $carrier) {
-            if (isset($responseData[$carrier])) {
-                $carrierData = $responseData[$carrier];
-                $totalParcels += $carrierData['total_parcels'];
-                $totalDelivered += $carrierData['delivered_parcels'];
-                $totalCanceled += $carrierData['canceled_parcels'];
+        // Check if the response has a 'success' key
+        if (isset($responseData['success']) && is_array($responseData['success'])) {
+            foreach ($responseData['success'] as $carrier => $carrierData) {
+                // Dynamically extract parcel details
+                $carrierParcels = $carrierData['Total Parcels'] ?? $carrierData['Total Delivery'] ?? 0;
+                $carrierDelivered = $carrierData['Delivered Parcels'] ?? $carrierData['Successful Delivery'] ?? 0;
+                $carrierCanceled = $carrierData['Canceled Parcels'] ?? $carrierData['Canceled Delivery'] ?? 0;
 
-                $formattedStatus[] = $carrier . ':' . $carrierData['total_parcels'] . ',' . $carrierData['delivered_parcels'] . ',' . $carrierData['canceled_parcels'];
-            } else {
-                $formattedStatus[] = $carrier . ':0,0,0';
+                // Update overall totals
+                $totalParcels += $carrierParcels;
+                $totalDelivered += $carrierDelivered;
+                $totalCanceled += $carrierCanceled;
+
+                // Format the status for the current carrier
+                $formattedStatus[] = "$carrier:$carrierParcels,$carrierDelivered,$carrierCanceled";
             }
         }
 
-        $formattedStatus[] = 'Total:' . $totalParcels . ',' . $totalDelivered . ',' . $totalCanceled;
+        // Add the overall totals to the formatted status
+        $formattedStatus[] = "Total:$totalParcels,$totalDelivered,$totalCanceled";
 
+        // Return the status as a semicolon-separated string
         return implode(';', $formattedStatus);
     }
 }

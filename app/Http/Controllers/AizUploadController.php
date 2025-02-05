@@ -231,7 +231,7 @@ class AizUploadController extends Controller
                 // Get the current host's domain and extract slug
                 $currentRequest = HttpFoundationRequest::createFromGlobals();
                 $domain = $currentRequest->getHost();
-                $slug = str_replace('.' . env('CENTRAL_DOMAIN'), '', $domain);
+                $slug = str_replace('.' . get_zotc_setting('central_domain'), '', $domain);
 
                 // Construct the uploaded path with the random filename and extension
                 $uploaded_path = 'uploads/' . $slug . '/' . $random_filename . '.webp';

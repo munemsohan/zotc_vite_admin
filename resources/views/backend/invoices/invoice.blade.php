@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ translate('INVOICE') }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <style media="all">
         @page {
             margin: 0;
@@ -87,7 +87,8 @@
                 <tr>
                     <td>
                         @if ($logo != null)
-                            <img src="{{ uploaded_asset(get_business_setting('header_logo_white')) }}" height="30" style="display:inline-block;background: white !important;">
+                            <img src="{{ uploaded_asset(get_business_setting('header_logo_white')) }}" height="30"
+                                style="display:inline-block;background: white !important;">
                         @else
                             <h1 class="fw-bold">{{ get_business_setting('site_name') }}</h1>
                         @endif
@@ -106,7 +107,8 @@
                     $trackingArray = explode('-', $order->tracking_code);
                 @endphp
                 <tr>
-                    <td class="gry-color small">{{ get_business_setting('contact_address') }}</td>
+                    <td class="gry-color small">{{ get_business_setting('contact_address', null, session('locale')) }}
+                    </td>
                     <td align="center">
                         @if (isset($trackingArray[0]) && !empty($trackingArray[0]))
                             <span>Consignment ID: {{ $trackingArray[0] }}</span>
@@ -117,7 +119,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="gry-color small">{{ translate('Email') }}: {{ get_business_setting('contact_email') }}</td>
+                    <td class="gry-color small">
+                        {{ translate('Email') }}: {{ get_business_setting('contact_email') }}
+                    </td>
                     <td align="center">
                         @if (isset($trackingArray[1]) && !empty($trackingArray[1]))
                             <span>Tracking ID: {{ $trackingArray[1] }}</span>
@@ -129,11 +133,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="gry-color small">{{ translate('Phone') }}: {{ get_business_setting('contact_phone') }}</td>
+                    <td class="gry-color small">{{ translate('Phone') }}: {{ get_business_setting('contact_phone') }}
+                    </td>
                     <td></td>
                     <td class="text-right small">
                         <span class="gry-color small">{{ translate('Payment') }}:</span>
-                        <span class="strong">{{ translate(ucfirst(str_replace('_', ' ', $order->payment_type))) }}</span>
+                        <span
+                            class="strong">{{ translate(ucfirst(str_replace('_', ' ', $order->payment_type))) }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -167,22 +173,33 @@
                     <td class="strong small gry-color">{{ translate('Bill to') }}:</td>
                 </tr>
                 <tr>
-                    <td class="strong" style="font-size: 1.5rem">{{ $shipping_address->name }}</td>
+                    <td class="strong" style="font-size: 1.5rem">{{ $shipping_address->name ?? '' }}</td>
                 </tr>
                 <tr>
-                    <td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }},
-                        @if (isset($shipping_address->state))
+                    <td class="gry-color small">
+                        {{ $shipping_address->address ?? '' }},
+                        {{ $shipping_address->city ?? '' }},
+                        @if (!empty($shipping_address->state))
                             {{ $shipping_address->state }} -
-                        @endif {{ $shipping_address->postal_code }},
-                        {{ $shipping_address->country }}
+                        @endif
+                        {{ $shipping_address->postal_code ?? '' }},
+                        {{ $shipping_address->country ?? '' }}
                     </td>
                 </tr>
-                <tr>
-                    <td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td>
-                </tr>
-                <tr>
-                    <td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td>
-                </tr>
+                @if (!empty($shipping_address->email) && !Str::endsWith($shipping_address->email, '@zo.tc'))
+                    <tr>
+                        <td class="gry-color small">
+                            {{ translate('Email') }}: {{ $shipping_address->email }}
+                        </td>
+                    </tr>
+                @endif
+                @if (!empty($shipping_address->phone))
+                    <tr>
+                        <td class="gry-color small">
+                            {{ translate('Phone') }}: {{ $shipping_address->phone }}
+                        </td>
+                    </tr>
+                @endif
             </table>
         </div>
 
@@ -238,9 +255,11 @@
                                     @endif
                                 </td>
                                 <td class="">{{ $orderDetail->quantity }}</td>
-                                <td class="currency">{{ single_price2($orderDetail->price / $orderDetail->quantity) }}</td>
+                                <td class="currency">{{ single_price2($orderDetail->price / $orderDetail->quantity) }}
+                                </td>
                                 @if ($order->orderDetails->sum('tax') > 0)
-                                    <td class="currency">{{ single_price2($orderDetail->tax / $orderDetail->quantity) }}</td>
+                                    <td class="currency">
+                                        {{ single_price2($orderDetail->tax / $orderDetail->quantity) }}</td>
                                 @endif
                                 <td class="text-right currency">
                                     {{ single_price2($orderDetail->price + $orderDetail->tax) }}</td>
@@ -263,10 +282,10 @@
                     <tr>
                         <td class="text-left" style="padding:0 1rem">
                             @php
-                            $removedXML = '<?xml version="1.0" encoding="UTF-8"@endphp';
+                            $removedXML = '<?xml version="1.0" encoding="UTF-8"?>';
                             $qrCode = QrCode::size(100)->generate($order->track_url);
                             $qrCode = str_replace($removedXML, '', $qrCode);
-                            ?>
+                            @endphp
                             {!! $qrCode !!}
                             <p style="margin-top: 10px; font-size: 11px">{{ $order->track_url }}</p>
                         </td>
@@ -305,14 +324,22 @@
     </div>
     <div class="footer">
         <div style="float: left; width: 40%; text-align: left; padding-left: 10px;">
-            <img src="https://zo.tc/assets/img/invoice-logo.webp" height="30" style="display:inline-block; background: white !important;">
+            @if (!empty(get_zotc_setting('invoice_footer_logo_link')))
+                <img src="{{ get_zotc_setting('invoice_footer_logo_link') }}" height="30"
+                    style="display:inline-block; background: white !important;">
+            @else
+                <img src="https://zo.tc/assets/img/invoice-logo.webp" height="30"
+                    style="display:inline-block; background: white !important;">
+            @endif
         </div>
         <div style="float: left; width: 55%;">
-            <p style="margin-top: 10px; text-align: right;">Instantly Build your eCommerce Website with
-                https://{{ env('CENTRAL_DOMAIN') }}</p>
+            <p style="margin-top: 10px; text-align: right;">
+                {{ !empty(get_zotc_setting('invoice_footer_text'))
+                    ? get_zotc_setting('invoice_footer_text')
+                    : 'Instantly Build your eCommerce Website with https://' . get_zotc_setting('central_domain') }}
+            </p>
         </div>
     </div>
-    
 </body>
 
 </html>

@@ -64,9 +64,11 @@ class OrderController extends Controller
 
         if (!is_null($order->shipping_address)) {
             $order_shipping_address = json_decode($order->shipping_address);
-            $delivery_boys = User::where('city', $order_shipping_address->city)
-                ->where('user_type', 'delivery_boy')
-                ->get();
+            if (isset($order_shipping_address->city)) {
+                $delivery_boys = User::where('city', $order_shipping_address->city)
+                    ->where('user_type', 'delivery_boy')
+                    ->get();
+            }
         }
 
         $carriers = Carrier::where('status', 1)->get();

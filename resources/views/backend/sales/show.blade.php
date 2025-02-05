@@ -274,7 +274,9 @@
                             @endif
 
                             @if (!empty($shippingAddress->email))
-                                {{ $shippingAddress->email }}<br>
+                                <input type="text" id="email" value="{{ $shippingAddress->email }}"
+                                    oninput="saveOrderAddress()" placeholder="Shipping Email">
+                                <br>
                             @endif
 
                             @if (!empty($shippingAddress->address))
@@ -304,8 +306,8 @@
                             @endif
                         </address>
 
-                        <input type="customer_phone" id="phone" value="{{ $shippingAddress->phone }}"
-                            oninput="saveOrderAddress()" placeholder="Customer Phone">
+                        <input type="text" id="phone" value="{{ $shippingAddress->phone }}"
+                            oninput="saveOrderAddress()" placeholder="Shipping Phone">
                     @else
                         @if ($order->user)
                             <address>
@@ -1311,26 +1313,22 @@
 
         function saveOrderAddress() {
             var order_id = {{ $order->id }};
-            var country = $('[name=country_id] option:selected').text().trim();
-            var state = $('[name=state_id] option:selected').text().trim();
-            var city = $('[name=city_id] option:selected').text().trim();
-            var address = $('#address').val();
-            var postal_code = $('#postal_code').val();
-            var phone = $('#phone').val();
-
-            $.post('{{ route('orders.update_address') }}', {
+            var formData = {
                 _token: '{{ csrf_token() }}',
                 order_id: order_id,
-                country: country,
-                state: state,
-                city: city,
-                address: address,
-                postal_code: postal_code,
-                phone: phone,
-            }, function(data) {
+                country: $('[name=country_id] option:selected').text().trim(),
+                state: $('[name=state_id] option:selected').text().trim(),
+                city: $('[name=city_id] option:selected').text().trim(),
+                address: $('#address').val(),
+                postal_code: $('#postal_code').val(),
+                email: $('#email').val(),
+                phone: $('#phone').val()
+            };
+
+            $.post('{{ route('orders.update_address') }}', formData, function(data) {
                 // AIZ.plugins.notify('success', '{{ translate('Order Address has been updated') }}');
             });
-        };
+        }
 
         function sendToCarrier() {
             $('#send-to-courier').prop('disabled', true).html('Processing');

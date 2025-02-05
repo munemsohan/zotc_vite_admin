@@ -1,0 +1,66 @@
+{
+    "name": "uddoktaPay Payment Module",
+    "unique_identifier": "uddoktapay",
+    "version": "1.0",
+    "minimum_item_version": "6.0",
+    "addon_banner": "uddoktapay_banner.png",
+    "directory": [
+        {
+            "name": [
+                "app/Library"
+            ]
+        }
+    ],
+    "sql_file": "",
+    "files": [
+        {
+            "root_directory": "addons/uddoktapay/views/backend/activation.blade.php",
+            "update_directory": "resources/views/backend/setup_configurations/activation.blade.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/views/backend/payment_method.blade.php",
+            "update_directory": "resources/views/backend/setup_configurations/payment_method.blade.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/views/frontend/index.blade.php",
+            "update_directory": "resources/views/frontend/user/wallet/index.blade.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/views/frontend/payment_select.blade.php",
+            "update_directory": "resources/views/frontend/payment_select.blade.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/routes/uddoktapay.php",
+            "update_directory": "routes/uddoktapay.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/routes/RouteServiceProvider.php",
+            "update_directory": "app/Providers/RouteServiceProvider.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/controllers/UddoktaPay.php",
+            "update_directory": "app/Library/UddoktaPay.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/controllers/UddoktapayController.php",
+            "update_directory": "app/Http/Controllers/Payment/UddoktapayController.php"
+        },
+
+        {
+            "root_directory": "addons/uddoktapay/controllers/VerifyCsrfToken.php",
+            "update_directory": "app/Http/Middleware/VerifyCsrfToken.php"
+        },
+        {
+            "root_directory": "addons/uddoktapay/assets/uddoktapay_banner.png",
+            "update_directory": "public/uddoktapay_banner.png"
+        },
+        {
+            "root_directory": "addons/uddoktapay/assets/uddoktapay_logo.png",
+            "update_directory": "public/assets/img/cards/uddoktapay_logo.png"
+        },
+        {
+            "root_directory": "addons/uddoktapay/assets/up_payment_logo.png",
+            "update_directory": "public/assets/img/cards/up_payment_logo.png"
+        }
+    ]
+}

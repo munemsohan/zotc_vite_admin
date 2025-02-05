@@ -47,7 +47,7 @@
                         
                         <div class="col-md-4">
                             <button type="button" class="btn btn-primary fetch-categories" data-source="zotc_bdb">Import
-                                Products from shopbase.com.bd</button>
+                                Products from shopbasebd.com</button>
                         </div>
 
                         <div class="col-md-4">

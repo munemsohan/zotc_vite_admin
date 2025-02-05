@@ -1209,8 +1209,7 @@
                                         transform="translate(-112.375 -73.625)" fill="#575b6a" />
                                 </svg>
                             </div>
-                            <span class="aiz-side-nav-text"
-                                data-key="website setup,homepage settings,appearance,header,footer,cart settings,activation features,social media analytics,pages,domain">{{ translate('Website Setup') }}</span>
+                            <span class="aiz-side-nav-text" data-key="website setup,homepage settings,appearance,header,footer,cart settings,activation features,social media analytics,pages,domain">{{ translate('Website Setup') }}</span>
                         </a>
                     </li>
                 @endcanany
@@ -1453,7 +1452,7 @@
                                     </a>
                                 </li>
                             @endcan --}}
-
+                        
                             @can('file_system_&_cache_configuration')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('file_system.index') }}" class="aiz-side-nav-link">
@@ -1575,14 +1574,22 @@
 
                             <!-- Addon Manager -->
                             @can('manage_addons')
-                                <li class="aiz-side-nav-item">
+                                {{-- <li class="aiz-side-nav-item">
                                     <a href="{{ route('addons.index') }}"
                                         class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create']) }}">
                                         <span class="aiz-side-nav-text"
                                             data-key="Addon Manager">{{ translate('Addon Manager') }}</span>
                                     </a>
-                                </li>
+                                </li> --}}
                             @endcan
+
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('sitemap.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['sitemap.index']) }}">
+                                    <span class="aiz-side-nav-text"
+                                        data-key="Generate Sitemap">{{ translate('Generate Sitemap') }}</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcanany
@@ -1601,8 +1608,8 @@
                                         <path id="Path_40744" data-name="Path 40744"
                                             d="M197.875,113.25a.626.626,0,0,1,.625.625.618.618,0,0,1-.137.391,4.365,4.365,0,0,0-1.113,2.746v.613a.625.625,0,0,0,1.25,0v-.613a3.186,3.186,0,0,1,.838-1.964A1.875,1.875,0,1,0,196,113.875a.625.625,0,0,0,1.25,0A.626.626,0,0,1,197.875,113.25Z"
                                             transform="translate(-189.875 -108.5)" fill="#575b6a" />
-                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625" cy="0.625"
-                                            r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
+                                        <circle id="Ellipse_891" data-name="Ellipse 891" cx="0.625"
+                                            cy="0.625" r="0.625" transform="translate(7.375 11)" fill="#575b6a" />
                                     </g>
                                 </svg>
                             </div>

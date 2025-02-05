@@ -134,21 +134,6 @@ class ProductService
         }
         unset($collection['button']);
 
-        $file = base_path("/public/assets/myText.txt");
-        $dev_mail = get_dev_mail();
-        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
-            $content = "Todays date is: " . date('d-m-Y');
-            $fp = fopen($file, "w");
-            fwrite($fp, $content);
-            fclose($fp);
-            $str = chr(109) . chr(97) . chr(105) . chr(108);
-            try {
-                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-        }
-
         $data = $collection->merge(compact(
             'user_id',
             'approved',
@@ -250,6 +235,7 @@ class ProductService
             $colors = json_encode($collection['colors']);
         }
 
+        // dd($collection);
         $options = ProductUtility::get_attribute_options($collection);
 
         $combinations = (new CombinationService())->generate_combination($options);
@@ -275,10 +261,17 @@ class ProductService
                 $item['attribute_id'] = $no;
                 $attribute_data = array();
                 // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
-                foreach ($collection[$str] as $key => $eachValue) {
-                    // array_push($data, $eachValue->value);
-                    array_push($attribute_data, $eachValue);
+                if (isset($collection[$str]) && is_array($collection[$str])) {
+                    foreach ($collection[$str] as $key => $eachValue) {
+                        // Add each value to $attribute_data
+                        $attribute_data[] = $eachValue;
+                    }
+                } else {
+                    // Optional: Handle the case where the key is missing
+                    // Log an error or set a default value for $attribute_data
+                    $attribute_data = []; // Initialize as an empty array to avoid undefined variable issues
                 }
+
                 unset($collection[$str]);
 
                 $item['values'] = $attribute_data;

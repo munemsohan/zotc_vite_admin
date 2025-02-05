@@ -198,23 +198,24 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="FACEBOOK_PAGE_ID">
+                        <input type="hidden" name="types[]"
+                            value="facebook_page_id
                         <div class="col-md-3">
-                            <label class="col-from-label">{{ translate('Facebook Page ID') }}</label>
-                        </div>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control" name="FACEBOOK_PAGE_ID"
-                                value="{{ env('FACEBOOK_PAGE_ID') }}"
-                                placeholder="{{ translate('Facebook Page ID') }}" required>
-                        </div>
+                        <label class="col-from-label">{{ translate('Facebook Page ID') }}</label>
                     </div>
-                    <div class="form-group mb-0 text-right">
-                        <button type="submit" class="btn btn-sm btn-primary">{{ translate('Save') }}</button>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="facebook_page_id"
+                            value="{{ get_business_setting('facebook_page_id') }}"
+                            placeholder="{{ translate('Facebook Page ID') }}" required>
                     </div>
-                </form>
             </div>
+            <div class="form-group mb-0 text-right">
+                <button type="submit" class="btn btn-sm btn-primary">{{ translate('Save') }}</button>
+            </div>
+            </form>
         </div>
     </div>
+
     <div class="col-md-6">
         <div class="card bg-gray-light">
             <div class="card-header">
@@ -263,12 +264,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="TAWK_ID">
+                        <input type="hidden" name="types[]" value="tawk_id">
                         <div class="col-md-3">
                             <label class="col-from-label">{{ translate('Tawk ID') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="TAWK_ID" value="{{ env('TAWK_ID') }}"
+                            <input type="text" class="form-control" name="tawk_id"
+                                value="{{ get_business_setting('tawk_id') }}"
                                 placeholder="{{ translate('Tawk ID Link') }}" required>
                         </div>
                     </div>
@@ -284,7 +286,7 @@
     <div class="col-md-6">
         <div class="card shadow-none bg-light">
             <div class="card-header">
-                <h5 class="mb-0 h6">{{ translate('whatsapp_setting') }}</h5>
+                <h5 class="mb-0 h6">{{ translate('Whatsapp Setting') }}</h5>
             </div>
             <div class="card-body">
                 <form class="form-horizontal" action="{{ route('whatsapp.update') }}" method="POST">
@@ -302,13 +304,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="WHATSAPP_NUMBER">
+                        <input type="hidden" name="types[]" value="whatsapp_number">
                         <div class="col-md-3">
                             <label class="col-from-label">{{ translate('Whatsapp Number') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="WHATSAPP_NUMBER"
-                                value="{{ env('WHATSAPP_NUMBER') }}"
+                            <input type="text" class="form-control" name="whatsapp_number"
+                                value="{{ get_business_setting('whatsapp_number') }}"
                                 placeholder="{{ translate('Whatsapp Number') }}" required>
                         </div>
                     </div>
@@ -446,35 +448,35 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="FACEBOOK_PIXEL_ID">
+                        <input type="hidden" name="types[]" value="facebook_pixel_id">
                         <div class="col-lg-3">
                             <label class="col-from-label">{{ translate('Facebook Pixel ID') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="FACEBOOK_PIXEL_ID"
-                                value="{{ env('FACEBOOK_PIXEL_ID') }}"
+                            <input type="text" class="form-control" name="facebook_pixel_id"
+                                value="{{ get_business_setting('facebook_pixel_id') }}"
                                 placeholder="{{ translate('Facebook Pixel ID') }}" required>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="FACEBOOK_ACCESS_TOKEN">
+                        <input type="hidden" name="types[]" value="facebook_access_token">
                         <div class="col-lg-3">
                             <label class="col-from-label">{{ translate('Facebook Access Token') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="FACEBOOK_ACCESS_TOKEN"
-                                value="{{ env('FACEBOOK_ACCESS_TOKEN') }}"
+                            <input type="text" class="form-control" name="facebook_access_token"
+                                value="{{ get_business_setting('facebook_access_token') }}"
                                 placeholder="{{ translate('Facebook Pixel Access Token') . ' (optional)' }}">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="FACEBOOK_TEST_EVENT_CODE">
+                        <input type="hidden" name="types[]" value="facebook_test_event_code">
                         <div class="col-lg-3">
                             <label class="col-from-label">{{ translate('Facebook Test Event Code') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="FACEBOOK_TEST_EVENT_CODE"
-                                value="{{ env('FACEBOOK_TEST_EVENT_CODE') }}"
+                            <input type="text" class="form-control" name="facebook_test_event_code"
+                                value="{{ get_business_setting('facebook_test_event_code') }}"
                                 placeholder="{{ translate('Facebook Test Event Code') . ' (optional)' }}">
                         </div>
                     </div>
@@ -516,13 +518,13 @@
                     method="POST">
                     @csrf
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="FACEBOOK_DOMAIN_VERIFICATION">
+                        <input type="hidden" name="types[]" value="facebook_domain_verification">
                         <div class="col-lg-12">
                             <label class="col-from-label">{{ translate('Content ') }}</label>
                         </div>
                         <div class="col-md-12">
-                            <textarea type="text" class="form-control" name="FACEBOOK_DOMAIN_VERIFICATION"
-                                placeholder="test*****************************" required>{{ env('FACEBOOK_DOMAIN_VERIFICATION') }}</textarea>
+                            <textarea type="text" class="form-control" name="facebook_domain_verification"
+                                placeholder="test*****************************" required>{{ get_business_setting('facebook_domain_verification') }}</textarea>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -548,6 +550,50 @@
         </div>
     </div>
 
+    {{-- Google Site Verification --}}
+    <div class="col-md-6">
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{ translate('Google Site Verification') }}</h5>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('google_site_verification.update') }}"
+                    method="POST">
+                    @csrf
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="google_site_verification">
+                        <div class="col-lg-12">
+                            <label class="col-from-label">{{ translate('Content ') }}</label>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea type="text" class="form-control" name="google_site_verification"
+                                placeholder="test*****************************" required>{{ get_business_setting('google_site_verification') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{ translate('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">
+                    {{ translate('Google Site Verification Meta Sample') }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <h>
+                    &lt;meta name="google-site-verification" content="**********************" /&gt;
+                    </p>
+            </div>
+        </div>
+    </div>
+
+    {{-- G-tag Setting --}}
     <div class="col-md-6">
         <div class="card shadow-none bg-light">
             <div class="card-header">
@@ -569,12 +615,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="GTAG_ID">
+                        <input type="hidden" name="types[]" value="gtag_id">
                         <div class="col-lg-3">
                             <label class="col-from-label">{{ translate('G-Tag ID') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="GTAG_ID" value="{{ env('GTAG_ID') }}"
+                            <input type="text" class="form-control" name="gtag_id"
+                                value="{{ get_business_setting('gtag_id') }}"
                                 placeholder="{{ translate('G-Tag ID eg: GTM-N3541234') }}" required>
                         </div>
                     </div>
@@ -608,14 +655,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="TRACKING_ID">
+                        <input type="hidden" name="types[]" value="tracking_id">
                         <div class="col-lg-3">
                             <label class="col-from-label">{{ translate('Tracking ID') }}</label>
                         </div>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" name="TRACKING_ID"
-                                value="{{ env('TRACKING_ID') }}" placeholder="{{ translate('Tracking ID') }}"
-                                required>
+                            <input type="text" class="form-control" name="tracking_id"
+                                value="{{ get_business_setting('tracking_id') }}"
+                                placeholder="{{ translate('Tracking ID') }}" required>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">

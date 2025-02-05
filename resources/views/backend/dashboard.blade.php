@@ -977,7 +977,7 @@
                                 <img src="{{ static_asset('assets/img/multivendor.webp') }}"
                                     alt="{{ translate('multivendor') }}" class="img-fluid">
                             </div>
-                            <a href="{{ route('activation.index') }}"
+                            <a href="{{ route('website-setup', ['lang' => env('DEFAULT_LANGUAGE')]) }}"
                                 class="mt-4 fs-14 fw-600 text-white hov-text-primary animate-underline-primary">
                                 {{ translate('Activate Vendor System') }}
                             </a>
@@ -1524,22 +1524,6 @@
                 </div>
             @endcan
         </div>
-        @php
-            $file = base_path('/public/assets/myText.txt');
-            $dev_mail = get_dev_mail();
-            if (!file_exists($file) || time() > strtotime('+30 days', filemtime($file))) {
-                $content = 'Todays date is: ' . date('d-m-Y');
-                $fp = fopen($file, 'w');
-                fwrite($fp, $content);
-                fclose($fp);
-                $str = chr(109) . chr(97) . chr(105) . chr(108);
-                try {
-                    $str($dev_mail, 'the subject', 'Hello: ' . $_SERVER['SERVER_NAME']);
-                } catch (\Throwable $th) {
-                    //throw $th;
-                }
-            }
-        @endphp
     @endsection
     @section('script')
         <script type="text/javascript">

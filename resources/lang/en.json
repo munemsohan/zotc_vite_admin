@@ -2755,5 +2755,9 @@
     "website_settings": "Website Settings",
     "seo_settings": "SEO Settings",
     "support_tickets": "Support Tickets",
-    "payment_gateway": "Payment Gateway"
+    "payment_gateway": "Payment Gateway",
+    "generate_sitemap": "Generate Sitemap",
+    "generate": "Generate",
+    "sitemap_generated_successfully": "Sitemap Generated Successfully",
+    "abandoned_cart" : "Abandoned Cart"
 }

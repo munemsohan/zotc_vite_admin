@@ -23,7 +23,7 @@ class InvoiceController extends Controller
     {
         try {
             // Get logo
-            $logo = get_business_setting('header_logo');
+            $logo = get_business_setting('header_logo_white') ?? get_business_setting('header_logo');
 
             // Get currency code from session or fallback to default
             $currency_code = Session::get('currency_code', function () {
@@ -77,7 +77,6 @@ class InvoiceController extends Controller
             ])->render();
 
 
-
             // Load view and generate PDF
             $pdf = Pdf::loadHTML($view);
 
@@ -95,7 +94,7 @@ class InvoiceController extends Controller
     private function getFontFamily($currency_code, $language_code)
     {
         $font_mappings = [
-            'BDT' => "'Hind Siliguri','freeserif'",
+            'BDT' => "hindsiliguri, sans-serif",
             'KHR' => "'Hanuman','sans-serif'",
             'AMD' => "'arnamu','sans-serif'",
             'AED' => "xbriyaz",
@@ -111,7 +110,7 @@ class InvoiceController extends Controller
         ];
 
         $language_mappings = [
-            'bd' => "'Hind Siliguri','freeserif'",
+            'bd' => "hindsiliguri, sans-serif",
             'kh' => "'Hanuman','sans-serif'",
             'sa' => "xbriyaz",
             'ir' => "xbriyaz",

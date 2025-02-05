@@ -7,6 +7,7 @@ use Cookie;
 
 class CartUtility
 {
+
     public static function create_cart_variant($product, $request)
     {
         $str = null;

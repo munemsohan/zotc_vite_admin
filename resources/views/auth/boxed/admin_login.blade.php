@@ -5,29 +5,38 @@
             <div class="col-xxl-6 col-xl-9 col-lg-10 col-md-7 mx-auto py-lg-4">
                 <div class="card shadow-none rounded-0 border-0">
                     <div class="row no-gutters">
-                        <!-- Left Side Image-->
+                        {{-- <!-- Left Side Image-->
                         <div class="col-lg-6">
                             <img src="{{ uploaded_asset(get_setting('admin_login_page_image')) }}"
                                 alt="{{ translate('Admin Login Page Image') }}" class="img-fit h-100">
-                        </div>
+                        </div> --}}
 
-                        <div class="col-lg-6 p-4 p-lg-5 d-flex flex-column justify-content-center border right-content"
-                            style="height: auto;">
-                            <!-- Site Icon -->
-                            <div class="size-48px mb-3 mx-auto mx-lg-0">
-                                <img src="{{ uploaded_asset(get_setting('site_icon')) }}"
-                                    alt="{{ translate('Site Icon') }}" class="img-fit h-100">
+                        <div class="col-lg-6 p-2 p-lg-5 border right-content mx-auto" style="height: auto;">
+                            <h1 class="text-primary text-center">Admin Login</h1>
+                            <!-- Header Logo -->
+                            <div class="mb-3 mx-auto mx-lg-0 text-center">
+                                @if (get_setting('header_logo'))
+                                    <img src="{{ uploaded_asset(get_setting('header_logo')) }}"
+                                        alt="{{ translate('Header Logo') }}" class="w-10">
+                                @else
+                                    <h5 class="fs-14 fw-400 text-dark">
+                                        {{ env('APP_NAME') }}
+                                    </h5>
+                                @endif
                             </div>
 
                             <!-- Titles -->
-                            <div class="text-center text-lg-left">
-                                <h1 class="fs-20 fs-md-20 fw-700 text-primary" style="text-transform: uppercase;">
-                                    {{ translate('Welcome to') }} {{ env('APP_NAME') }}</h1>
-                                <h5 class="fs-14 fw-400 text-dark">{{ translate('Login to your account') }}</h5>
+                            <div class="text-center">
+                                <h1 class="fs-20 fs-md-20 fw-700 text-secondary" style="text-transform: uppercase;">
+                                    {{ translate('Welcome to') }}
+                                </h1>
+                                <h5 class="fs-14 fw-400 text-dark">
+                                    {{ translate('Login to your account') }}
+                                </h5>
                             </div>
 
                             <!-- Login form -->
-                            <div class="pt-3">
+                            <div class="pt-1">
                                 <div class="">
                                     <form class="form-default" role="form" action="{{ route('login') }}"
                                         method="POST">
@@ -39,9 +48,8 @@
                                                 class="fs-12 fw-700 text-soft-dark">{{ translate('Email') }}</label>
                                             <input type="email"
                                                 class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }} rounded-0"
-                                                value="{{ old('email') }}"
-                                                placeholder="{{ translate('johndoe@example.com') }}" name="email"
-                                                id="email" autocomplete="off">
+                                                value="{{ old('email') }}" placeholder="{{ translate('email') }}"
+                                                name="email" id="email" autocomplete="off">
                                             @if ($errors->has('email'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('email') }}</strong>
@@ -110,12 +118,12 @@
                         </div>
                     </div>
                     <!-- Go Back -->
-                    <div class="mt-3 mr-4 mr-md-0">
-                        <a href="{{ url()->previous() }}"
+                    <div class="mt-2 mx-auto">
+                        <a href="{{ str_replace('admin', '', url('/')) }}"
                             class="ml-auto fs-14 fw-700 d-flex align-items-center text-primary"
                             style="max-width: fit-content;">
                             <i class="las la-arrow-left fs-20 mr-1"></i>
-                            {{ translate('Back to Previous Page') }}
+                            {{ translate('Back to Home Page') }}
                         </a>
                     </div>
                 </div>

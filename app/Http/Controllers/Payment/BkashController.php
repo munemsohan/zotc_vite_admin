@@ -67,7 +67,7 @@ class BkashController extends Controller
         $header = array(
             'Content-Type:application/json',
             'Authorization:' . Session::get('bkash_token'),
-            'X-APP-Key:' . env('BKASH_CHECKOUT_APP_KEY')
+            'X-APP-Key:' . get_zotc_setting('bkash_checkout_app_key')
         );
 
         $url = curl_init($this->base_url . 'checkout/create');
@@ -85,13 +85,13 @@ class BkashController extends Controller
 
     public function getToken()
     {
-        $request_data = array('app_key' => env('BKASH_CHECKOUT_APP_KEY'), 'app_secret' => env('BKASH_CHECKOUT_APP_SECRET'));
+        $request_data = array('app_key' => get_zotc_setting('bkash_checkout_app_key'), 'app_secret' => get_zotc_setting('bkash_checkout_app_secret'));
         $request_data_json = json_encode($request_data);
 
         $header = array(
             'Content-Type:application/json',
-            'username:' . env('BKASH_CHECKOUT_USER_NAME'),
-            'password:' . env('BKASH_CHECKOUT_PASSWORD')
+            'username:' . get_zotc_setting('bkash_checkout_user_name'),
+            'password:' . get_zotc_setting('bkash_checkout_password')
         );
 
         $url = curl_init($this->base_url . 'checkout/token/grant');
@@ -158,7 +158,7 @@ class BkashController extends Controller
         $header = array(
             'Content-Type:application/json',
             'Authorization:' . $auth,
-            'X-APP-Key:' . env('BKASH_CHECKOUT_APP_KEY')
+            'X-APP-Key:' . get_zotc_setting('bkash_checkout_app_key')
         );
 
         $url = curl_init($this->base_url . 'checkout/execute');
@@ -187,7 +187,7 @@ class BkashController extends Controller
         $header = array(
             'Content-Type:application/json',
             'Authorization:' . $auth,
-            'X-APP-Key:' . env('BKASH_CHECKOUT_APP_KEY')
+            'X-APP-Key:' . get_zotc_setting('bkash_checkout_app_key')
         );
 
         $url = curl_init($this->base_url . 'checkout/payment/status');

@@ -31,10 +31,10 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>
-                                <a href="{{ 'https://' . env('APP_URL') . '/page/' . $page->slug }}"
+                                <a href="{{ str_replace('admin/', '', url('page/' . $page->slug)) }}"
                                     class="text-reset">{{ $page->getTranslation('title') }}</a>
                             </td>
-                            <td>{{ 'https://' . env('APP_URL') . '/page/' . $page->slug }}</td>
+                            <td>{{ str_replace('admin/', '', url('page/' . $page->slug)) }}</td>
                             <td class="text-right">
                                 @can('edit_website_page')
                                     @if ($page->type == 'home_page')

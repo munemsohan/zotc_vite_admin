@@ -44,6 +44,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerWithdrawRequestController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SizeChartController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StateController;
@@ -74,6 +75,7 @@ Route::controller(UpdateController::class)->group(function () {
 });
 
 Route::post('/shop/switch', [AdminController::class, 'getSwitched'])->name('shop.get.switch');
+Route::post('/api-admin-login', [AdminController::class, 'apiAdminLogin'])->name('admin.apiAdminLogin');
 
 Route::prefix('admin')->controller(AdminController::class)->group(function () {
     Route::post('dashboard/top-category-products-section', 'top_category_products_section')->name('dashboard.top_category_products_section');
@@ -235,6 +237,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::get('abandoned_cart', [AbandonedCartController::class, 'index'])->name('abandoned_cart.index');
     Route::get('abandoned_cart/view/{id}', [AbandonedCartController::class, 'show'])->name('abandoned_cart.show');
     Route::get('abandoned_cart/destroy/{id}', [AbandonedCartController::class, 'destroy'])->name('abandoned_cart.destroy');
+
 
     // Newsletter
     Route::controller(NewsletterController::class)->group(function () {
@@ -602,7 +605,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::get('/measurement-points/destroy/{id}',  [MeasurementPointsController::class, 'destroy'])->name('measurement-points.destroy');
 
     // Addon
-    Route::resource('addons', AddonController::class);
+    // Route::resource('addons', AddonController::class);
     Route::post('/addons/activation', [AddonController::class, 'activation'])->name('addons.activation');
 
     //Customer Package
@@ -667,7 +670,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     Route::get('/api', [ApiController::class, 'index'])->name('api.index');
 
-    Route::get('/shopbase/import', [AdminController::class, 'shopbase_import'])->name('shopbase_import');
+    Route::prefix('sitemap')->name('sitemap.')->group(function () {
+        // Show the sitemap
+        Route::get('/', [SitemapController::class, 'index'])->name('index');
 
-    Route::get('/mohasagor/import', [AdminController::class, 'mohasagor_import'])->name('mohasagor_import');
+        // Generate the sitemap
+        Route::get('/generate', [SitemapController::class, 'generate_sitemaps'])->name('generate');
+    });
+
+    // Route::get('/shopbase/import', [AdminController::class, 'shopbase_import'])->name('shopbase_import');
+
+    // Route::get('/mohasagor/import', [AdminController::class, 'mohasagor_import'])->name('mohasagor_import');
+
+    // Route::get('/mohasagor/update', [AdminController::class, 'mohasagor_update'])->name('mohasagor_update');
+
+
 });

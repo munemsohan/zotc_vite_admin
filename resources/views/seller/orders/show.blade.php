@@ -355,7 +355,7 @@
                         <tbody>
                             @php
                                 // Example response
-                                $allFraudCheck = $order->fraud_status; // This should be your actual fraud_status field
+                                $allFraudCheck = $order->fraud_status;
                                 $courierDataArray = explode(';', $allFraudCheck);
                                 $couriers = [];
                                 $total_parcels = 0;
@@ -425,7 +425,6 @@
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
 
                 <div class="col-md-2">

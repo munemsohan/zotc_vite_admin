@@ -179,6 +179,7 @@ class ProductController extends Controller
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search', 'pagination'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -227,23 +228,17 @@ class ProductController extends Controller
 
                 // Ensure the image exists in the database
                 if ($imageUpload) {
-                    $imagePath = $imageUpload->file_name;
-                    $thumbnailPath = $imageUpload->thumbnail;
-
-                    $randomFilename = Str::random(10);
+                    $originalImagePath = $imageUpload->file_name;
 
                     // Process main image if it exists and needs resizing
-                    $imageUpload->file_name = $this->processImage($randomFilename, $imagePath, 500);
-                    $imageUpload->save();
+                    $imageUpload->file_name = processImage($originalImagePath, 500, 500, true);
 
                     // Process thumbnail
-                    $imageUpload->thumbnail = $this->processThumbnail($randomFilename, $imagePath, $thumbnailPath, 200, 200);
+                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250, true);
                     $imageUpload->save();
 
                     // Delete original image file if it's not a WebP
-                    if (pathinfo(public_path($imagePath), PATHINFO_EXTENSION) !== 'webp') {
-                        unlink(public_path($imagePath));
-                    }
+                    deleteImageIfNotWebp($originalImagePath);
                 }
             }
         }
@@ -277,6 +272,7 @@ class ProductController extends Controller
         $product->save();
 
 
+        $slug = get_free_domain_slug();
         if ($request->dropship_price && count($request->dropship_price) > 0) {
             $dropshop_price = '';
 
@@ -449,23 +445,17 @@ class ProductController extends Controller
 
                 // Ensure the image exists in the database
                 if ($imageUpload) {
-                    $imagePath = $imageUpload->file_name;
-                    $thumbnailPath = $imageUpload->thumbnail;
-
-                    $randomFilename = Str::random(10);
+                    $originalImagePath = $imageUpload->file_name;
 
                     // Process main image if it exists and needs resizing
-                    $imageUpload->file_name = $this->processImage($randomFilename, $imagePath, 500);
-                    $imageUpload->save();
+                    $imageUpload->file_name = processImage($originalImagePath, 500);
 
                     // Process thumbnail
-                    $imageUpload->thumbnail = $this->processThumbnail($randomFilename, $imagePath, $thumbnailPath, 200, 200);
+                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250);
                     $imageUpload->save();
 
                     // Delete original image file if it's not a WebP
-                    if (pathinfo(public_path($imagePath), PATHINFO_EXTENSION) !== 'webp') {
-                        unlink(public_path($imagePath));
-                    }
+                    deleteImageIfNotWebp($originalImagePath);
                 }
             }
         }
@@ -512,10 +502,14 @@ class ProductController extends Controller
         $product->save();
 
         $slug = get_free_domain_slug();
+        $dropshop_price = '';
 
+        $sitesConnection = DB::connection('dynamic_db');
+        $sitesConnection->getPdo()->exec("USE zotc_nazmart");
+
+        // Check if `dropship_price` is provided
         if ($request->dropship_price && count($request->dropship_price) > 0) {
-            $dropshop_price = '';
-
+            // Prepare dropshop price string
             for ($i = 0; $i < count($request->dropship_price); $i++) {
                 if ($request->dropship_range[$i] && $request->dropship_price[$i]) {
                     $dropshop_price .= $request->dropship_range[$i] . '-' . $request->dropship_price[$i] . ',';
@@ -525,61 +519,44 @@ class ProductController extends Controller
             // Remove trailing comma if present
             $dropshop_price = rtrim($dropshop_price, ',');
 
-            // Only proceed if dropshop_price is not empty
             if (!empty($dropshop_price)) {
+                // Update dropshop price in the product
                 $product->dropshop_price = $dropshop_price;
                 $product->save();
 
-                // DB::connection('dynamic_db')->statement("USE zotc_nazmart");
+                $productData = [
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->unit_price,
+                    'slug' => $slug
+                ];
 
-                // $productData = [
-                //     'product_id' => $product->id,
-                //     'name' => $product->name,
-                //     'price' => $product->unit_price,
-                // ];
-
-                // // Check if the product exists
-                // $productExists = DB::connection('dynamic_db')
-                //     ->table('products')
-                //     ->where('slug', $slug)
-                //     ->where('product_id', $product->id)
-                //     ->exists();
-
-                // if ($productExists) {
-                //     // Update the product if it exists
-                //     DB::connection('dynamic_db')
-                //         ->table('products')
-                //         ->where('slug', $slug)
-                //         ->where('product_id', $product->id)
-                //         ->update($productData);
-                // } else {
-                //     // Add the slug to the product data
-                //     $productData['slug'] = $slug;
-
-                //     // Insert the product if it does not exist
-                //     DB::connection('dynamic_db')
-                //         ->table('products')
-                //         ->insert($productData);
-                // }
+                // Update or insert the product in the sites connection
+                $sitesConnection->table('products')->updateOrInsert(
+                    ['slug' => $slug, 'product_id' => $product->id],
+                    $productData
+                );
             } else {
-                // $product->dropshop_price = null;
-                // $product->save();
+                // If dropshop price is empty, remove it from the product
+                $product->dropshop_price = null;
+                $product->save();
 
-                // DB::connection('dynamic_db')
-                //     ->table('products')
-                //     ->where('slug', $slug)
-                //     ->where('product_id', $product->id)
-                //     ->delete();
+                $sitesConnection
+                    ->table('products')
+                    ->where('slug', $slug)
+                    ->where('product_id', $product->id)
+                    ->delete();
             }
         } else {
+            // Handle case when no dropship price is provided
             $product->dropshop_price = null;
             $product->save();
 
-            // DB::connection('dynamic_db')
-            //     ->table('products')
-            //     ->where('slug', $slug)
-            //     ->where('product_id', $product->id)
-            //     ->delete();
+            $sitesConnection
+                ->table('products')
+                ->where('slug', $slug)
+                ->where('product_id', $product->id)
+                ->delete();
         }
 
         $request->merge(['product_id' => $product->id]);
@@ -623,6 +600,7 @@ class ProductController extends Controller
 
         // Frequently Bought Products
         $product->frequently_bought_products()->delete();
+
         $this->FrequentlyBoughtProductService->store($request->only([
             'product_id',
             'frequently_bought_selection_type',
@@ -653,68 +631,6 @@ class ProductController extends Controller
         return back();
     }
 
-    private function processImage($randomFilename, $imagePath, $desiredWidth)
-    {
-        $slug = get_zotc_setting('img_slug') ?: 'all';
-
-        if ($imagePath) {
-            $imageContent = file_get_contents(public_path($imagePath));
-            $image = imagecreatefromstring($imageContent);
-
-            if ($image) {
-                $originalWidth = imagesx($image);
-
-                // Check if the image is already a WebP with the desired size
-                $isWebp = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION)) === 'webp';
-
-                if (!($isWebp && $originalWidth == $desiredWidth)) {
-                    $uploadedPath = "uploads/{$slug}/{$randomFilename}.webp";
-                    resizeAndSaveWebpImage($image, $uploadedPath, $desiredWidth);
-
-                    return $uploadedPath;
-                }
-
-                return $imagePath;
-            }
-        }
-
-        return null;
-    }
-
-    private function processThumbnail($randomFilename, $imagePath, $thumbnailPath, $desiredWidth, $desiredHeight)
-    {
-        $slug = get_zotc_setting('img_slug') ?: 'all';
-
-        if ($thumbnailPath) {
-            $thumbnailContent = file_get_contents(public_path($thumbnailPath));
-            $thumbnail = imagecreatefromstring($thumbnailContent);
-
-            if ($thumbnail) {
-                $thumbnailWidth = imagesx($thumbnail);
-                $thumbnailHeight = imagesy($thumbnail);
-
-                if (!($thumbnailWidth == $desiredWidth && $thumbnailHeight == $desiredHeight)) {
-                    $uploadedPath = "uploads/{$slug}/{$randomFilename}x{$desiredWidth}.webp";
-                    resizeAndSaveWebpImage($thumbnail, $uploadedPath, $desiredWidth, $desiredHeight);
-
-                    return $uploadedPath;
-                }
-
-                return $thumbnailPath;
-            }
-        } else {
-            $imageContent = file_get_contents(public_path($imagePath));
-            $image = imagecreatefromstring($imageContent);
-
-            $uploadedPath = "uploads/{$slug}/{$randomFilename}x{$desiredWidth}.webp";
-            resizeAndSaveWebpImage($image, $uploadedPath, $desiredWidth, $desiredHeight);
-
-            return $uploadedPath;
-        }
-
-        return null;
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -731,12 +647,12 @@ class ProductController extends Controller
         $product->taxes()->delete();
         $product->frequently_bought_products()->delete();
 
-        // DB::connection('dynamic_db')->statement("USE zotc_nazmart");
-        // DB::connection('dynamic_db')
-        //     ->table('products')
-        //     ->where('slug', get_free_domain_slug())
-        //     ->where('product_id', $product->id)
-        //     ->delete();
+        DB::connection('dynamic_db')->statement("USE zotc_nazmart");
+        DB::connection('dynamic_db')
+            ->table('products')
+            ->where('slug', get_free_domain_slug())
+            ->where('product_id', $product->id)
+            ->delete();
 
         if (Product::destroy($id)) {
             Cart::where('product_id', $id)->delete();

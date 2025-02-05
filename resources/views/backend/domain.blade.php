@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="col-md-8">
-                    <div class="dashboard-box bg-white h-230px mb-2rem overflow-hidden">
+                    <div class="dashboard-box bg-white h-auto mb-2rem overflow-hidden">
                         <div class="row">
                             {{-- <div class="col-md-2 d-flex align-items-center">
                                     <img src="{{ static_asset('assets/img/www.svg') }}" width="100%">
@@ -202,13 +202,13 @@
                                             <tr>
                                                 <td>A Record</td>
                                                 <td>@</td>
-                                                <td>103.84.173.171</td>
+                                                <td>103.159.37.145</td>
                                                 <td>Automatic</td>
                                             </tr>
                                             <tr>
                                                 <td>A Record</td>
                                                 <td>www</td>
-                                                <td>103.84.173.171</td>
+                                                <td>173.212.253.251</td>
                                                 <td>Automatic</td>
                                             </tr>
                                             <tr>

@@ -15,7 +15,6 @@ class FrequentlyBoughtProductService
             $collection['fq_brought_product_ids'] != null && 
                 $collection['frequently_bought_selection_type'] == 'product' ){
             foreach($collection['fq_brought_product_ids'] as $fq_product){
-
                 FrequentlyBoughtProduct::insert([
                     'product_id' => $collection['product_id'],
                     'frequently_bought_product_id' => $fq_product,

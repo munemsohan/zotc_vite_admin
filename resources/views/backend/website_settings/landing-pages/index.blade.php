@@ -28,12 +28,12 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>
-                                <a href="{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}"
+                                <a href="{{ str_replace('admin/', '', url('landing/' . $page->slug)) }}"
                                     class="text-reset">{{ $page->title }}</a>
                             </td>
-                            <td>{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}</td>
+                            <td>{{ str_replace('admin/', '', url('landing/' . $page->slug)) }}</td>
                             <td class="text-right">
-                                <a href="{{ 'https://' . env('APP_URL') . '/landing/' . $page->slug }}" target="_blank"
+                                <a href="{{ str_replace('admin/', '', url('landing/' . $page->slug)) }}" target="_blank"
                                     class="btn btn-soft-primary btn-icon btn-circle btn-sm"
                                     title="{{ translate('Delete') }}">
                                     <i class="las la-eye"></i>

@@ -19,7 +19,8 @@ use DB;
 
 class AuctionProductController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         // Staff Permission Check
         $this->middleware(['permission:view_all_auction_products'])->only('all_auction_product_list');
         $this->middleware(['permission:view_inhouse_auction_products'])->only('inhouse_auction_products');
@@ -194,7 +195,7 @@ class AuctionProductController extends Controller
     {
         (new AuctionService)->destroy($id);
         flash(translate('Product has been deleted successfully'))->success();
-            
+
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
         return redirect()->route('auction.inhouse_products');
@@ -204,7 +205,7 @@ class AuctionProductController extends Controller
     {
         (new AuctionService)->destroy($id);
         flash(translate('Product has been deleted successfully'))->success();
-            
+
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
         return redirect()->route('auction_products.seller.index');
@@ -317,7 +318,7 @@ class AuctionProductController extends Controller
         if ($detailedProduct != null) {
             return view('frontend.product_details', compact('detailedProduct', 'product_queries', 'total_query', 'reviews', 'review_status'));
         }
-        
+
         abort(404);
     }
 
@@ -372,9 +373,17 @@ class AuctionProductController extends Controller
     {
         $order = Order::findOrFail(decrypt($id));
         $order_shipping_address = json_decode($order->shipping_address);
-        $delivery_boys = User::where('city', $order_shipping_address->city)
-            ->where('user_type', 'delivery_boy')
-            ->get();
+
+        $delivery_boys = null;
+
+        if (!is_null($order->shipping_address)) {
+            $order_shipping_address = json_decode($order->shipping_address);
+            if (isset($order_shipping_address->city)) {
+                $delivery_boys = User::where('city', $order_shipping_address->city)
+                    ->where('user_type', 'delivery_boy')
+                    ->get();
+            }
+        }
 
         $order->viewed = 1;
         $order->save();

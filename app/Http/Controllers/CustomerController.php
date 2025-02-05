@@ -24,7 +24,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $sort_search = null;
-        $users = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc');
+        $users = User::where('user_type', 'customer')->orderBy('created_at', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
             $users->where(function ($q) use ($sort_search){

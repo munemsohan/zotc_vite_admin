@@ -451,6 +451,12 @@ class LandingPageController extends Controller
 
     public function builderStore(Request $request)
     {
+
+        if (empty($request->product_id)) {
+            flash(translate('No Product is added for Landing Page'))->error();
+            return back();
+        }
+
         // Sanitize and format the slug
         $slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', trim($request->slug)));
 
@@ -564,34 +570,43 @@ class LandingPageController extends Controller
 
     private function copyDir($source, $destination)
     {
-        // Ensure the destination directory exists
-        if (!is_dir($destination)) {
-            mkdir($destination, 0777, true);
+        if (!is_dir($source)) {
+            error_log("Source directory does not exist: {$source}");
+            return false;
         }
 
-        // Get the list of files and directories
-        $items = scandir($source);
+        if (!is_readable($source)) {
+            error_log("Source directory is not readable: {$source}");
+            return false;
+        }
 
+        if (!is_dir($destination) && !mkdir($destination, 0777, true)) {
+            error_log("Failed to create destination directory: {$destination}");
+            return false;
+        }
+
+        $items = scandir($source);
         foreach ($items as $item) {
-            // Skip '.' and '..' directory entries
             if ($item !== '.' && $item !== '..') {
                 $sourceItem = $source . '/' . $item;
                 $destinationItem = $destination . '/' . $item;
 
-                // If it's a directory, recurse into it
                 if (is_dir($sourceItem)) {
                     $this->copyDir($sourceItem, $destinationItem);
                 } else {
-                    // If it's a file, copy it
-                    if (is_file($sourceItem)) {
-                        if (!copy($sourceItem, $destinationItem)) {
-                            error_log("Failed to copy file: {$sourceItem}");
-                        }
+                    // Set file permissions to 755 before copying
+                    chmod($sourceItem, 0755);
+
+                    if (!copy($sourceItem, $destinationItem)) {
+                        error_log("Failed to copy file: {$sourceItem}");
+                    } else {
+                        chmod($destinationItem, 0755); // Ensure copied file also has 755
                     }
                 }
             }
         }
     }
+
 
     public function builder($code)
     {

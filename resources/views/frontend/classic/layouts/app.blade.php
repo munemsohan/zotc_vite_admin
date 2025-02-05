@@ -28,7 +28,7 @@
 <html dir="{{ $rtl == 1 ? 'rtl' : 'ltr' }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    @if (env('GTAG_ID'))
+    @if (get_business_setting('gtag_id'))
         <!-- Google Tag Manager -->
         <script>
             (function(w, d, s, l, i) {
@@ -44,7 +44,7 @@
                 j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
                 f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '{{ env('GTAG_ID') }}');
+            })(window, document, 'script', 'dataLayer', '{{ get_business_setting('gtag_id') }}');
         </script>
         <!-- End Google Tag Manager -->
     @endif
@@ -84,7 +84,7 @@
         <meta property="og:image" content="{{ $meta_image }}" />
         <meta property="og:description" content="{{ $meta_description }}" />
         <meta property="og:site_name" content="{{ env('APP_NAME') }}" />
-        <meta property="fb:app_id" content="{{ env('FACEBOOK_PIXEL_ID') }}">
+        <meta property="fb:app_id" content="{{ get_business_setting('facebook_pixel_id') }}">
     @endif
 
     <!-- Favicon -->
@@ -224,13 +224,13 @@
 
 @if (get_setting('google_analytics') == 1)
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('TRACKING_ID') }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ get_business_setting('tracking_id') }}"></script>
 
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '{{ env('TRACKING_ID') }}');
+        gtag('config', '{{ get_business_setting('tracking_id') }}');
     </script>
 @endif
 
@@ -245,11 +245,11 @@
         t.src=v;s=b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '{{ env('FACEBOOK_PIXEL_ID') }}');
+        fbq('init', '{{ get_business_setting('facebook_pixel_id') }}');
         fbq('track', 'PageView');
     </script>
     <noscript>
-        <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ env('FACEBOOK_PIXEL_ID') }}&ev=PageView&noscript=1"/>
+        <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ get_business_setting('facebook_pixel_id') }}&ev=PageView&noscript=1"/>
     </noscript>
     <!-- End Facebook Pixel Code -->
 @endif
@@ -260,9 +260,9 @@
 
 </head>
 <body>
-    @if (env('GTAG_ID'))
+    @if (get_business_setting('gtag_id'))
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ env('GTAG_ID') }}"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ get_business_setting('gtag_id') }}"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     @endif
@@ -393,7 +393,7 @@
         <!-- Your customer chat code -->
         <div class="fb-customerchat"
           attribution=setup_tool
-          page_id="{{ env('FACEBOOK_PAGE_ID') }}">
+          page_id="{{ get_business_setting('facebook_page_id') }}">
         </div>
     @endif
 
@@ -1008,7 +1008,7 @@
 
     @if (get_setting('tawk_chat'))
         @php
-            $originalUrl = env('TAWK_ID');
+            $originalUrl = get_business_setting('tawk_id');
             $convertedUrl = str_replace('tawk.to/chat', 'embed.tawk.to', $originalUrl);
         @endphp
 
@@ -1026,8 +1026,7 @@
                 s0.parentNode.insertBefore(s1, s0);
             })();
         </script>
-        <!--End of Tawk.to Script--> 
-        @endif
+        <!--End of Tawk.to Script--> @endif
 
         @if (get_setting('whatsapp'))
         <style>
@@ -1051,7 +1050,7 @@
             }
         </style>
 
-        <a href="https://api.whatsapp.com/send?phone={{ env('WHATSAPP_NUMBER') }}"
+        <a href="https://api.whatsapp.com/send?phone={{ get_business_setting('whatsapp_number') }}"
             class="floating_whatsapp" target="_blank">
         <i class="la la-whatsapp my-float"></i>
         </a> @endif

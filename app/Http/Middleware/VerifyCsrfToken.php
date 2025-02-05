@@ -33,6 +33,7 @@ class VerifyCsrfToken extends Middleware
         '/mock_payments',
         '/lnmo*',
         '/shop/switch',
+        '/api-admin-login',
         '/landing-pages-builder/update',
         '/pathao/status-update',
         '/steadfast/status-update',

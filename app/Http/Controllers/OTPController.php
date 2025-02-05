@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SmsTemplate;
 use Illuminate\Http\Request;
 use App\Models\OtpConfiguration;
+use App\Models\ZotcSetting;
 
 class OTPController extends Controller
 {
@@ -69,7 +70,7 @@ class OTPController extends Controller
     public function update_credentials(Request $request)
     {
         foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
+            $this->overWriteZotcSetting($type, $request[$type]);
         }
 
         flash("Settings updated successfully")->success();
@@ -98,5 +99,15 @@ class OTPController extends Controller
                 file_put_contents($path, file_get_contents($path) . "\r\n" . $type . '=' . $val);
             }
         }
+    }
+
+    public function overWriteZotcSetting($type, $val)
+    {
+        // Fetch existing setting or create a new instance
+        $zotc_settings = ZotcSetting::firstOrNew(['type' => $type]);
+
+        // Update the value of the setting
+        $zotc_settings->value = $val;
+        $zotc_settings->save();
     }
 }

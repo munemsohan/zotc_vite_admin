@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($manual_payment_methods as $key => $manual_payment_method)
+                @foreach(get_all_manual_payment_methods() as $key => $manual_payment_method)
                     <tr>
                         <td>{{ ($key+1) }}</td>
                         <td>{{ str_replace('_manual', '', $manual_payment_method->heading) }}</td>

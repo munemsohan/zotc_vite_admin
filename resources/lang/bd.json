@@ -347,5 +347,9 @@
     "website_settings": "ওয়েবসাইট সেটিংস",
     "seo_settings": "এসইও সেটিংস",
     "support_tickets": "সহায়তা টিকেট",
-    "payment_gateway": "পেমেন্ট গেটওয়ে"
+    "payment_gateway": "পেমেন্ট গেটওয়ে",
+    "generate_sitemap": "সাইটম্যাপ তৈরি করুন",
+    "generate": "তৈরি করুন",
+    "sitemap_generated_successfully": "সাইটম্যাপ সফলভাবে তৈরি হয়েছে",
+    "abandoned_cart" : "পরিত্যক্ত কার্ট"
 }

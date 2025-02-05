@@ -66,7 +66,8 @@ class FlashDealController extends Controller
 
         $flash_deal->background_color = $request->background_color;
         $flash_deal->slug = Str::slug($request->title) . '-' . Str::random(5);
-        $flash_deal->banner = $request->banner;
+        // $flash_deal->banner = $request->banner;
+        $flash_deal->banner = null;
         if ($flash_deal->save()) {
             foreach ($request->products as $key => $product) {
                 $flash_deal_product = new FlashDealProduct;
@@ -144,16 +145,20 @@ class FlashDealController extends Controller
             }
         }
 
-        $flash_deal->banner = $request->banner;
+        // $flash_deal->banner = $request->banner;
+        $flash_deal->banner = null;
         foreach ($flash_deal->flash_deal_products as $key => $flash_deal_product) {
-            $prev_product = Product::findOrFail($flash_deal_product->product_id);
-            $prev_product->discount = 0.00;
-            $prev_product->discount_type = 'amount';
-            $prev_product->discount_start_date = null;
-            $prev_product->discount_end_date   = null;
-            $prev_product->save();
+            try {
+                $prev_product = Product::findOrFail($flash_deal_product->product_id);
+                $prev_product->discount = 0.00;
+                $prev_product->discount_type = 'amount';
+                $prev_product->discount_start_date = null;
+                $prev_product->discount_end_date   = null;
+                $prev_product->save();
 
-            $flash_deal_product->delete();
+                $flash_deal_product->delete();
+            } catch (\Exception $e) {
+            }
         }
         if ($flash_deal->save()) {
             foreach ($request->products as $key => $product) {
@@ -175,7 +180,7 @@ class FlashDealController extends Controller
             $sub_category_translation->save();
 
             flash(translate('Flash Deal has been updated successfully'))->success();
-            return back();
+            return redirect()->route('flash_deals.index');
         } else {
             flash(translate('Something went wrong'))->error();
             return back();

@@ -10,21 +10,24 @@
             </label>
         </div>
         <div class="card-body">
-            <form class="form-horizontal" action="{{ route('update_credentials') }}" method="POST">
+            <form class="form-horizontal" action="{{ route('zotc_settings.update') }}" method="POST">
                 <input type="hidden" name="otp_method" value="zotc">
                 @csrf
                 <div class="form-group row">
-                    <input type="hidden" name="types[]" value="ZOTC_SMS_TYPE">
+                    <input type="hidden" name="types[]" value="zotc_sms_type">
                     <div class="col-lg-3">
                         <label class="col-from-label">{{ translate('SMS TYPE') }}</label>
                     </div>
                     <div class="col-lg-8">
-                        <select name="ZOTC_SMS_TYPE" class="form-control aiz-selectpicker">
-                            <option value="sms" {{ env('ZOTC_SMS_TYPE') === 'sms' ? 'selected' : '' }}>SMS
+                        <select name="zotc_sms_type" class="form-control aiz-selectpicker">
+                            <option value="sms" {{ get_zotc_setting('zotc_sms_type') === 'sms' ? 'selected' : '' }}>
+                                SMS
                             </option>
-                            <option value="whatsapp" {{ env('ZOTC_SMS_TYPE') === 'whatsapp' ? 'selected' : '' }}>
+                            <option value="whatsapp"
+                                {{ get_zotc_setting('zotc_sms_type') === 'whatsapp' ? 'selected' : '' }}>
                                 WhatsApp</option>
-                            <option value="both" {{ env('ZOTC_SMS_TYPE') === 'both' ? 'selected' : '' }}>BOTH
+                            <option value="both" {{ get_zotc_setting('zotc_sms_type') === 'both' ? 'selected' : '' }}>
+                                BOTH
                             </option>
                         </select>
                     </div>
