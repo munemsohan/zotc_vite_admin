@@ -54,7 +54,7 @@ class BusinessSettingsController extends Controller
 
     public function domain()
     {
-        $domain = BusinessSetting::where('type', 'domains')->first();
+        $domain = ZotcSetting::where('type', 'domains')->first();
 
         if ($domain) {
             $domains = json_decode($domain->value);
@@ -144,16 +144,12 @@ class BusinessSettingsController extends Controller
             $this->overWriteZotcSetting($type, $request[$type]);
         }
 
-        $business_settings = BusinessSetting::where('type', $request->payment_method . '_sandbox')->first();
-        if ($business_settings != null) {
-            if ($request->has($request->payment_method . '_sandbox')) {
-                $business_settings->value = 1;
-                $business_settings->save();
-            } else {
-                $business_settings->value = 0;
-                $business_settings->save();
-            }
-        }
+        // Update or create the sandbox setting in ZotcSetting
+        $zotcSettingKey = $request->payment_method . '_sandbox';
+        ZotcSetting::updateOrInsert(
+            ['type' => $zotcSettingKey],
+            ['value' => $request->has($zotcSettingKey) ? 1 : 0]
+        );
 
         Artisan::call('cache:clear');
 
@@ -1064,62 +1060,57 @@ class BusinessSettingsController extends Controller
     public function processWhiteLogo($imagePath)
     {
         $randomFilename = Str::random(10) . '.webp';
-
-        // Resolve the input path dynamically
         $absoluteInputPath = public_path($imagePath);
 
-        // Check if the input file exists
         if (!file_exists($absoluteInputPath)) {
             throw new \Exception('File does not exist: ' . $absoluteInputPath);
         }
 
-        // Load the WebP image
         $image = imagecreatefromwebp($absoluteInputPath);
         if (!$image) {
-            throw new \Exception('Failed to load WebP image: ' . $absoluteInputPath);
+            throw new \Exception('Failed to load WebP image.');
         }
 
         $originalWidth = imagesx($image);
         $originalHeight = imagesy($image);
-
-        // Create a new true color image with the same dimensions
         $processedImage = imagecreatetruecolor($originalWidth, $originalHeight);
 
-        // Set background color to #eceff4 (RGB: 236, 239, 244)
-        $bgColor = imagecolorallocate($processedImage, 236, 239, 244);
+        $bgColor = imagecolorallocate($processedImage, 236, 239, 244); // #E1E6E4
         imagefill($processedImage, 0, 0, $bgColor);
 
-        // Copy the original image onto the new background
-        if (!imagecopy($processedImage, $image, 0, 0, 0, 0, $originalWidth, $originalHeight)) {
-            throw new \Exception('Failed to copy image onto background.');
+        for ($x = 0; $x < $originalWidth; $x++) {
+            for ($y = 0; $y < $originalHeight; $y++) {
+                $pixelColor = imagecolorat($image, $x, $y);
+                $colors = imagecolorsforindex($image, $pixelColor);
+
+                if ($colors['red'] > 240 && $colors['green'] > 240 && $colors['blue'] > 240) {
+                    imagesetpixel($processedImage, $x, $y, $bgColor);
+                } else {
+                    imagesetpixel($processedImage, $x, $y, $pixelColor);
+                }
+            }
         }
 
-        // Define the dynamic asset path
         $slug = get_zotc_setting('img_slug');
         $assetPath = 'uploads/' . $slug;
         $absoluteAssetPath = public_path($assetPath);
 
-        // Ensure the directory exists
         if (!file_exists($absoluteAssetPath) && !mkdir($absoluteAssetPath, 0755, true)) {
-            throw new \Exception('Failed to create directory: ' . $absoluteAssetPath);
+            throw new \Exception('Failed to create directory.');
         }
 
-        // Define the full output path
         $outputPath = $absoluteAssetPath . '/' . $randomFilename;
-
-        // Save the processed image as a WebP file
         if (!imagewebp($processedImage, $outputPath)) {
-            throw new \Exception('Failed to save WebP image at: ' . $outputPath);
+            throw new \Exception('Failed to save WebP image.');
         }
 
-        // Set permissions and clean up
         chmod($outputPath, 0644);
         imagedestroy($processedImage);
         imagedestroy($image);
 
-        // Return the relative output path
         return $assetPath . '/' . $randomFilename;
     }
+
 
     function resizeLogo($randomFileName, $imagePath, $newWidth, $newHeight)
     {

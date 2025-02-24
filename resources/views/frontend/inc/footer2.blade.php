@@ -598,7 +598,7 @@
         <div class="row align-items-center py-3">
             <!-- Copyright -->
             <div class="col-lg-6 order-1 order-lg-0">
-                <div class="text-center text-lg-left fs-14" current-verison="{{ get_setting('current_version') }}">
+                <div class="text-center text-lg-left fs-14">
                     Copyright ©{{ date('Y') }} {{ get_setting('website_name') }} | {!! get_setting('developed_by') !!}
                 </div>
             </div>

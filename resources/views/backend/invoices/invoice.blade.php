@@ -86,18 +86,22 @@
             <table>
                 <tr>
                     <td>
+                        @php
+                            // Get logo
+                            $logo = get_business_setting('header_logo');
+                        @endphp
                         @if ($logo != null)
                             <img src="{{ uploaded_asset(get_business_setting('header_logo_white')) }}" height="30"
                                 style="display:inline-block;background: white !important;">
                         @else
-                            <h1 class="fw-bold">{{ get_business_setting('site_name') }}</h1>
+                            <h1 class="fw-bold">{{ get_business_setting('website_name') }}</h1>
                         @endif
                     </td>
                     <td></td>
                     <td class="text-right strong" style="font-size: 1.5rem;">{{ translate('INVOICE') }}</td>
                 </tr>
                 <tr>
-                    <td class="strong" style="font-size: 1rem;">{{ get_business_setting('site_name') }}</td>
+                    <td class="strong" style="font-size: 1rem;">{{ get_business_setting('website_name') }}</td>
                     <td></td>
                     <td class="text-right strong" style="font-size: 1.2rem;">
                         <span class="strong" style="font-size: 15px;">{{ $order->code }}</span>
@@ -144,7 +148,7 @@
                 </tr>
                 <tr>
                     @php
-                        $domains = json_decode(get_business_setting('domains'));
+                        $domains = json_decode(get_zotc_setting('domains'));
                         $custom_domains = $domains->custom_domain;
                         $free_domain = $domains->free_domain;
 
@@ -282,10 +286,10 @@
                     <tr>
                         <td class="text-left" style="padding:0 1rem">
                             @php
-                            $removedXML = '<?xml version="1.0" encoding="UTF-8"?>';
-                            $qrCode = QrCode::size(100)->generate($order->track_url);
-                            $qrCode = str_replace($removedXML, '', $qrCode);
-                            @endphp
+                            $removedXML = '<?xml version="1.0" encoding="UTF-8"@endphp';
+$qrCode = QrCode::size(100)->generate($order->track_url);
+$qrCode = str_replace($removedXML, '', $qrCode);
+?>
                             {!! $qrCode !!}
                             <p style="margin-top: 10px; font-size: 11px">{{ $order->track_url }}</p>
                         </td>

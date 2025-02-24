@@ -1548,7 +1548,6 @@
     "affiliate_withdraw_request_reject": "Affiliate Withdraw Request Reject",
     "are_you_sure_you_want_to_reject_this": "Are you sure, You want to reject this?",
     "server_information": "Server information",
-    "current_version": "Current Version",
     "required_version": "Required Version",
     "phpini_config": "php.ini Config",
     "config_name": "Config Name",
@@ -2759,5 +2758,6 @@
     "generate_sitemap": "Generate Sitemap",
     "generate": "Generate",
     "sitemap_generated_successfully": "Sitemap Generated Successfully",
-    "abandoned_cart" : "Abandoned Cart"
+    "abandoned_cart" : "Abandoned Cart",
+    "fraud_checker" : "Fraud Checker"
 }

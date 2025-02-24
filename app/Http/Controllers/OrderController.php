@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Milon\Barcode\DNS1D;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class OrderController extends Controller
 {
@@ -114,6 +115,10 @@ class OrderController extends Controller
                 ->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])) . '  23:59:59');
         }
 
+        if (get_zotc_setting('order_delete') != 1) {
+            $orders = $orders->where('delivery_status', '!=', 'deleted');
+        }
+
         // Paginate the orders after updating
         $orders = $orders->paginate(15);
 
@@ -166,15 +171,29 @@ class OrderController extends Controller
         // Get the font family
         $font_family = $this->getFontFamily($currency_code, $language_code);
 
+        // dd($font_family);
         // Initialize the PDF
         $pdf = new \Mpdf\Mpdf([
+            // Set margins to 0 (no margin)
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,
             'margin_bottom' => 0,
             'margin_header' => 0,
-            'margin_footer' => 0
+            'margin_footer' => 0,
+
+            // Set font options (assuming you want to use a custom font)
+            'fontDir' => public_path('assets/fonts/'), // Adjust this path to where your fonts are located
+            'fontdata' => [
+                'hindsiliguri' => [
+                    'R' => 'HindSiliguri-Regular.ttf',
+                    'B' => 'HindSiliguri-Bold.ttf',
+                ],
+            ],
         ]);
+
+        // Set the font you want to use
+        $pdf->SetFont('hindsiliguri', '', 12);
 
         // Loop through each order ID and generate the invoice
         foreach ($ids as $id) {
@@ -188,7 +207,8 @@ class OrderController extends Controller
             }
 
             // Generate the barcode
-            $barcode = DNS1D::getBarcodeHTML($order->code, 'C128');
+            $generator = new BarcodeGeneratorPNG();
+            $barcode = 'data:image/png;base64,' . base64_encode($generator->getBarcode($order->code, $generator::TYPE_CODE_128));
 
             // Render the invoice view to HTML
             $html = view('backend.invoices.invoice', [
@@ -199,6 +219,9 @@ class OrderController extends Controller
                 'not_text_align' => $not_text_align,
                 'barcode' => $barcode,
             ])->render();
+
+
+            // return $html;
 
             // Add the HTML to the PDF
             $pdf->AddPage();
@@ -212,7 +235,7 @@ class OrderController extends Controller
     private function getFontFamily($currency_code, $language_code)
     {
         $fonts = [
-            'BDT' => "'Hind Siliguri','freeserif'",
+            'BDT' => "hindsiliguri, sans-serif",
             'KHR' => "'Hanuman','sans-serif'",
             'AMD' => "'arnamu','sans-serif'",
             'THB' => "'Kanit','sans-serif'",
@@ -448,7 +471,7 @@ class OrderController extends Controller
 
         $combined_order->save();
 
-        $plan = get_business_setting('plan');
+        $plan = get_zotc_setting('plan');
         $planParts = explode(',', $plan);
 
         if ($planParts[0] == '11') {
@@ -937,7 +960,7 @@ class OrderController extends Controller
                 "merchant_order_id" => $order->code,
                 // "sender_name" => $user->name,
                 // "sender_phone" => $this->normalizePhoneNumber($user->phone),
-                "recipient_name" => $recipient->name,
+                "recipient_name" => $recipient->name ?? 'N/A',
                 "recipient_phone" => $recipient_phone,
                 "recipient_address" => $recipient_address,
                 "recipient_city" => $request->city_id,
@@ -1568,5 +1591,13 @@ class OrderController extends Controller
 
         // Return the status as a semicolon-separated string
         return implode(';', $formattedStatus);
+    }
+
+    public function markDelete($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delivery_status = 'deleted';
+        $order->save();
+        return response()->json(['success' => true, 'message' => 'Order has been deleted successfully.']);
     }
 }

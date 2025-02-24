@@ -16,11 +16,10 @@ class PosController extends Controller
 {
     public function index()
     {
-        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc')->get();
+        $customers = User::where('user_type', 'customer')->where('seller_id', auth()->id())->orderBy('created_at', 'desc')->get();
         if (get_setting('pos_activation_for_seller') == 1) {
             return view('seller.pos.index', compact('customers'));
-        }
-        else {
+        } else {
             flash(translate('POS is disable for Sellers!!!'))->error();
             return back();
         }
@@ -37,7 +36,7 @@ class PosController extends Controller
 
     // Add product To cart
     public function addToCart(Request $request)
-    {   
+    {
         $stockId    = $request->stock_id;
         $userID     = Session::get('pos.user_id');
         $temUserId  = Session::get('pos.temp_user_id');
@@ -46,7 +45,7 @@ class PosController extends Controller
             Session::put('pos.temp_user_id', $temUserId);
         }
         $response = PosUtility::addToCart($stockId, $userID, $temUserId);
-        
+
         return array(
             'success' => $response['success'],
             'message' => $response['message'],
@@ -72,7 +71,7 @@ class PosController extends Controller
 
     //Shipping Address for seller
     public function getShippingAddress(Request $request)
-    {   
+    {
         Session::forget('pos.shipping_info');
         $user_id = $request->id;
         return ($user_id == '') ? view('seller.pos.guest_shipping_address') : view('seller.pos.shipping_address', compact('user_id'));
@@ -87,55 +86,60 @@ class PosController extends Controller
     }
 
     // Update user Cart data when user is changed 
-    public function updateSessionUserCartData(Request $request){
+    public function updateSessionUserCartData(Request $request)
+    {
         PosUtility::updateCartOnUserChange($request->only(['userId']));
         return view('backend.pos.cart');
     }
 
     //set Discount
-    public function setDiscount(Request $request){
-        if($request->discount >= 0){
+    public function setDiscount(Request $request)
+    {
+        if ($request->discount >= 0) {
             Session::put('pos.discount', $request->discount);
         }
         return view('backend.pos.cart');
     }
 
     //set Shipping Cost
-    public function setShipping(Request $request){
-        if($request->shipping != null){
+    public function setShipping(Request $request)
+    {
+        if ($request->shipping != null) {
             Session::put('pos.shipping', $request->shipping);
         }
         return view('backend.pos.cart');
     }
 
     //order summary
-    public function get_order_summary(Request $request){
+    public function get_order_summary(Request $request)
+    {
         return view('backend.pos.order_summary');
     }
 
-   //order place
-   public function order_store(Request $request)
-   {
-       $request->merge(['temp_usder_id' => Session::get('pos.temp_user_id'), 'shippingInfo' => Session::get('pos.shipping_info'), 'shippingCost' => Session::get('pos.shipping', 0), 'discount' => Session::get('pos.discount')]);
-       $response = PosUtility::orderStore($request->except(['_token']));
+    //order place
+    public function order_store(Request $request)
+    {
+        $request->merge(['temp_usder_id' => Session::get('pos.temp_user_id'), 'shippingInfo' => Session::get('pos.shipping_info'), 'shippingCost' => Session::get('pos.shipping', 0), 'discount' => Session::get('pos.discount')]);
+        $response = PosUtility::orderStore($request->except(['_token']));
 
-       if ($response['success']) {
-           Session::forget('pos.shipping_info');
-           Session::forget('pos.shipping');
-           Session::forget('pos.discount');
-           Session::forget('pos.user_id');
-           Session::forget('pos.temp_user_id');
-       }
+        if ($response['success']) {
+            Session::forget('pos.shipping_info');
+            Session::forget('pos.shipping');
+            Session::forget('pos.discount');
+            Session::forget('pos.user_id');
+            Session::forget('pos.temp_user_id');
+        }
 
-       return $response;
-   }
+        return $response;
+    }
 
     public function configuration()
     {
         return view('seller.pos.pos_activation');
     }
 
-    public function posConfigurationUpdate (Request $request) {
+    public function posConfigurationUpdate(Request $request)
+    {
         $shop = auth()->user()->shop;
         $shop->thermal_printer_width = $request->thermal_printer_width;
         $shop->save();
@@ -147,7 +151,7 @@ class PosController extends Controller
     public function invoice($id)
     {
         $order = Order::findOrFail($id);
-        if(auth()->user()->id != $order->seller_id) {
+        if (auth()->user()->id != $order->seller_id) {
             return back();
         }
         $print_width = get_setting('print_width_seller_pos');
@@ -155,9 +159,9 @@ class PosController extends Controller
             flash(translate('Print Size does not set for thermal printer from POS configuration'))->warning();
             return back();
         }
-        
+
         $pdf_style_data = FontUtility::get_font_family();
-        
+
         $html = view('backend.pos.thermal_invoice', compact('order', 'pdf_style_data'));
 
         $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => [$print_width, 1000]]);
@@ -170,10 +174,34 @@ class PosController extends Controller
         $p = 'P';
         // dd($mpdf->y);
         $mpdf->_setPageSize(array($print_width, $mpdf->y), $p);
-        
+
         $mpdf->addPage();
         $mpdf->WriteHTML($html);
 
         $mpdf->Output('order-' . $order->code . '.pdf', 'I');
+    }
+
+    public function addCustomer(Request $request)
+    {
+        // Combine phone code and number
+        $fullPhone = $request->phonecode . $request->phone;
+
+        // Validate input
+        $request->validate([
+            'name'      => 'required',
+            'phonecode' => 'required',
+            'phone'     => 'required|unique:users,phone,' . $fullPhone,
+        ]);
+
+        // Create new user if not exists
+        $user = new User();
+        $user->name  = $request->name;
+        $user->phone = $fullPhone;
+        $user->seller_id = auth()->id();
+        $user->save();
+
+        // Flash success message
+        flash(translate('Customer added successfully!'));
+        return back();
     }
 }

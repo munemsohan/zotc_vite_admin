@@ -39,7 +39,7 @@
                 <div class="aiz-topbar-item mr-3">
                     <div class="d-flex align-items-center">
                         <a class="btn btn-topbar has-transition btn-icon btn-circle btn-light p-0 hov-bg-primary hov-svg-white d-flex align-items-center justify-content-center"
-                            href="{{ route('poin-of-sales.index') }}" target="_blank" data-toggle="tooltip"
+                            href="{{ route('point-of-sales.index') }}" target="_blank" data-toggle="tooltip"
                             data-title="{{ translate('POS') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13.79" height="16"
                                 viewBox="0 0 13.79 16">
@@ -101,7 +101,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-left dropdown-menu-animated dropdown-menu-md">
-                            <a href="{{ route('poin-of-sales.index') }}" class="dropdown-item">
+                            <a href="{{ route('point-of-sales.index') }}" class="dropdown-item">
                                 <i class="las la-plus"></i>
                                 <span>New Sale</span>
                             </a>

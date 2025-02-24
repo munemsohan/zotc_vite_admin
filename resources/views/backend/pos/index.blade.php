@@ -53,16 +53,22 @@
                                     @php
                                         $userID = Session::has('pos.user_id') ? Session::get('pos.user_id') : null;
                                     @endphp
-                                    <select name="user_id" class="form-control aiz-selectpicker pos-customer"
-                                        data-live-search="true" onchange="getShippingAddressUpdateCartData()"
-                                        data-selected="{{ $userID }}">
-                                        <option value="">{{ translate('Walk In Customer') }}</option>
-                                        @foreach ($customers as $key => $customer)
-                                            <option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
-                                                {{ $customer->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <div class="input-group">
+                                        <select name="user_id" class="form-control aiz-selectpicker pos-customer"
+                                            data-live-search="true" onchange="getShippingAddressUpdateCartData()"
+                                            data-selected="{{ $userID }}">
+                                            <option value="">{{ translate('Walk In Customer') }}</option>
+                                            @foreach ($customers as $key => $customer)
+                                                <option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
+                                                    {{ $customer->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="btn btn-soft-primary" data-target="#addCustomerModal"
+                                            data-toggle="modal">
+                                            <i class="las la-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <button type="button" class="btn btn-icon btn-soft-dark ml-3 mr-0 text-white"
                                     data-target="#new-customer" data-toggle="modal">
@@ -244,7 +250,6 @@
             </div>
         </form>
     </section>
-
 @endsection
 
 @section('modal')
@@ -311,7 +316,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="customer_id" id="set_customer_id" value="">
                         <div class="form-group">
-                            <div class=" row">
+                            <div class="row">
                                 <label class="col-sm-2 control-label" for="address">{{ translate('Address') }}</label>
                                 <div class="col-sm-10">
                                     <textarea placeholder="{{ translate('Address') }}" id="address" name="address" class="form-control" required></textarea>
@@ -319,7 +324,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class=" row">
+                            <div class="row">
                                 <label class="col-sm-2 control-label">{{ translate('Country') }}</label>
                                 <div class="col-sm-10">
                                     <select class="form-control aiz-selectpicker" data-live-search="true"
@@ -360,7 +365,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class=" row">
+                            <div class="row">
                                 <label class="col-sm-2 control-label"
                                     for="postal_code">{{ translate('Postal code') }}</label>
                                 <div class="col-sm-10">
@@ -370,7 +375,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class=" row">
+                            <div class="row">
                                 <label class="col-sm-2 control-label" for="phone">{{ translate('Phone') }}</label>
                                 <div class="col-sm-10">
                                     <input type="number" min="0" placeholder="{{ translate('Phone') }}"
@@ -428,7 +433,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <div class=" row">
+                        <div class="row">
                             <label class="col-sm-3 control-label"
                                 for="offline_payment_method">{{ translate('Payment Method') }}</label>
                             <div class="col-sm-9">
@@ -439,7 +444,7 @@
                     </div>
 
                     <div class="form-group">
-                        <div class=" row">
+                        <div class="row">
                             <label class="col-sm-3 control-label"
                                 for="offline_payment_amount">{{ translate('Amount') }}</label>
                             <div class="col-sm-9">
@@ -482,6 +487,122 @@
             </div>
         </div>
     </div>
+
+    {{-- customer add modal --}}
+    <div id="addCustomerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCustomerModalLabel">Add New Customer</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Customer Form -->
+                    <form id="customerForm" method="POST" action="{{ route('admin.pos.add_customer') }}">
+                        @csrf
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 form-label">{{ translate('Name') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name"
+                                        placeholder="{{ translate('Name') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 form-label">{{ translate('Email') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="{{ translate('Email') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="phone"
+                                    class="col-sm-2 form-label fw-bold">{{ translate('Phone') }}</label>
+                                <div class="input-group col-sm-10">
+                                    <div class="input-group-prepend">
+                                        <select name="phonecode" class="form-select border-end-0">
+                                            @foreach (get_active_countries() as $country)
+                                                <option value="{{ $country->phonecode }}">{{ $country->phonecode }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="number" class="form-control border-start-0" name="phone"
+                                        id="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="address">{{ translate('Address') }}</label>
+                                <div class="col-sm-10">
+                                    <textarea placeholder="{{ translate('Address') }}" id="address" name="address" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label">{{ translate('Country') }}</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control aiz-selectpicker" data-live-search="true"
+                                        data-placeholder="{{ translate('Select your country') }}" name="country_id"
+                                        required>
+                                        <option value="">{{ translate('Select your country') }}</option>
+                                        @foreach (\App\Models\Country::where('status', 1)->get() as $key => $country)
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2 control-label">
+                                    <label>{{ translate('State') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="state_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>{{ translate('City') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="city_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label"
+                                    for="postal_code">{{ translate('Postal code') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="0" placeholder="{{ translate('Postal code') }}"
+                                        id="postal_code" name="postal_code" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Customer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -503,7 +624,6 @@
                     } else {
                         AIZ.plugins.notify('danger', data.message);
                     }
-
                 });
             });
             filterProducts();
@@ -574,11 +694,11 @@
                                 ${data.data[i].digital == 0 
                                     ?
                                         `<span class="absolute-top-left mt-1 ml-1 mr-0">
-                                                                        ${data.data[i].qty > 0
-                                                                            ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
-                                                                            : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
-                                                                        : ${data.data[i].qty}</span>
-                                                                    </span>`
+                                                                                                                                    ${data.data[i].qty > 0
+                                                                                                                                        ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
+                                                                                                                                        : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
+                                                                                                                                    : ${data.data[i].qty}</span>
+                                                                                                                                </span>`
                                     : ''
                                 }
                                 ${data.data[i].variant != null

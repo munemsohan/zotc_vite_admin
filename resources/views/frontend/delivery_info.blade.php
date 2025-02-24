@@ -43,7 +43,7 @@
             @if (!empty($admin_products))
                 <div class="card mb-5 border-0 rounded-0 shadow-none">
                     <div class="card-header py-3 px-0 border-bottom-0">
-                        <h5 class="fs-16 fw-700 text-dark mb-0">{{ get_setting('site_name') }}
+                        <h5 class="fs-16 fw-700 text-dark mb-0">{{ get_setting('website_name') }}
                             {{ translate('Inhouse Products') }}</h5>
                     </div>
                     <div class="card-body p-0">

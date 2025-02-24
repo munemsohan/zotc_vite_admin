@@ -485,8 +485,7 @@
         <div class="row align-items-center">
             <!-- Copyright -->
             <div class="col-lg-5 order-1 order-lg-0">
-                <div class="text-center text-lg-left fs-16 footer_developed_by"
-                    current-verison="{{ get_setting('current_version') }}">
+                <div class="text-center text-lg-left fs-16 footer_developed_by">
                     {{ translate('copyright') }} ©{{ date('Y') }} {{ get_setting('website_name') }} |
                     {!! get_setting('developed_by') !!}
                 </div>

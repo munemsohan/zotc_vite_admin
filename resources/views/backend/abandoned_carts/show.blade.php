@@ -16,23 +16,23 @@
                         <tbody>
                             <tr>
                                 <th>Name</th>
-                                <td>{{ $abandonedCart->name ?? 'N/A' }}</td>
+                                <td>{{ $abandonedCart->name ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td>{{ $abandonedCart->email ?? 'N/A' }}</td>
+                                <td>{{ $abandonedCart->email ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Phone</th>
-                                <td>{{ $abandonedCart->phone ?? 'N/A' }}</td>
+                                <td>{{ $abandonedCart->phone ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Address</th>
-                                <td>{{ $abandonedCart->address ?? 'N/A' }}</td>
+                                <td>{{ $abandonedCart->address ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Coupon Code</th>
-                                <td>{{ $abandonedCart->coupon_code ?? 'N/A' }}</td>
+                                <td>{{ $abandonedCart->coupon_code ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Payment Option</th>
@@ -51,14 +51,20 @@
                                 <td>{{ $abandonedCart->shipping_cost }}</td>
                             </tr>
                             <tr>
-                                <th>Terms Accepted</th>
-                                <td>{{ $abandonedCart->terms_accepted ? 'Yes' : 'No' }}</td>
+                                <th>Landing Page</th>
+                                <td>
+                                    @if (!empty($abandonedCart->landing_page_link))
+                                        <a href="{{ $abandonedCart->landing_page_link }}" target="_blank">
+                                            {{ $abandonedCart->landing_page_link }}
+                                        </a>
+                                    @endif
+                                </td>
                             </tr>
                         </tbody>
                     </table>
 
                     <h4>Products</h4>
-                    <table class="table table-bordered">
+                    <table class="table aiz-table">
                         <thead>
                             <tr>
                                 <th>Product Name</th>

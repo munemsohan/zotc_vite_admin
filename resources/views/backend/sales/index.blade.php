@@ -8,22 +8,22 @@
                     <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
                 </div>
 
-                @can('delete_order')
-                    <div class="dropdown mb-2 mb-md-0">
-                        <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
-                            {{ translate('Action') }}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item confirm-alert" href="javascript:void(0)"
-                                onclick="selectedOrdersSendCarrier()">
-                                {{ translate('Send To Courier') }}</a>
-                            {{-- <a class="dropdown-item confirm-alert" href="javascript:void(0)" data-target="#bulk-delete-modal">
+                {{-- @can('delete_order') --}}
+                <div class="dropdown mb-2 mb-md-0">
+                    <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
+                        {{ translate('Action') }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item confirm-alert" href="javascript:void(0)"
+                            onclick="selectedOrdersSendCarrier()">
+                            {{ translate('Send To Courier') }}</a>
+                        {{-- <a class="dropdown-item confirm-alert" href="javascript:void(0)" data-target="#bulk-delete-modal">
                                 {{ translate('Delete selection') }}</a> --}}
-                            <a class="dropdown-item confirm-alert" href="javascript:void(0)" onclick="selectedOrdersPrint()">
-                                {{ translate('Print') }}</a>
-                        </div>
+                        <a class="dropdown-item confirm-alert" href="javascript:void(0)" onclick="selectedOrdersPrint()">
+                            {{ translate('Print') }}</a>
                     </div>
-                @endcan
+                </div>
+                {{-- @endcan --}}
                 <div class="col-md-4">
                     <div class="row gutters-5">
                         <div class="col-6">
@@ -249,6 +249,7 @@
                                     @else
                                         {{ translate(ucfirst(str_replace('_', ' ', $order->payment_type))) }}
                                     @endif
+
                                 </td>
         </form>
 
@@ -264,6 +265,9 @@
 
         <td>
             {{ translate(ucfirst(str_replace('_', ' ', $order->delivery_status))) }}
+
+            <span
+                class="badge badge-inline badge-info">{{ $order->carrier_id ? substr($order->carrier->name, 0, 1) : '' }}</span>
         </td>
 
         <td>
@@ -356,8 +360,13 @@
                 title="{{ translate('Download Invoice') }}">
                 <i class="las la-download"></i>
             </a>
+            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm mark-delete"
+                data-href="{{ route('orders.mark.delete', $order->id) }}" title="{{ translate('Delete') }}">
+                <i class="las la-trash"></i>
+            </a>
+
             @if (get_zotc_setting('order_delete') == 1)
-                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
+                <a href="#" class="btn btn-danger btn-icon btn-circle btn-sm confirm-delete"
                     data-href="{{ route('orders.destroy', $order->id) }}" title="{{ translate('Delete') }}">
                     <i class="las la-trash"></i>
                 </a>
@@ -382,7 +391,7 @@
     @include('modals.delete_modal')
 
     <!-- Bulk Delete modal -->
-    @include('modals.bulk_delete_modal')
+    {{-- @include('modals.bulk_delete_modal') --}}
 
     <!-- Bulk Carrier modal -->
     @include('modals.bulk_send_carrier')
@@ -401,7 +410,26 @@
                     this.checked = false;
                 });
             }
+        });
 
+        $(document).on("click", ".mark-delete", function() {
+            var url = $(this).data('href');
+            var row = $(this).closest('tr');
+            if (confirm("Are you sure to delete?")) {
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(data) {
+                        // Hide the row after successful deletion, don't reload
+                        row.hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            } else {
+                return false;
+            }
         });
 
         $(document).ready(function() {
@@ -415,25 +443,25 @@
             }
         });
 
-        function bulk_delete() {
-            var data = new FormData($('#sort_orders')[0]);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('bulk-order-delete') }}",
-                type: 'POST',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response == 1) {
-                        location.reload();
-                    }
-                }
-            });
-        }
+        // function bulk_delete() {
+        //     var data = new FormData($('#sort_orders')[0]);
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         url: "{{ route('bulk-order-delete') }}",
+        //         type: 'POST',
+        //         data: data,
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function(response) {
+        //             if (response == 1) {
+        //                 location.reload();
+        //             }
+        //         }
+        //     });
+        // }
 
         function selectedOrdersSendCarrier() {
             var selectedRowsHtml = '';

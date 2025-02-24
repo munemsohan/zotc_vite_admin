@@ -105,7 +105,7 @@
                                 <div class="form-group row">
                                     <label class="col-xxl-3 col-from-label fs-13"
                                         for="signinSrEmail">{{ translate('Gallery Images') }}
-                                        <small>(500x500)</small></label>
+                                        <small>(750x750)</small></label>
                                     <div class="col-xxl-9">
                                         <div class="input-group" data-toggle="aizuploader" data-uploadtype="product"
                                             data-type="image" data-multiple="true">
@@ -121,7 +121,7 @@
                                         <div class="file-preview box sm">
                                         </div>
                                         <small
-                                            class="text-muted">{{ translate('These images are visible in product details page gallery. Use 500x500 sizes images.') }}</small>
+                                            class="text-muted">{{ translate('These images are visible in product details page gallery. Use 750x750 sizes images.') }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +260,6 @@
                                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                                     <!-- Bootstrap Tags Input JS -->
                                     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
-
 
                                     <!-- Tags -->
                                     <div class="form-group row">

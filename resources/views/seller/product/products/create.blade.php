@@ -20,7 +20,8 @@
         </div>
     @endif
 
-    <form class="" action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data" id="choice_form">
+    <form class="" action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data"
+        id="choice_form">
         <div class="row gutters-5">
             <div class="col-lg-8">
                 @csrf
@@ -31,7 +32,8 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Product Name') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Product Name') }} <span
+                                    class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="name"
                                     placeholder="{{ translate('Product Name') }}" onchange="update_sku()" required>
@@ -50,7 +52,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Unit') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Unit') }} <span
+                                    class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="unit"
                                     placeholder="{{ translate('Unit (e.g. KG, Pc etc)') }}" required>
@@ -65,17 +68,48 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Minimum Purchase Qty') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Minimum Purchase Qty') }} <span
+                                    class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <input type="number" lang="en" class="form-control" name="min_qty" value="1"
                                     min="1" required>
                             </div>
                         </div>
+
+                        <link
+                            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+                            rel="stylesheet">
+                        <style>
+                            .bootstrap-tagsinput {
+                                width: 100%;
+                            }
+
+                            .bootstrap-tagsinput .tag {
+                                margin-right: 2px;
+                                color: white;
+                                background-color: #007bff;
+                                padding: 5px;
+                                border-radius: 3px;
+                                display: inline-block;
+                            }
+                        </style>
+
+                        <!-- jQuery -->
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        <!-- Bootstrap Tags Input JS -->
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+                        <!-- Tags -->
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Tags') }}</label>
+                            <label class="col-md-3 col-from-label fs-13">{{ translate('Tags') }}
+                                <span class="text-danger">*</span>
+                            </label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control aiz-tag-input" name="tags[]"
-                                    placeholder="{{ translate('Type and hit enter to add a tag') }}">
+                                <input type="text" class="form-control bootstrap-tagsinput" name="tags" id="tags"
+                                    value="" placeholder="{{ translate('Type to add a tag') }}"
+                                    data-role="tagsinput">
+                                <small
+                                    class="text-muted">{{ translate("Press 'ENTER' or comma to seperate Tags") }}</small>
                             </div>
                         </div>
                         @if (addon_is_activated('pos_system'))
@@ -225,7 +259,8 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Unit price') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Unit price') }} <span
+                                    class="text-danger">*</span></label>
                             <div class="col-md-6">
                                 <input type="number" lang="en" min="0" value="0" step="0.01"
                                     placeholder="{{ translate('Unit price') }}" name="unit_price" class="form-control"
@@ -234,8 +269,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-md-3 control-label"
-                                for="start_date">{{ translate('Discount Date Range') }} </label>
+                            <label class="col-md-3 control-label" for="start_date">{{ translate('Discount Date Range') }}
+                            </label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control aiz-date-range" name="date_range"
                                     placeholder="{{ translate('Select Date') }}" data-time-picker="true"
@@ -244,7 +279,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Discount') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">{{ translate('Discount') }} <span
+                                    class="text-danger">*</span></label>
                             <div class="col-md-6">
                                 <input type="number" lang="en" min="0" value="0" step="0.01"
                                     placeholder="{{ translate('Discount') }}" name="discount" class="form-control"
@@ -260,7 +296,8 @@
 
                         <div id="show-hide-div">
                             <div class="form-group row">
-                                <label class="col-md-3 col-from-label">{{ translate('Quantity') }} <span class="text-danger">*</span></label>
+                                <label class="col-md-3 col-from-label">{{ translate('Quantity') }} <span
+                                        class="text-danger">*</span></label>
                                 <div class="col-md-6">
                                     <input type="number" lang="en" min="0" value="0" step="1"
                                         placeholder="{{ translate('Quantity') }}" name="current_stock"
@@ -385,14 +422,20 @@
                         <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
                     </div>
                     <div class="w-100">
-                        <div class="d-flex my-3"> 
+                        <div class="d-flex my-3">
                             <div class="align-items-center d-flex mar-btm ml-4 mr-5 radio">
-                                <input id="fq_brought_select_products" type="radio" name="frequently_bought_selection_type" value="product" onchange="fq_brought_product_selection_type()" checked >
-                                <label for="fq_brought_select_products" class="fs-14 fw-500 mb-0 ml-2">{{translate('Select Product')}}</label>
+                                <input id="fq_brought_select_products" type="radio"
+                                    name="frequently_bought_selection_type" value="product"
+                                    onchange="fq_brought_product_selection_type()" checked>
+                                <label for="fq_brought_select_products"
+                                    class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Product') }}</label>
                             </div>
                             <div class="radio mar-btm mr-3 d-flex align-items-center">
-                                <input id="fq_brought_select_category" type="radio" name="frequently_bought_selection_type" value="category" onchange="fq_brought_product_selection_type()">
-                                <label for="fq_brought_select_category" class="fs-14 fw-500 mb-0 ml-2">{{translate('Select Category')}}</label>
+                                <input id="fq_brought_select_category" type="radio"
+                                    name="frequently_bought_selection_type" value="category"
+                                    onchange="fq_brought_product_selection_type()">
+                                <label for="fq_brought_select_category"
+                                    class="fs-14 fw-500 mb-0 ml-2">{{ translate('Select Category') }}</label>
                             </div>
                         </div>
 
@@ -400,37 +443,42 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="fq_brought_select_product_div">
-    
+
                                         <div id="selected-fq-brought-products">
-    
+
                                         </div>
-    
-                                        <button 
-                                            type="button" 
+
+                                        <button type="button"
                                             class="btn btn-block border border-dashed hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center"
                                             onclick="showFqBroughtProductModal()">
                                             <i class="las la-plus"></i>
                                             <span class="ml-2">{{ translate('Add More') }}</span>
                                         </button>
                                     </div>
-    
+
                                     {{-- Select Category for Frequently Bought Product --}}
                                     <div class="fq_brought_select_category_div d-none">
                                         <div class="form-group row">
-                                            <label class="col-md-2 col-from-label">{{translate('Category')}}</label>
+                                            <label class="col-md-2 col-from-label">{{ translate('Category') }}</label>
                                             <div class="col-md-10">
-                                                <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Select a Category')}}" name="fq_brought_product_category_id" data-live-search="true" required>
+                                                <select class="form-control aiz-selectpicker"
+                                                    data-placeholder="{{ translate('Select a Category') }}"
+                                                    name="fq_brought_product_category_id" data-live-search="true"
+                                                    required>
                                                     @foreach ($categories as $category)
-                                                        <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
+                                                        <option value="{{ $category->id }}">
+                                                            {{ $category->getTranslation('name') }}</option>
                                                         @foreach ($category->childrenCategories as $childCategory)
-                                                            @include('categories.child_category', ['child_category' => $childCategory])
+                                                            @include('categories.child_category', [
+                                                                'child_category' => $childCategory,
+                                                            ])
                                                         @endforeach
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -447,17 +495,21 @@
                             {{ translate('Select Main') }}
                             <span class="position-relative main-category-info-icon">
                                 <i class="las la-question-circle fs-18 text-info"></i>
-                                <span class="main-category-info bg-soft-info p-2 position-absolute d-none border">{{ translate('This will be used for commission based calculations and homepage category wise product Show.') }}</span>
+                                <span
+                                    class="main-category-info bg-soft-info p-2 position-absolute d-none border">{{ translate('This will be used for commission based calculations and homepage category wise product Show.') }}</span>
                             </span>
                         </h6>
                     </div>
                     <div class="card-body">
                         <div class="h-300px overflow-auto c-scrollbar-light">
-                            <ul class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
+                            <ul class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]"
+                                data-radio-name="category_id">
                                 @foreach ($categories as $category)
-                                <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}</li>
+                                    <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}</li>
                                     @foreach ($category->childrenCategories as $childCategory)
-                                        @include('backend.product.products.child_category', ['child_category' => $childCategory])
+                                        @include('backend.product.products.child_category', [
+                                            'child_category' => $childCategory,
+                                        ])
                                     @endforeach
                                 @endforeach
                             </ul>
@@ -506,7 +558,8 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-md-6 col-from-label">{{translate('Is Product Quantity Mulitiply')}}</label>
+                                <label
+                                    class="col-md-6 col-from-label">{{ translate('Is Product Quantity Mulitiply') }}</label>
                                 <div class="col-md-6">
                                     <label class="aiz-switch aiz-switch-success mb-0">
                                         <input type="checkbox" name="is_quantity_multiplied" value="1">
@@ -662,168 +715,213 @@
 @endsection
 
 @section('modal')
-	<!-- Frequently Bought Product Select Modal -->
+    <!-- Frequently Bought Product Select Modal -->
     @include('modals.product_select_modal')
 @endsection
 
 @section('script')
-<!-- Treeview js -->
-<script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
+    <!-- Treeview js -->
+    <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#treeview").hummingbird();
-    });
-
-    $("[name=shipping_type]").on("change", function() {
-        $(".product_wise_shipping_div").hide();
-        $(".flat_rate_shipping_div").hide();
-        if ($(this).val() == 'product_wise') {
-            $(".product_wise_shipping_div").show();
-        }
-        if ($(this).val() == 'flat_rate') {
-            $(".flat_rate_shipping_div").show();
-        }
-
-    });
-
-    function add_more_customer_choice_option(i, name) {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: "POST",
-            url: '{{ route('seller.products.add-more-choice-option') }}',
-            data: {
-                attribute_id: i
-            },
-            success: function(data) {
-                var obj = JSON.parse(data);
-                $('#customer_choice_options').append('\
-                    <div class="form-group row">\
-                        <div class="col-md-3">\
-                            <input type="hidden" name="choice_no[]" value="' + i + '">\
-                            <input type="text" class="form-control" name="choice[]" value="' + name +
-                    '" placeholder="{{ translate('Choice Title') }}" readonly>\
-                        </div>\
-                        <div class="col-md-8">\
-                            <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' + i + '[]" multiple>\
-                                ' + obj + '\
-                            </select>\
-                        </div>\
-                    </div>');
-                AIZ.plugins.bootstrapSelect('refresh');
-            }
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initializeTreeView();
         });
 
+        function initializeTreeView() {
+            $("#treeview").hummingbird();
+            var main_id = '{{ old('category_id') }}';
+            var selected_ids = @json(old('category_ids') ?? []);
 
-    }
+            if (selected_ids.length > 0) {
+                selectCategories(selected_ids);
+            } else {
+                selectFirstCategory();
+            }
 
-    $('input[name="colors_active"]').on('change', function() {
-        if (!$('input[name="colors_active"]').is(':checked')) {
-            $('#colors').prop('disabled', true);
-            AIZ.plugins.bootstrapSelect('refresh');
-        } else {
-            $('#colors').prop('disabled', false);
-            AIZ.plugins.bootstrapSelect('refresh');
+            if (main_id) {
+                $('#treeview input:radio[value=' + main_id + ']').prop('checked', true);
+            } else {
+                $('#treeview input:radio').first().prop('checked', true);
+            }
         }
-        update_sku();
-    });
 
-    $(document).on("change", ".attribute_choice", function() {
-        update_sku();
-    });
+        function selectCategories(selected_ids) {
+            selected_ids.forEach(function(element) {
+                let checkbox = $('#treeview input:checkbox#' + element);
+                checkbox.prop('checked', true);
+                checkbox.parents("ul").css("display", "block");
+                checkbox.parents("li").children('.las').removeClass("la-plus").addClass('la-minus');
+            });
+        }
 
-    $('#colors').on('change', function() {
+        function selectFirstCategory() {
+            let firstCategory = $('#treeview input:checkbox').first();
+            firstCategory.prop('checked', true);
+            firstCategory.parents("ul").css("display", "block");
+            firstCategory.parents("li").children('.las').removeClass("la-plus").addClass('la-minus');
+        }
+
+        $("[name=shipping_type]").on("change", function() {
+            $(".product_wise_shipping_div").hide();
+            $(".flat_rate_shipping_div").hide();
+            if ($(this).val() == 'product_wise') {
+                $(".product_wise_shipping_div").show();
+            }
+            if ($(this).val() == 'flat_rate') {
+                $(".flat_rate_shipping_div").show();
+            }
+
+        });
+
+        function add_more_customer_choice_option(i, name) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: '{{ route('seller.products.add-more-choice-option') }}',
+                data: {
+                    attribute_id: i
+                },
+                success: function(data) {
+                    var obj = JSON.parse(data);
+                    $('#customer_choice_options').append('\
+                                <div class="form-group row">\
+                                    <div class="col-md-3">\
+                                        <input type="hidden" name="choice_no[]" value="' + i + '">\
+                                        <input type="text" class="form-control" name="choice[]" value="' + name +
+                        '" placeholder="{{ translate('Choice Title') }}" readonly>\
+                                    </div>\
+                                    <div class="col-md-8">\
+                                        <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' +
+                        i + '[]" multiple>\
+                                            ' + obj + '\
+                                        </select>\
+                                    </div>\
+                                </div>');
+                    AIZ.plugins.bootstrapSelect('refresh');
+                }
+            });
+
+
+        }
+
+        $('input[name="colors_active"]').on('change', function() {
+            if (!$('input[name="colors_active"]').is(':checked')) {
+                $('#colors').prop('disabled', true);
+                AIZ.plugins.bootstrapSelect('refresh');
+            } else {
+                $('#colors').prop('disabled', false);
+                AIZ.plugins.bootstrapSelect('refresh');
+            }
             update_sku();
         });
 
-    $('input[name="unit_price"]').on('keyup', function() {
-        update_sku();
-    });
+        $(document).on("change", ".attribute_choice", function() {
+            update_sku();
+        });
 
-    // $('input[name="name"]').on('keyup', function() {
-    //     update_sku();
-    // });
+        $('#colors').on('change', function() {
+            update_sku();
+        });
 
-    function delete_row(em) {
-        $(em).closest('.form-group row').remove();
-        update_sku();
-    }
+        $('input[name="unit_price"]').on('keyup', function() {
+            update_sku();
+        });
 
-    function delete_variant(em) {
-        $(em).closest('.variant').remove();
-    }
+        // $('input[name="name"]').on('keyup', function() {
+        //     update_sku();
+        // });
 
-    function update_sku() {
-        $.ajax({
-            type: "POST",
-            url: '{{ route('seller.products.sku_combination') }}',
-            data: $('#choice_form').serialize(),
-            success: function(data) {
-                $('#sku_combination').html(data);
-                AIZ.plugins.fooTable();
-                if (data.trim().length > 1) {
-                    $('#show-hide-div').hide();
-                } else {
-                    $('#show-hide-div').show();
+        function delete_row(em) {
+            $(em).closest('.form-group row').remove();
+            update_sku();
+        }
+
+        function delete_variant(em) {
+            $(em).closest('.variant').remove();
+        }
+
+        function update_sku() {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('seller.products.sku_combination') }}',
+                data: $('#choice_form').serialize(),
+                success: function(data) {
+                    $('#sku_combination').html(data);
+                    AIZ.plugins.fooTable();
+                    if (data.trim().length > 1) {
+                        $('#show-hide-div').hide();
+                    } else {
+                        $('#show-hide-div').show();
+                    }
                 }
+            });
+        }
+
+        $('#choice_attributes').on('change', function() {
+            $('#customer_choice_options').html(null);
+            $.each($("#choice_attributes option:selected"), function() {
+                add_more_customer_choice_option($(this).val(), $(this).text());
+            });
+            update_sku();
+        });
+
+        function fq_brought_product_selection_type() {
+            var productSelectionType = $("input[name='frequently_bought_selection_type']:checked").val();
+            if (productSelectionType == 'product') {
+                $('.fq_brought_select_product_div').removeClass('d-none');
+                $('.fq_brought_select_category_div').addClass('d-none');
+            } else if (productSelectionType == 'category') {
+                $('.fq_brought_select_category_div').removeClass('d-none');
+                $('.fq_brought_select_product_div').addClass('d-none');
             }
-        });
-    }
-
-    $('#choice_attributes').on('change', function() {
-        $('#customer_choice_options').html(null);
-        $.each($("#choice_attributes option:selected"), function() {
-            add_more_customer_choice_option($(this).val(), $(this).text());
-        });
-        update_sku();
-    });
-
-    function fq_brought_product_selection_type(){
-        var productSelectionType = $("input[name='frequently_bought_selection_type']:checked").val();
-        if(productSelectionType == 'product'){
-            $('.fq_brought_select_product_div').removeClass('d-none');
-            $('.fq_brought_select_category_div').addClass('d-none');
         }
-        else if(productSelectionType == 'category'){
-            $('.fq_brought_select_category_div').removeClass('d-none');
-            $('.fq_brought_select_product_div').addClass('d-none');
+
+        function showFqBroughtProductModal() {
+            $('#fq-brought-product-select-modal').modal('show', {
+                backdrop: 'static'
+            });
         }
-    }
 
-    function showFqBroughtProductModal() {
-        $('#fq-brought-product-select-modal').modal('show', {backdrop: 'static'});
-    }
+        function filterFqBroughtProduct() {
+            var searchKey = $('input[name=search_keyword]').val();
+            var fqBroughCategory = $('select[name=fq_brough_category]').val();
+            $.post('{{ route('seller.product.search') }}', {
+                _token: AIZ.data.csrf,
+                product_id: null,
+                search_key: searchKey,
+                category: fqBroughCategory,
+                product_type: "physical"
+            }, function(data) {
+                $('#product-list').html(data);
+                AIZ.plugins.fooTable();
+            });
+        }
 
-    function filterFqBroughtProduct() {
-        var searchKey = $('input[name=search_keyword]').val();
-        var fqBroughCategory = $('select[name=fq_brough_category]').val();
-        $.post('{{ route('seller.product.search') }}', { _token: AIZ.data.csrf, product_id: null, search_key:searchKey, category:fqBroughCategory, product_type:"physical" }, function(data){
-            $('#product-list').html(data);
-            AIZ.plugins.fooTable();
-        });
-    }
+        function addFqBroughtProduct() {
+            var selectedProducts = [];
+            $("input:checkbox[name=fq_brought_product_id]:checked").each(function() {
+                selectedProducts.push($(this).val());
+            });
 
-    function addFqBroughtProduct() {
-        var selectedProducts = [];
-        $("input:checkbox[name=fq_brought_product_id]:checked").each(function() {
-            selectedProducts.push($(this).val());
-        });
+            var fqBroughtProductIds = [];
+            $("input[name='fq_brought_product_ids[]']").each(function() {
+                fqBroughtProductIds.push($(this).val());
+            });
 
-        var fqBroughtProductIds = [];
-        $("input[name='fq_brought_product_ids[]']").each(function() {
-            fqBroughtProductIds.push($(this).val());
-        });
+            var productIds = selectedProducts.concat(fqBroughtProductIds.filter((item) => selectedProducts.indexOf(item) <
+                0))
 
-        var productIds = selectedProducts.concat(fqBroughtProductIds.filter((item) => selectedProducts.indexOf(item) < 0))
-
-        $.post('{{ route('seller.get-selected-products') }}', { _token: AIZ.data.csrf, product_ids:productIds}, function(data){
-            $('#fq-brought-product-select-modal').modal('hide');
-            $('#selected-fq-brought-products').html(data);
-            AIZ.plugins.fooTable();
-        });
-    }
-
-</script>
+            $.post('{{ route('seller.get-selected-products') }}', {
+                _token: AIZ.data.csrf,
+                product_ids: productIds
+            }, function(data) {
+                $('#fq-brought-product-select-modal').modal('hide');
+                $('#selected-fq-brought-products').html(data);
+                AIZ.plugins.fooTable();
+            });
+        }
+    </script>
 @endsection

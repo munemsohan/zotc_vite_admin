@@ -18,7 +18,7 @@
 
     @can('admin_dashboard')
         <div class="row gutters-16 fs-14">
-            @if (get_business_setting('plan_details_show') == 1)
+            @if (get_zotc_setting('plan_details_show') == 1)
                 <div class="col-md-3 p-1">
                     <div class="dashboard-box overflow-hidden h-250px rounded" style="background: #1976d2">
                         <div class="row">
@@ -74,7 +74,7 @@
                     <div class="dashboard-box text-white overflow-hidden h-250px rounded" style="background: #26a69a;"
                         id="extend_parent_div">
                         @php
-                            $plan = get_business_setting('plan');
+                            $plan = get_zotc_setting('plan');
                             $planParts = explode(',', $plan);
 
                             if (count($planParts) < 6) {
@@ -304,7 +304,7 @@
                                                 $package_name = 'For more complex businesses';
                                             }
                                         @endphp
-
+                                        
                                         <h4>
                                             {{ $currency == 'BDT' ? $plan->price_bdt . ' BDT' : $plan->price . ' $' }}
                                         </h4>
@@ -1522,212 +1522,213 @@
                     </div> --}}
 
                 </div>
-            @endcan
+            </div>
         </div>
-    @endsection
-    @section('script')
-        <script type="text/javascript">
-            AIZ.plugins.chart('#graph-3', {
-                type: 'line',
-                data: {
-                    labels: [
-                        @foreach ($sales_stat as $month => $row)
-                            "{{ $month }}",
-                        @endforeach
-                    ],
-                    datasets: [{
-                            fill: false,
-                            borderColor: '#009ef7',
-                            label: "{{ translate('Yearly Sales') }}",
-                            data: [
-                                @foreach ($sales_stat as $row)
-                                    {{ $row[0]->total }},
-                                @endforeach
-                            ],
-
-                        },
-
-                    ]
-                },
-                options: {
-                    legend: {
-                        labels: {
-                            fontFamily: 'sans-serif',
-                            fontColor: "#000",
-                            boxWidth: 10,
-                            usePointStyle: true
-                        },
-                        onClick: function() {
-                            return '';
-                        },
-                        position: 'bottom'
-                    },
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                display: false,
-                                drawBorder: false,
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                        xAxes: [{
-                            gridLines: {
-                                display: false,
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                    }
-                }
-            });
-
-            AIZ.plugins.chart('#graph-2', {
-                type: 'doughnut',
-                data: {
-                    labels: [
-                        @foreach ($payment_type_wise_inhouse_sale as $row)
-                            "{{ ucwords(str_replace('_', ' ', $row->payment_type)) }}",
-                        @endforeach
-                    ],
-                    datasets: [{
-                        label: 'My First Dataset',
+    @endcan
+@endsection
+@section('script')
+    <script type="text/javascript">
+        AIZ.plugins.chart('#graph-3', {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach ($sales_stat as $month => $row)
+                        "{{ $month }}",
+                    @endforeach
+                ],
+                datasets: [{
+                        fill: false,
+                        borderColor: '#009ef7',
+                        label: "{{ translate('Yearly Sales') }}",
                         data: [
-                            @foreach ($payment_type_wise_inhouse_sale as $row)
-                                {{ $row->total_amount }},
+                            @foreach ($sales_stat as $row)
+                                {{ $row[0]->total }},
                             @endforeach
                         ],
-                        backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-                        ],
-                        hoverOffset: 4
-                    }]
+
+                    },
+
+                ]
+            },
+            options: {
+                legend: {
+                    labels: {
+                        fontFamily: 'sans-serif',
+                        fontColor: "#000",
+                        boxWidth: 10,
+                        usePointStyle: true
+                    },
+                    onClick: function() {
+                        return '';
+                    },
+                    position: 'bottom'
                 },
-                options: {
-                    legend: {
-                        position: 'bottom',
-                        align: 'center',
-                        labels: {
-                            usePointStyle: true,
-                            fontSize: 11,
-                            boxWidth: 30
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                            drawBorder: false,
                         },
+                        ticks: {
+                            display: false
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }],
+                }
+            }
+        });
+
+        AIZ.plugins.chart('#graph-2', {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    @foreach ($payment_type_wise_inhouse_sale as $row)
+                        "{{ ucwords(str_replace('_', ' ', $row->payment_type)) }}",
+                    @endforeach
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [
+                        @foreach ($payment_type_wise_inhouse_sale as $row)
+                            {{ $row->total_amount }},
+                        @endforeach
+                    ],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                legend: {
+                    position: 'bottom',
+                    align: 'center',
+                    labels: {
+                        usePointStyle: true,
+                        fontSize: 11,
+                        boxWidth: 30
                     },
-                }
-            })
-
-            function top_category_products(category_id, e) {
-                $(".top_category_products").removeClass("active");
-                e.classList.add("active");
-                $(".top_category_product_table").removeClass("show");
-                $("#top_category_product_table_" + category_id).addClass("show");
+                },
             }
+        })
 
-            function top_sellers_products(seller_id, e) {
-                $(".top_sellers_products").removeClass("active");
-                e.classList.add("active");
-                $(".top_sellers_product_table").removeClass("show");
-                $("#top_sellers_product_table_" + seller_id).addClass("show");
-            }
+        function top_category_products(category_id, e) {
+            $(".top_category_products").removeClass("active");
+            e.classList.add("active");
+            $(".top_category_product_table").removeClass("show");
+            $("#top_category_product_table_" + category_id).addClass("show");
+        }
 
-            function top_brands_products(brand_id, e) {
-                $(".top_brands_products").removeClass("active");
-                e.classList.add("active");
-                $(".top_brands_product_table").removeClass("show");
-                $("#top_brands_product_table_" + brand_id).addClass("show");
-            }
+        function top_sellers_products(seller_id, e) {
+            $(".top_sellers_products").removeClass("active");
+            e.classList.add("active");
+            $(".top_sellers_product_table").removeClass("show");
+            $("#top_sellers_product_table_" + seller_id).addClass("show");
+        }
 
-            $('#extendButton').click(function() {
-                var $button = $(this);
-                var $parentDiv = $('#extend_parent_div');
-                var $extendDiv = $('#extend_div');
+        function top_brands_products(brand_id, e) {
+            $(".top_brands_products").removeClass("active");
+            e.classList.add("active");
+            $(".top_brands_product_table").removeClass("show");
+            $("#top_brands_product_table_" + brand_id).addClass("show");
+        }
 
-                if ($extendDiv.is(':visible')) {
-                    // First slide to close, then remove class
-                    $extendDiv.slideUp(function() {
-                        $parentDiv.removeClass('h-auto');
-                        $button.text('Extend');
-                    });
-                } else {
-                    // First add class, then slide to open
-                    $parentDiv.addClass('h-auto');
-                    $extendDiv.slideDown(function() {
-                        $button.text('Close');
-                    });
-                }
-            });
+        $('#extendButton').click(function() {
+            var $button = $(this);
+            var $parentDiv = $('#extend_parent_div');
+            var $extendDiv = $('#extend_div');
 
-            $('#buy_sms').click(function() {
-                $('#buy_balance_div').slideUp();
-                $('#buy_sms_div').slideToggle();
-            });
-
-            $('#buy_balance').click(function() {
-                $('#buy_sms_div').slideUp();
-                $('#buy_balance_div').slideToggle();
-            });
-
-            function togglePricing(type) {
-                $('#monthly_price, #yearly_price, #life_time_price, #percentage_price').removeClass('btn-primary');
-                $('#monthly_pricing, #yearly_pricing, #life_time_pricing, #percentage_pricing').hide();
-
-                if (type === 'monthly') {
-                    $('#monthly_pricing').show();
-                    $('#monthly_price').addClass('btn-primary');
-                } else if (type === 'yearly') {
-                    $('#yearly_pricing').show();
-                    $('#yearly_price').addClass('btn-primary');
-                } else if (type === 'life_time') {
-                    $('#life_time_pricing').show();
-                    $('#life_time_price').addClass('btn-primary');
-                } else if (type === 'percentage') {
-                    $('#percentage_pricing').show();
-                    $('#percentage_price').addClass('btn-primary');
-                }
-            }
-
-            function copyToClipboard(text) {
-                navigator.clipboard.writeText(text).then(function() {
-                    alert('Successfully copied to clipboard');
-                }, function(err) {
-                    alert('Error in copying text: ', err);
+            if ($extendDiv.is(':visible')) {
+                // First slide to close, then remove class
+                $extendDiv.slideUp(function() {
+                    $parentDiv.removeClass('h-auto');
+                    $button.text('Extend');
+                });
+            } else {
+                // First add class, then slide to open
+                $parentDiv.addClass('h-auto');
+                $extendDiv.slideDown(function() {
+                    $button.text('Close');
                 });
             }
+        });
 
-            $('#upgrade_plan').click(function() {
-                $('#connect_existing_domain_div').slideUp();
-                $('#buy_new_domain_div').slideUp();
-                $('#upgrade_plan_div').slideToggle();
+        $('#buy_sms').click(function() {
+            $('#buy_balance_div').slideUp();
+            $('#buy_sms_div').slideToggle();
+        });
+
+        $('#buy_balance').click(function() {
+            $('#buy_sms_div').slideUp();
+            $('#buy_balance_div').slideToggle();
+        });
+
+        function togglePricing(type) {
+            $('#monthly_price, #yearly_price, #life_time_price, #percentage_price').removeClass('btn-primary');
+            $('#monthly_pricing, #yearly_pricing, #life_time_pricing, #percentage_pricing').hide();
+
+            if (type === 'monthly') {
+                $('#monthly_pricing').show();
+                $('#monthly_price').addClass('btn-primary');
+            } else if (type === 'yearly') {
+                $('#yearly_pricing').show();
+                $('#yearly_price').addClass('btn-primary');
+            } else if (type === 'life_time') {
+                $('#life_time_pricing').show();
+                $('#life_time_price').addClass('btn-primary');
+            } else if (type === 'percentage') {
+                $('#percentage_pricing').show();
+                $('#percentage_price').addClass('btn-primary');
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Successfully copied to clipboard');
+            }, function(err) {
+                alert('Error in copying text: ', err);
             });
+        }
 
-            $('.buy_now').click(function() {
-                var plan_id = $(this).attr('id');
+        $('#upgrade_plan').click(function() {
+            $('#connect_existing_domain_div').slideUp();
+            $('#buy_new_domain_div').slideUp();
+            $('#upgrade_plan_div').slideToggle();
+        });
 
-                $('#buy_now_div_' + plan_id).slideToggle();
+        $('.buy_now').click(function() {
+            var plan_id = $(this).attr('id');
+
+            $('#buy_now_div_' + plan_id).slideToggle();
+        });
+
+        $('.convertToPercentage').click(function() {
+            $.ajax({
+                url: "{{ url('admin/convertToPercentage') }}",
+                method: "GET",
+                success: function(response) {
+                    AIZ.plugins.notify('success',
+                        '{{ translate('Percentage Plan is Activated') }}');
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
             });
+        });
 
-            $('.convertToPercentage').click(function() {
-                $.ajax({
-                    url: "{{ url('admin/convertToPercentage') }}",
-                    method: "GET",
-                    success: function(response) {
-                        AIZ.plugins.notify('success',
-                            '{{ translate('Percentage Plan is Activated') }}');
-                        window.location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-
-            $('.lifetimebuynow').click(function() {
-                var purpose = $(this).data('purpose');
-                $('#' + purpose + '_div').slideToggle();
-            });
-        </script>
-    @endsection
+        $('.lifetimebuynow').click(function() {
+            var purpose = $(this).data('purpose');
+            $('#' + purpose + '_div').slideToggle();
+        });
+    </script>
+@endsection

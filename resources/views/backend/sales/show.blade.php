@@ -66,17 +66,13 @@
                 <div class="col-md-2">
                     <label>{{ translate('State/District') }}</label>
                     <select class="form-control mb-3 aiz-selectpicker rounded-0" data-live-search="true" name="state_id"
-                        required>
-
-                    </select>
+                        required></select>
                 </div>
 
                 <div class="col-md-2">
                     <label>{{ translate('City/Upazilla') }}</label>
                     <select class="form-control mb-3 aiz-selectpicker rounded-0" data-live-search="true" name="city_id"
-                        required>
-
-                    </select>
+                        required></select>
                 </div>
 
                 <div class="col-md-2">
@@ -361,7 +357,6 @@
                             </p>
                         @endif
                     @endif
-
                 </div>
 
                 <div class="col-md-4">
@@ -443,13 +438,19 @@
                                             aria-valuenow="{{ 100 - $total_success_percentage }}" aria-valuemin="0"
                                             aria-valuemax="100"></div>
                                     </div>
-                                    <p class="mb-0 text-center">{{ (int) $total_success_percentage }}% Delivered</p>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <p class="text-primary btn p-0 m-0 d-none" id="show_fraud_comments">
+                                            <i class="las la-eye"></i> Steadfast Merchant Comments (<span
+                                                id="fraud_comment_count"></span>)
+                                        </p>
+
+                                        <p class="mb-0 text-center">{{ (int) $total_success_percentage }}% Delivered</p>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
 
                 <div class="col-md-2">
                     <div class="table-responsive">
@@ -850,9 +851,22 @@
                         </table>
                     </div>
                 @endif
-
             </div>
+        </div>
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="fraudCommentsModal" tabindex="-1" aria-labelledby="fraudCommentsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fraudCommentsModalLabel">Steadfast Merchant Comments</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="fraudCommentDiv"></div>
+            </div>
         </div>
     </div>
 @endsection
@@ -860,6 +874,8 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
+            getFraudComments();
+
             var country_id = $('[name=country_id]').val();
             get_states(country_id);
 
@@ -886,6 +902,10 @@
             } else {
                 $('#send-to-courier').hide();
             }
+        });
+
+        $('#show_fraud_comments').on('click', function() {
+            $('#fraudCommentsModal').modal('show');
         });
 
         $('#assign_deliver_boy').on('change', function() {
@@ -1091,6 +1111,32 @@
         $(document).on('change', '[name=city_id]', function() {
             saveOrderAddress();
         });
+
+        function getFraudComments() {
+            let fraud_check_number = $('#phone').val().trim();
+
+            if (fraud_check_number.length >= 11) {
+                fraud_check_number = fraud_check_number.slice(-11);
+            }
+
+            $.ajax({
+                url: '{{ route('fraud_comments.get') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    phone: fraud_check_number
+                },
+                success: function(response) {
+                    $('#fraud_comment_count').html(response.count);
+
+                    if (response.count > 0) {
+                        $('#show_fraud_comments').removeClass('d-none');
+                    }
+
+                    $('#fraudCommentDiv').html(response.html);
+                }
+            });
+        }
 
         function get_states(country_id) {
             $('[name="state"]').html("");

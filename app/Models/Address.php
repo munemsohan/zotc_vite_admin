@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    protected $fillable = ['set_default'];
+    protected $fillable = [
+        'user_id',
+        'address',
+        'country_id',
+        'state_id',
+        'city_id',
+        'postal_code',
+        'phone',
+        'set_default'
+    ];
 
     public function user()
     {
@@ -17,12 +26,12 @@ class Address extends Model
     {
         return $this->belongsTo(Country::class);
     }
-    
+
     public function state()
     {
         return $this->belongsTo(State::class);
     }
-    
+
     public function city()
     {
         return $this->belongsTo(City::class);

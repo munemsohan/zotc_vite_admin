@@ -9,7 +9,7 @@
             <div class="card-body">
                 <!-- Check if there are abandoned carts -->
                 @if ($abandonedCarts->count() > 0)
-                    <table class="table aiz-table mb-0">
+                    <table class="table mb-0">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -59,14 +59,10 @@
 
                                 @if (!empty($products) && is_array($products))
                                     @foreach ($products as $product)
-                                        <table class="table d-none" id="products_{{ $cart->id }}">
-                                            <tbody>
-                                                <tr>
-                                                    <td>{{ $product['name'] ?? '' }}</td>
-                                                    <td>{{ $product['quantity'] ?? '' }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <tr class="bg-secondary text-white d-none" id="products_{{ $cart->id }}">
+                                            <td class="text-center" colspan="9">{{ $product['name'] ?? '' }}</td>
+                                            <td class="text-left">{{ $product['quantity'] ?? '' }}</td>
+                                        </tr>
                                     @endforeach
                                 @endif
                             @endforeach
@@ -87,18 +83,17 @@
 @endsection
 
 @section('script')
-<script>
-    $(document).ready(function() {
-        $(document).on("mouseenter", ".product-toggle", function() {
-            let id = $(this).data("id");
-            $("#products_" + id).removeClass("d-none");
-        });
+    <script>
+        $(document).ready(function() {
+            $(document).on("mouseenter", ".product-toggle", function() {
+                let id = $(this).data("id");
+                $("#products_" + id).removeClass("d-none");
+            });
 
-        $(document).on("mouseleave", ".product-toggle", function() {
-            let id = $(this).data("id");
-            $("#products_" + id).addClass("d-none");
+            $(document).on("mouseleave", ".product-toggle", function() {
+                let id = $(this).data("id");
+                $("#products_" + id).addClass("d-none");
+            });
         });
-    });
-</script>
-
+    </script>
 @endsection

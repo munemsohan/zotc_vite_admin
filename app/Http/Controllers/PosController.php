@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Http\Resources\PosProductCollection;
+use App\Models\Address;
 use App\Models\Cart;
+use App\Models\City;
+use App\Models\State;
 use App\Utility\FontUtility;
 use App\Utility\PosUtility;
 use Session;
@@ -23,7 +26,10 @@ class PosController extends Controller
 
     public function index()
     {
-        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc')->get();
+        $customers = User::where('user_type', 'customer')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('backend.pos.index', compact('customers'));
     }
 
@@ -38,16 +44,22 @@ class PosController extends Controller
 
     // Add product To cart
     public function addToCart(Request $request)
-    {   
+    {
         $stockId    = $request->stock_id;
+        $sellerId   = $request->sellerId;
+
         $userID     = Session::get('pos.user_id');
         $temUserId  = Session::get('pos.temp_user_id');
         if (!$temUserId && !$userID) {
             $temUserId = bin2hex(random_bytes(10));
             Session::put('pos.temp_user_id', $temUserId);
         }
-        $response = PosUtility::addToCart($stockId, $userID, $temUserId);
-        
+        $response = PosUtility::addToCart($stockId, $userID, $temUserId, $sellerId);
+
+        if ($request->shipping != null) {
+            Session::put('pos.shipping', $request->shipping);
+        }
+
         return array(
             'success' => $response['success'],
             'message' => $response['message'],
@@ -103,12 +115,34 @@ class PosController extends Controller
         return view('backend.pos.cart');
     }
 
+    public function setShippingByCustomer(Request $request)
+    {
+        $address_id = $request->address_id;
+        $address = Address::find($address_id);
+
+        $shippingType = get_business_setting('shipping_type');
+
+        $state = null;
+        $city = null;
+
+        if ($shippingType == 'state_wise_shipping') {
+            $state = State::find($address->state_id);
+            Session::put('pos.shipping', $state->cost ?? 0);
+        } elseif ($shippingType == 'area_wise_shipping') {
+            $city = City::find($address->city_id);
+            Session::put('pos.shipping', $city->cost ?? 0);
+        }
+
+        return view('backend.pos.cart');
+    }
+
     //set Shipping Cost
     public function setShipping(Request $request)
     {
         if ($request->shipping != null) {
             Session::put('pos.shipping', $request->shipping);
         }
+
         return view('backend.pos.cart');
     }
 
@@ -144,7 +178,7 @@ class PosController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $print_width = get_setting('print_width');
+        $print_width = get_zotc_setting('print_width');
         if ($print_width == null) {
             flash(translate('Thermal printer size is not given in POS configuration'))->warning();
             return back();
@@ -169,5 +203,54 @@ class PosController extends Controller
         $mpdf->WriteHTML($html);
 
         $mpdf->Output('order-' . $order->code . '.pdf', 'I');
+    }
+
+    public function addCustomer(Request $request)
+    {
+        // Combine phone code and number
+        $fullPhone = $request->phonecode . $request->phone;
+
+        // Validate input
+        $request->validate([
+            'name'       => 'required',
+            'email'      => 'nullable|email|unique:users,email',
+            'phonecode'  => 'required',
+            'phone'      => 'required',
+            'address'    => 'nullable',
+            'country_id' => 'required',
+            'state_id'   => 'required',
+            'city_id'    => 'required',
+            'postal_code' => 'nullable',
+        ]);
+
+        // Search for existing user by phone or email
+        $user = User::where('phone', $fullPhone)
+            ->orWhere('email', $request->email)
+            ->first();
+
+        // If user does not exist, create a new one
+        if (!$user) {
+            $user = User::create([
+                'name'  => $request->name,
+                'email' => $request->email,
+                'phone' => $fullPhone,
+            ]);
+        }
+
+        // Always create a new address entry
+        Address::create([
+            'user_id'     => $user->id,
+            'address'     => $request->address,
+            'country_id'  => $request->country_id,
+            'state_id'    => $request->state_id,
+            'city_id'     => $request->city_id,
+            'postal_code' => $request->postal_code,
+            'phone'       => $fullPhone,
+        ]);
+
+        // Flash success message
+        flash(translate('Customer added successfully!'))->success();
+
+        return back();
     }
 }

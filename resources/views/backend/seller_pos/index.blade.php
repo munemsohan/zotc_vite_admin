@@ -1,0 +1,1021 @@
+@extends('backend.layouts.app')
+
+@section('content')
+
+    <section class="">
+        <form class="" action="" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row gutters-5">
+                <div class="col-md">
+                    <div class="row gutters-5 mb-3">
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <div class="form-group mb-0">
+                                <input class="form-control form-control-lg" type="text" name="keyword"
+                                    placeholder="{{ translate('Search by Product Name/Barcode') }}"
+                                    onkeyup="filterProducts()">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <select name="poscategory" class="form-control form-control-lg aiz-selectpicker"
+                                data-live-search="true" onchange="filterProducts()">
+                                <option value="">{{ translate('All Categories') }}</option>
+                                @foreach (\App\Models\Category::all() as $key => $category)
+                                    <option value="category-{{ $category->id }}">{{ $category->getTranslation('name') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <select name="brand" class="form-control form-control-lg aiz-selectpicker"
+                                data-live-search="true" onchange="filterProducts()">
+                                <option value="">{{ translate('All Brands') }}</option>
+                                @foreach (\App\Models\Brand::all() as $key => $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="aiz-pos-product-list c-scrollbar-light">
+                        <div class="d-flex flex-wrap justify-content-center" id="product-list">
+
+                        </div>
+                        <div id="load-more" class="text-center">
+                            <div class="fs-14 d-inline-block fw-600 btn btn-soft-primary c-pointer"
+                                onclick="loadMoreProduct()">{{ translate('Loading..') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            @if (get_business_setting('vendor_system_activation'))
+                                <select name="seller_id" class="form-control mb-2 aiz-selectpicker" data-live-search="true"
+                                    id="seller_id" onchange="selectSeller(this)">
+                                    <option value="">Select Seller</option>
+                                    @foreach ($sellers as $key => $seller)
+                                        <option value="{{ $seller->id }}" data-contact="{{ $seller->email }}">
+                                            {{ $seller->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            <div class="d-flex border-bottom pb-3">
+                                <div class="flex-grow-1">
+                                    @php
+                                        $userID = Session::has('seller_pos.user_id')
+                                            ? Session::get('seller_pos.user_id')
+                                            : null;
+                                    @endphp
+                                    <div class="input-group">
+                                        <select name="user_id" class="form-control aiz-selectpicker pos-customer"
+                                            data-live-search="true" onchange="getShippingAddressUpdateCartData()"
+                                            data-selected="{{ $userID }}">
+                                            <option value="">{{ translate('Walk In Customer') }}</option>
+                                            @foreach ($customers as $key => $customer)
+                                                <option value="{{ $customer->id }}" data-contact="{{ $customer->email }}"
+                                                    data-seller-id="{{ $customer->seller_id }}">
+                                                    {{ $customer->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="btn btn-soft-primary" data-target="#addCustomerModal"
+                                            data-toggle="modal">
+                                            <i class="las la-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-icon btn-soft-dark ml-3 mr-0 text-white"
+                                    data-target="#new-customer" data-toggle="modal">
+                                    <i class="las la-truck"></i>
+                                </button>
+                            </div>
+
+                            <div class="" id="cart-details">
+                                @php
+                                    $subtotal = 0;
+                                    $tax = 0;
+
+                                    $shippingType = get_business_setting('shipping_type');
+
+                                    if ($shippingType == 'flat_rate') {
+                                        $shippingCost = get_business_setting('flat_rate_shipping_cost');
+                                    } elseif ($shippingType == 'custom_shipping') {
+                                        $shippingInfo = get_business_setting('custom_shipping_info');
+                                    }
+                                @endphp
+                                <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
+                                    <div class="text-center">
+                                        <i class="las la-frown la-3x opacity-50"></i>
+                                        <p>{{ translate('No Product Added') }}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
+                                        <span>{{ translate('Sub Total') }}</span>
+                                        <span>{{ single_price($subtotal) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
+                                        <span>{{ translate('Tax') }}</span>
+                                        <span>{{ single_price($tax) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
+                                        <span>{{ translate('Shipping') }}
+                                            @if ($shippingType == 'custom_shipping')
+                                                @foreach (json_decode($shippingInfo) as $key => $value)
+                                                    <input name="shipping-option" class="mx-2 shipping-option"
+                                                        type="radio" data-custom-shipping="{{ $key }}"
+                                                        value="{{ $value }}"
+                                                        {{ Session::get('seller_pos.shipping_type') == $key ? 'checked' : '' }}>
+                                                    {{ $key . '(' . $value . ')' }}
+                                                @endforeach
+                                            @endif
+                                        </span>
+                                        <span>{{ single_price(Session::get('seller_pos.shipping', 0)) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
+                                        <span>{{ translate('Discount') }}</span>
+                                        <span>{{ single_price(Session::get('seller_pos.discount', 0)) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-600 fs-18 border-top pt-2">
+                                        <span>{{ translate('Total') }}</span>
+                                        <span>{{ single_price($subtotal + $tax + Session::get('seller_pos.shipping', 0) - Session::get('seller_pos.discount', 0)) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pos-footer mar-btm">
+                        <div class="d-flex flex-column flex-md-row justify-content-between">
+                            <div class="d-flex">
+                                <div class="dropdown mr-1 ml-0 dropup">
+                                    <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button"
+                                        data-toggle="dropdown">
+                                        {{ translate('Shipping') }}
+                                    </button>
+                                    <div class="dropdown-menu p-3 dropdown-menu-lg">
+                                        <div class="input-group">
+                                            <input type="number" min="0" placeholder="Amount" name="shipping"
+                                                class="form-control" value="{{ Session::get('seller_pos.shipping', 0) }}"
+                                                required onchange="setShipping()">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text py-1">{{ translate('Flat') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown mr-1 ml-0 dropup">
+                                    <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button"
+                                        data-toggle="dropdown">
+                                        {{ translate('Discount') }}
+                                    </button>
+                                    <div class="dropdown-menu p-3 dropdown-menu-lg">
+                                        <div class="input-group">
+                                            <input type="number" min="0" placeholder="Amount" name="discount"
+                                                class="form-control" value="{{ Session::get('seller_pos.discount', 0) }}"
+                                                required onchange="setDiscount()">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text py-1">{{ translate('Flat') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown dropup">
+                                    <select id="order_from" class="form-control border-dark" style="height: 42px">
+                                        <option value="pos">POS</option>
+                                        <option value="web">Web</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="whatsapp">Whatsapp</option>
+                                        <option value="custom">Custom</option>
+                                        <option value="phone_call">Phone Call</option>
+                                        <option value="messenger">Messenger</option>
+                                        <option value="instagram">Instagram</option>
+                                        <option value="tikTok">TikTok</option>
+                                        <option value="up_sell">Up Sell</option>
+                                        <option value="offline">Offline</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="my-2 my-md-0">
+                                <button type="button" class="btn btn-primary btn-block"
+                                    onclick="orderConfirmation()">{{ translate('Place Order') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+@endsection
+
+@section('modal')
+    <!-- Address Modal -->
+    <div id="new-customer" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Shipping Address') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="shipping_form">
+                    <div class="modal-body" id="shipping_address"></div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-styled btn-base-3" data-dismiss="modal"
+                        id="close-button">{{ translate('Close') }}</button>
+                    <button type="button" class="btn btn-primary btn-styled btn-base-1" id="confirm-address"
+                        data-dismiss="modal">{{ translate('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Change Customer Confirmation Modal --}}
+    <div id="change-customer" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Change Customer Confirmation') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="shipping_form">
+                    <div class="modal-body">
+                        <p class="mt-1 fs-14">
+                            {{ translate('If you have cart data and change customers, cart data for the previous customer will be removed.') }}
+                        </p>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-styled btn-base-3" data-dismiss="modal"
+                        id="close-button">{{ translate('Close') }}</button>
+                    <button type="button" class="btn btn-primary btn-styled btn-base-1"
+                        onclick="updateSessionUserCartData()" data-dismiss="modal">{{ translate('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- new address modal -->
+    <div id="new-address-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Shipping Address') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form class="form-horizontal" action="{{ route('addresses.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="customer_id" id="set_customer_id" value="">
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="address">{{ translate('Address') }}</label>
+                                <div class="col-sm-10">
+                                    <textarea placeholder="{{ translate('Address') }}" id="address" name="address" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label">{{ translate('Country') }}</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control aiz-selectpicker" data-live-search="true"
+                                        data-placeholder="{{ translate('Select your country') }}" name="country_id"
+                                        required>
+                                        <option value="">{{ translate('Select your country') }}</option>
+                                        @foreach (\App\Models\Country::where('status', 1)->get() as $key => $country)
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2 control-label">
+                                    <label>{{ translate('State') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="state_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>{{ translate('City') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="city_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label"
+                                    for="postal_code">{{ translate('Postal code') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="0" placeholder="{{ translate('Postal code') }}"
+                                        id="postal_code" name="postal_code" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="phone">{{ translate('Phone') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="0" placeholder="{{ translate('Phone') }}"
+                                        id="phone" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-styled btn-base-3"
+                            data-dismiss="modal">{{ translate('Close') }}</button>
+                        <button type="submit"
+                            class="btn btn-primary btn-styled btn-base-1">{{ translate('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="order-confirm" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-xl">
+            <div class="modal-content" id="variants">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Order Summary') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" id="order-confirmation">
+                    <div class="p-4 text-center">
+                        <i class="las la-spinner la-spin la-3x"></i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-base-3"
+                        data-dismiss="modal">{{ translate('Close') }}</button>
+                    <button type="button" onclick="oflinePayment()"
+                        class="btn btn-base-1 btn-warning">{{ translate('Offline Payment') }}</button>
+                    <button type="button" onclick="submitOrder('cash_on_delivery')"
+                        class="btn btn-base-1 btn-info">{{ translate('Confirm with COD') }}</button>
+                    <button type="button" onclick="submitOrder('cash')"
+                        class="btn btn-base-1 btn-success">{{ translate('Confirm with Cash') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Offline Payment Modal --}}
+    <div id="offlin_payment" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Offline Payment Info') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"
+                                for="offline_payment_method">{{ translate('Payment Method') }}</label>
+                            <div class="col-sm-9">
+                                <input placeholder="{{ translate('Name') }}" id="offline_payment_method"
+                                    name="offline_payment_method" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"
+                                for="offline_payment_amount">{{ translate('Amount') }}</label>
+                            <div class="col-sm-9">
+                                <input placeholder="{{ translate('Amount') }}" id="offline_payment_amount"
+                                    name="offline_payment_amount" class="form-control" readonly required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-sm-3 control-label" for="trx_id">{{ translate('Transaction ID') }}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control mb-3" id="trx_id" name="trx_id"
+                                placeholder="{{ translate('Transaction ID') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{ translate('Payment Proof') }}</label>
+                        <div class="col-md-9">
+                            <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text bg-soft-secondary font-weight-medium">
+                                        {{ translate('Browse') }}</div>
+                                </div>
+                                <div class="form-control file-amount">{{ translate('Choose image') }}</div>
+                                <input type="hidden" name="payment_proof" class="selected-files">
+                            </div>
+                            <div class="file-preview box sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-base-3"
+                        data-dismiss="modal">{{ translate('Close') }}</button>
+                    <button type="button" onclick="submitOrder('offline_payment')"
+                        class="btn btn-styled btn-base-1 btn-success">{{ translate('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- customer add modal --}}
+    <div id="addCustomerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCustomerModalLabel">Add New Customer</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Customer Form -->
+                    <form id="customerForm" method="POST" action="{{ route('admin.seller_pos.add_customer') }}">
+                        @csrf
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 form-label">{{ translate('Seller') }}</label>
+                                <div class="col-sm-10">
+                                    <select name="seller_id" class="form-control p-1" data-live-search="true"
+                                        id="modal_seller_id">
+                                        <option value="">Select Seller</option>
+                                        @foreach ($sellers as $key => $seller)
+                                            <option value="{{ $seller->id }}" data-contact="{{ $seller->email }}">
+                                                {{ $seller->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 form-label">{{ translate('Name') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name"
+                                        placeholder="{{ translate('Name') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 form-label">{{ translate('Email') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="{{ translate('Email') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="phone"
+                                    class="col-sm-2 form-label fw-bold">{{ translate('Phone') }}</label>
+                                <div class="input-group col-sm-10">
+                                    <div class="input-group-prepend">
+                                        <select name="phonecode" class="form-select border-end-0">
+                                            @foreach (get_active_countries() as $country)
+                                                <option value="{{ $country->phonecode }}">{{ $country->phonecode }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="number" class="form-control border-start-0" name="phone"
+                                        id="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label" for="address">{{ translate('Address') }}</label>
+                                <div class="col-sm-10">
+                                    <textarea placeholder="{{ translate('Address') }}" id="address" name="address" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        @php
+                            $countries = \App\Models\Country::where('status', 1)->get();
+                        @endphp
+                        @if ($countries->count() == 1)
+                            <select class="d-none" name="country_id" id="hidden_country_id" required>
+                                <option value="{{ $countries->first()->id }}">{{ $countries->first()->name }}</option>
+                            </select>
+                        @else
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-2 control-label">{{ translate('Country') }}</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control aiz-selectpicker" data-live-search="true"
+                                            data-placeholder="{{ translate('Select your country') }}" name="country_id"
+                                            required>
+                                            @foreach ($countries as $country)
+                                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2 control-label">
+                                    <label>{{ translate('State') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="state_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>{{ translate('City') }}</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true"
+                                        name="city_id" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-2 control-label"
+                                    for="postal_code">{{ translate('Postal code') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="0" placeholder="{{ translate('Postal code') }}"
+                                        id="postal_code" name="postal_code" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Customer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+@section('script')
+    <script type="text/javascript">
+        var products = null;
+
+        $(document).ready(function() {
+            $('body').addClass('side-menu-closed');
+            $('#product-list').on('click', '.add-plus:not(.c-not-allowed)', function() {
+                var stock_id = $(this).data('stock-id');
+                var userId = $('select[name=user_id]').val();
+
+                $.post('{{ route('seller_pos.addToCart') }}', {
+                    _token: AIZ.data.csrf,
+                    stock_id: stock_id
+                }, function(data) {
+                    if (data.success == 1) {
+                        updateCart(data.view);
+                    } else {
+                        AIZ.plugins.notify('danger', data.message);
+                    }
+                });
+            });
+
+            //get the first option triggered
+            var firstOption = $('#hidden_country_id option:first').val();
+            if (firstOption) {
+                $('#hidden_country_id').val(firstOption).trigger("change");
+            }
+
+            filterProducts();
+            getShippingAddress();
+            selectPosCustomer();
+
+            // Check if shipping_type exists in the session
+            var shipping_type =
+                {{ Session::has('seller_pos.shipping_type') ? 'true' : 'false' }};
+
+            // If shipping_type is false, select the first shipping option
+            if (!shipping_type) {
+                var firstShippingOption = $('.shipping-option').first();
+
+                if (firstShippingOption.length) {
+                    firstShippingOption.prop('checked', true).trigger('change');
+                }
+            }
+
+            // Event listener for custom shipping radio buttons
+            $(document).on('change', '.shipping-option', function() {
+                var shippingAmount = $(this).val();
+                var shippingType = $(this).data('custom-shipping') || 'flat_rate';
+                setShippingByType(shippingAmount, shippingType);
+            });
+
+
+            // Add event listener for custom shipping radio buttons
+            $(document).on('change', '.pos-customer', function() {
+                selectPosCustomer();
+            });
+        });
+
+        function selectPosCustomer() {
+            var address_id = $('input[name=address_id]:checked').val();
+
+            $.post('{{ route('seller_pos.setShippingByCustomer') }}', {
+                _token: AIZ.data.csrf,
+                address_id: address_id
+            }, function(data) {
+                updateCart(data);
+            });
+
+            $("input[name='shipping']").val("{{ Session::get('seller_pos.shipping', 0) }}");
+        }
+
+        function setShippingByType(amount, shippingType) {
+            $.post('{{ route('seller_pos.setShipping') }}', {
+                _token: AIZ.data.csrf,
+                shipping: amount,
+                shippingType: shippingType
+            }, function(data) {
+                updateCart(data);
+
+                $("input[name='shipping']").val(amount);
+            });
+        }
+
+        $("#confirm-address").click(function() {
+            var data = new FormData($('#shipping_form')[0]);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': AIZ.data.csrf
+                },
+                method: "POST",
+                url: "{{ route('seller_pos.set-shipping-address') }}",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data, textStatus, jqXHR) {}
+            })
+        });
+
+        function selectSeller(element) {
+            var sellerId = $(element).val();
+            $('#modal_seller_id').val(sellerId);
+
+            // Loop through all customers and show only those that match the seller_id
+            $(".pos-customer option").each(function() {
+                var customerSellerId = $(this).data("seller-id");
+
+                if (!sellerId || customerSellerId == sellerId) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // Reset customer selection and refresh the select picker
+            $(".pos-customer").val("").trigger("change");
+            $(".pos-customer").selectpicker('refresh');
+
+            filterProducts();
+        }
+
+        function updateCart(data) {
+            $('#cart-details').html(data);
+            AIZ.extra.plusMinus();
+        }
+
+        function filterProducts() {
+            var keyword = $('input[name=keyword]').val();
+            var category = $('select[name=poscategory]').val();
+            var brand = $('select[name=brand]').val();
+
+            $.get('{{ route('seller_pos.search_product') }}', {
+                keyword: keyword,
+                category: category,
+                brand: brand
+            }, function(data) {
+                products = data;
+                $('#product-list').html(null);
+                setProductList(data);
+            });
+        }
+
+        function loadMoreProduct() {
+            var keyword = $('input[name=keyword]').val();
+            var category = $('select[name=poscategory]').val();
+            var brand = $('select[name=brand]').val();
+            if (products != null && products.links.next != null) {
+                $('#load-more').find('.btn').html('{{ translate('Loading..') }}');
+                $.get(products.links.next, {
+                    keyword: keyword,
+                    category: category,
+                    brand: brand
+                }, function(data) {
+                    products = data;
+                    setProductList(data);
+                });
+            }
+        }
+
+        function setProductList(data) {
+            for (var i = 0; i < data.data.length; i++) {
+
+                $('#product-list').append(
+                    `<div class="w-140px w-xl-180px w-xxl-210px mx-2">
+                        <div class="card bg-white c-pointer product-card hov-container">
+                            <div class="position-relative">
+                                ${data.data[i].digital == 0 
+                                    ?
+                                        `<span class="absolute-top-left mt-1 ml-1 mr-0">
+                                                                                                                                                                                                                                                                                                                                ${data.data[i].qty > 0
+                                                                                                                                                                                                                                                                                                                                    ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
+                                                                                                                                                                                                                                                                                                                                    : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
+                                                                                                                                                                                                                                                                                                                                : ${data.data[i].qty}</span>
+                                                                                                                                                                                                                                                                                                                            </span>`
+                                    : ''
+                                }
+                                ${data.data[i].variant != null
+                                    ? `<span class="badge badge-inline badge-warning absolute-bottom-left mb-1 ml-1 mr-0 fs-13 text-truncate">${data.data[i].variant}</span>`
+                                    : '' }
+                                <img src="${data.data[i].thumbnail_image }" class="card-img-top img-fit h-120px h-xl-180px h-xxl-210px mw-100 mx-auto" >
+                            </div>
+                            <div class="card-body p-2 p-xl-3">
+                                <div class="text-truncate fw-600 fs-14 mb-2">${data.data[i].name}</div>
+                                <div class="">
+                                    ${data.data[i].price != data.data[i].base_price
+                                        ? `<del class="mr-2 ml-0">${data.data[i].base_price}</del><span>${data.data[i].price}</span>`
+                                        : `<span>${data.data[i].base_price}</span>`
+                                    }
+                                </div>
+                            </div>
+                            <div class="add-plus absolute-full rounded overflow-hidden hov-box ${(data.data[i].digital == 0 && data.data[i].qty <= 0) ? 'c-not-allowed' : '' }" data-stock-id="${data.data[i].stock_id}">
+                                <div class="absolute-full bg-dark opacity-50">
+                                </div>
+                                <i class="las la-plus absolute-center la-6x text-white"></i>
+                            </div>
+                        </div>
+                    </div>`
+                );
+            }
+            if (data.links.next != null) {
+                $('#load-more').find('.btn').html('{{ translate('Load More.') }}');
+            } else {
+                $('#load-more').find('.btn').html('{{ translate('Nothing more found.') }}');
+            }
+        }
+
+        function removeFromCart(id) {
+            $.post('{{ route('seller_pos.removeFromCart') }}', {
+                _token: AIZ.data.csrf,
+                id: id
+            }, function(data) {
+                updateCart(data.view);
+            });
+        }
+
+        function updateQuantity(cartId) {
+            $.post('{{ route('seller_pos.updateQuantity') }}', {
+                _token: AIZ.data.csrf,
+                cartId: cartId,
+                quantity: $('#qty-' + cartId).val()
+            }, function(data) {
+                if (data.success == 1) {
+                    updateCart(data.view);
+                } else {
+                    AIZ.plugins.notify('danger', data.message);
+                }
+            });
+        }
+
+        function updateProductPrice() {
+            var cartID = event.target.getAttribute('data-cartid');
+            var newPrice = event.target.value;
+
+            $.post('{{ route('seller_pos.updateProductPrice') }}', {
+                _token: AIZ.data.csrf,
+                cartId: cartID,
+                price: newPrice
+            }, function(data) {
+                if (data.success == 1) {
+                    updateCart(data.view);
+                } else {
+                    AIZ.plugins.notify('danger', data.message);
+                }
+            });
+        }
+
+        function setShippingCost(element) {
+            var shippingCost = element.value;
+            var shippingType = element.getAttribute('data-custom-shipping') || 'flat_rate';
+
+            $.post('{{ route('seller_pos.setShipping') }}', {
+                _token: AIZ.data.csrf,
+                shipping: shippingCost,
+                shippingType: shippingType
+            }, function(data) {
+                updateCart(data);
+            });
+        }
+
+        function setDiscount() {
+            var discount = $('input[name=discount]').val();
+            $.post('{{ route('seller_pos.setDiscount') }}', {
+                _token: AIZ.data.csrf,
+                discount: discount
+            }, function(data) {
+                updateCart(data);
+            });
+        }
+
+        function setShipping() {
+            var shipping = $('input[name=shipping]').val();
+            $.post('{{ route('seller_pos.setShipping') }}', {
+                _token: AIZ.data.csrf,
+                shipping: shipping
+            }, function(data) {
+                updateCart(data);
+            });
+        }
+
+        function getShippingAddressUpdateCartData() {
+            getShippingAddress();
+            var $userID = '{{ $userID }}';
+            if (!$userID) {
+                updateSessionUserCartData();
+            } else {
+                $('#change-customer').modal('show');
+            }
+        }
+
+        function getShippingAddress() {
+            $.post('{{ route('seller_pos.getShippingAddress') }}', {
+                _token: AIZ.data.csrf,
+                id: $('select[name=user_id]').val()
+            }, function(data) {
+                $('#shipping_address').html(data);
+            });
+        }
+
+        function updateSessionUserCartData() {
+            $.post('{{ route('seller_pos.updateSessionUserCartData') }}', {
+                _token: AIZ.data.csrf,
+                userId: $('select[name=user_id]').val()
+            }, function(data) {
+                updateCart(data);
+            });
+        }
+
+        function add_new_address() {
+            var customer_id = $('#customer_id').val();
+            $('#set_customer_id').val(customer_id);
+            $('#new-address-modal').modal('show');
+            $("#close-button").click();
+        }
+
+        function orderConfirmation() {
+            $('#order-confirmation').html(
+                `<div class="p-4 text-center"><i class="las la-spinner la-spin la-3x"></i></div>`
+            );
+            $('#order-confirm').modal('show');
+            $.post('{{ route('seller_pos.getOrderSummary') }}', {
+                _token: AIZ.data.csrf
+            }, function(data) {
+                $('#order-confirmation').html(data);
+            });
+        }
+
+        function oflinePayment() {
+            var totalPrice = $('#total_price').val();
+            $('#offline_payment_amount').val(totalPrice);
+            $('#offlin_payment').modal('show');
+        }
+
+        function submitOrder(payment_type) {
+            var seller_id = $('select[name=seller_id]').val();
+            if (!seller_id) {
+                AIZ.plugins.notify('danger', '{{ translate('Please select a seller') }}');
+                return;
+            }
+            var user_id = $('select[name=user_id]').val();
+            var shipping = $('input[name=shipping]:checked').val();
+            var discount = $('input[name=discount]').val();
+            var order_from = $('#order_from').val();
+            var shipping_address = $('input[name=address_id]:checked').val();
+            var offline_payment_method = $('input[name=offline_payment_method]').val();
+            var offline_payment_amount = $('input[name=offline_payment_amount]').val();
+            var offline_trx_id = $('input[name=trx_id]').val();
+            var offline_payment_proof = $('input[name=payment_proof]').val();
+            var profit = $('#profit').val(); // Get the profit amount
+
+            $.post('{{ route('seller_pos.order_place') }}', {
+                _token: AIZ.data.csrf,
+                seller_id: seller_id,
+                user_id: user_id,
+                shipping_address: shipping_address,
+                payment_type: payment_type,
+                shipping: shipping,
+                discount: discount,
+                order_from: order_from,
+                offline_payment_method: offline_payment_method,
+                offline_payment_amount: offline_payment_amount,
+                offline_trx_id: offline_trx_id,
+                offline_payment_proof: offline_payment_proof,
+                profit: profit
+
+            }, function(data) {
+                console.log(data);
+                if (data.success == 1) {
+                    AIZ.plugins.notify('success', data.message);
+                    location.reload();
+                } else {
+                    AIZ.plugins.notify('danger', data.message);
+                }
+            });
+        }
+
+        //address
+        $(document).on('change', '[name=country_id]', function() {
+            var country_id = $(this).val();
+            get_states(country_id);
+        });
+
+        $(document).on('change', '[name=state_id]', function() {
+            var state_id = $(this).val();
+            get_city(state_id);
+        });
+
+        function get_states(country_id) {
+            $('[name="state"]').html("");
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('get-state') }}",
+                type: 'POST',
+                data: {
+                    country_id: country_id
+                },
+                success: function(response) {
+                    var obj = JSON.parse(response);
+                    if (obj != '') {
+                        $('[name="state_id"]').html(obj);
+                        AIZ.plugins.bootstrapSelect('refresh');
+                    }
+                }
+            });
+        }
+
+        function get_city(state_id) {
+            $('[name="city"]').html("");
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('get-city') }}",
+                type: 'POST',
+                data: {
+                    state_id: state_id
+                },
+                success: function(response) {
+                    var obj = JSON.parse(response);
+                    if (obj != '') {
+                        $('[name="city_id"]').html(obj);
+                        AIZ.plugins.bootstrapSelect('refresh');
+                    }
+                }
+            });
+        }
+    </script>
+@endsection

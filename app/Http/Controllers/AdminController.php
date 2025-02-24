@@ -189,7 +189,7 @@ class AdminController extends Controller
         $data['inhouse_product_rating'] = Product::where('added_by', 'admin')->where('rating', '!=', 0)->avg('rating');
         $data['total_inhouse_order'] = Order::where("seller_id", $admin_id)->count();
 
-        $domain = BusinessSetting::where('type', 'domains')->first();
+        $domain = ZotcSetting::where('type', 'domains')->first();
 
         if ($domain) {
             $data['domains'] = json_decode($domain->value);
@@ -210,7 +210,7 @@ class AdminController extends Controller
             'custom_domain' => 'required|regex:/^([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}$/',
         ]);
 
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
         $custom_domain = $request->custom_domain;
 
@@ -251,7 +251,7 @@ class AdminController extends Controller
         $count = $request->count;
 
         // Retrieve and process the plan settings
-        $planSettings = BusinessSetting::where('type', 'plan')->value('value');
+        $planSettings = ZotcSetting::where('type', 'plan')->value('value');
         $planSettingsArray = explode(',', $planSettings);
         $planId = $planSettingsArray[0];
 
@@ -262,7 +262,7 @@ class AdminController extends Controller
         // Retrieve the current plan details
         $currentPlan = $sitesConnection->table('price_plans')->where('id', $planId)->first();
 
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
 
         $bdt_amount = (int)($currentPlan->price_bdt * $count);
@@ -294,7 +294,7 @@ class AdminController extends Controller
 
     public function upgradePlan($payment_method, $plan_id)
     {
-        $planSettings = BusinessSetting::where('type', 'plan')->first();
+        $planSettings = ZotcSetting::where('type', 'plan')->first();
 
         $planSettings = explode(',', $planSettings->value);
 
@@ -335,7 +335,7 @@ class AdminController extends Controller
         //     $bdt_amount = (float)$current_plan->price_bdt - $remainingAmount;
         // }
 
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
 
         $token = Str::random(6);
@@ -384,7 +384,7 @@ class AdminController extends Controller
             $plan->order_limit ?? 'N/A'
         ]) : '';
 
-        $businessSetting = BusinessSetting::where('type', 'plan')->first();
+        $businessSetting = ZotcSetting::where('type', 'plan')->first();
         $businessSetting->value = $plan_details;
         $businessSetting->save();
     }
@@ -406,7 +406,7 @@ class AdminController extends Controller
         $usd_amount = $bdt_amount / 100;
         $token = Str::random(6);
 
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
 
         DB::connection('dynamic_db')->statement("USE zotc_nazmart");
@@ -739,7 +739,7 @@ class AdminController extends Controller
         flash($domain . ' caches cleared successfully')->success();
 
         // Handle custom domains
-        $settings = BusinessSetting::where('type', 'domains')->first();
+        $settings = ZotcSetting::where('type', 'domains')->first();
         if ($settings) {
             $domains = json_decode($settings->value);
 
@@ -1351,5 +1351,80 @@ class AdminController extends Controller
             'message' => "Update completed.",
             'updated_products' => $updatedProductsCount
         ]);
+    }
+
+    public function fraudChecker(Request $request)
+    {
+        return view('backend.fraud_checker.index');
+    }
+
+    public function fraudCheckerCheck(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string'
+        ]);
+
+        $phone = $request->phone;
+
+        // Fetch OrderGuard and Steadfast Data
+        $orderguardData = $this->fetchApiData('https://www.root6.xyz/wp-content/plugins/orderguard2/orderguard.php', [
+            'apiKey' => '5467yujhgfred54erwsd',
+            'number' => $phone
+        ]);
+
+        $steadfastData = $this->fetchApiData("https://ipinfo.zotc.pw/steadfast-com/api.php", [
+            'key'    => '3456yjhgfde456',
+            'mobile' => $phone
+        ]);
+
+        //update fraud checker
+        ZotcSetting::updateOrCreate(
+            ['type' => 'fraud_checker_count'],
+            ['value' => (int)get_zotc_setting('fraud_checker_count') + 1]
+        );
+
+        // Return View with Data
+        return view('backend.fraud_checker.fraud_checker', [
+            'orderguardData' => $orderguardData['success'] ?? '',
+            'steadfastData' => $steadfastData['data'] ?? []
+        ]);
+    }
+
+    public function getFraudComments(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string'
+        ]);
+
+        $phone = $request->phone;
+
+        // Fetch Steadfast Data
+        $steadfastData = $this->fetchApiData("https://ipinfo.zotc.pw/steadfast-com/api.php", [
+            'key'    => '3456yjhgfde456',
+            'mobile' => $phone
+        ]);
+
+        // Render the view and return it as a string
+        $view = view('partials.fraud_checker.comments', [
+            'steadfastData' => $steadfastData['data'] ?? []
+        ])->render();
+
+        // Return the view content and the count of data in JSON response
+        return response()->json([
+            'html' => $view,
+            'count' => count($steadfastData['data'] ?? []) 
+        ]);
+    }
+
+    private function fetchApiData(string $url, array $params): array
+    {
+        try {
+            $response = Http::timeout(10)->get($url, $params);
+
+            // Return the data if the response is successful, otherwise return an empty array
+            return $response->successful() ? $response->json() : [];
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }

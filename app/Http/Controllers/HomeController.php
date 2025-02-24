@@ -123,7 +123,7 @@ class HomeController extends Controller
         $bdt_amount = $amount;
         $usd_amount = $amount / 100;
 
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
 
         $token = Str::random(6);

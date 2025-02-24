@@ -114,7 +114,7 @@
                                 <div class="form-group row">
                                     <label class="col-xxl-3 col-from-label fs-13"
                                         for="signinSrEmail">{{ translate('Gallery Images') }}
-                                        <small>(600x600)</small></label>
+                                        <small>(750x750)</small></label>
                                     <div class="col-xxl-9">
                                         <div class="input-group" data-toggle="aizuploader" data-type="image"
                                             data-multiple="true">
@@ -129,7 +129,7 @@
                                         <div class="file-preview box sm">
                                         </div>
                                         <small
-                                            class="text-muted">{{ translate('These images are visible in product details page gallery. Use 600x600 sizes images.') }}</small>
+                                            class="text-muted">{{ translate('These images are visible in product details page gallery. Use 750x750 sizes images.') }}</small>
                                     </div>
                                 </div>
                             </div>

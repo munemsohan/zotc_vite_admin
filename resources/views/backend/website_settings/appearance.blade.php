@@ -9,16 +9,6 @@
                 <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    <!-- System Name -->
-                    {{-- <div class="form-group row">
-                            <label class="col-sm-3 col-from-label">{{ translate('System Name') }}</label>
-                            <div class="col-sm-9">
-                                <input type="hidden" name="types[]" value="site_name">
-                                <input type="text" name="site_name" class="form-control"
-                                    placeholder="{{ translate('System Name') }}"
-                                    value="{{ get_business_setting('site_name') }}">
-                            </div>
-                        </div> --}}
                     <!-- Frontend Website Name -->
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{ translate('Website Name') }}</label>
@@ -76,40 +66,8 @@
                             <div class="file-preview"></div>
                         </div>
                     </div>
-                    {{-- <!-- System Logo - White -->
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-from-label">{{translate('System Logo - White')}}</label>
-                            <div class="col-sm-9">
-                                <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                    </div>
-                                    <div class="form-control file-amount">{{ translate('Choose Files') }}</div>
-                                    <input type="hidden" name="types[]" value="system_logo_white">
-                                    <input type="hidden" name="system_logo_white" value="{{ get_business_setting('system_logo_white') }}" class="selected-files">
-                                </div>
-                                <div class="file-preview box sm"></div>
-                                <small>{{ translate('Will be used in admin panel side menu') }}</small>
-                            </div>
-                        </div>
-						<!-- System Logo - Black -->
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-from-label">{{translate('System Logo - Black')}}</label>
-                            <div class="col-sm-9">
-                                <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                    </div>
-                                    <div class="form-control file-amount">{{ translate('Choose Files') }}</div>
-                                    <input type="hidden" name="types[]" value="system_logo_black">
-                                    <input type="hidden" name="system_logo_black" value="{{ get_business_setting('system_logo_black') }}" class="selected-files">
-                                </div>
-                                <div class="file-preview box sm"></div>
-                                <small>{{ translate('Will be used in Admin login page, Seller login page & Delivery Boy login page') }}</small>
-                            </div>
-                        </div> --}}
-                    <!-- System Timezone -->
-                    {{-- <div class="form-group row">
+                    {{-- <!-- System Timezone -->
+                    <div class="form-group row">
                         <label class="col-sm-3 col-from-label">{{ translate('System Timezone') }}</label>
                         <div class="col-sm-9">
                             <input type="hidden" name="types[]" value="timezone">

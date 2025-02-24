@@ -580,9 +580,14 @@ class LandingPageController extends Controller
             return false;
         }
 
-        if (!is_dir($destination) && !mkdir($destination, 0777, true)) {
-            error_log("Failed to create destination directory: {$destination}");
-            return false;
+        // Ensure the destination directory is created with 755 permissions
+        if (!is_dir($destination)) {
+            if (!mkdir($destination, 0755, true)) {
+                error_log("Failed to create destination directory: {$destination}");
+                return false;
+            }
+        } else {
+            chmod($destination, 0755);
         }
 
         $items = scandir($source);
@@ -594,19 +599,15 @@ class LandingPageController extends Controller
                 if (is_dir($sourceItem)) {
                     $this->copyDir($sourceItem, $destinationItem);
                 } else {
-                    // Set file permissions to 755 before copying
-                    chmod($sourceItem, 0755);
-
                     if (!copy($sourceItem, $destinationItem)) {
                         error_log("Failed to copy file: {$sourceItem}");
                     } else {
-                        chmod($destinationItem, 0755); // Ensure copied file also has 755
+                        chmod($destinationItem, 0755);
                     }
                 }
             }
         }
     }
-
 
     public function builder($code)
     {

@@ -106,7 +106,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="bkash_sandbox" type="checkbox"
-                                                        @if (get_business_setting('bkash_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('bkash_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -139,61 +139,61 @@
                                         @csrf
                                         <input type="hidden" name="payment_method" value="nagad">
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="NAGAD_MODE">
+                                            <input type="hidden" name="types[]" value="nagad_mode">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('NAGAD MODE') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="NAGAD_MODE"
-                                                    value="{{ env('NAGAD_MODE') }}"
+                                                <input type="text" class="form-control" name="nagad_mode"
+                                                    value="{{ get_zotc_setting('nagad_mode') }}"
                                                     placeholder="{{ translate('NAGAD MODE') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_ID">
+                                            <input type="hidden" name="types[]" value="nagad_merchant_id">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('NAGAD MERCHANT ID') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="NAGAD_MERCHANT_ID"
-                                                    value="{{ env('NAGAD_MERCHANT_ID') }}"
+                                                <input type="text" class="form-control" name="nagad_merchant_id"
+                                                    value="{{ get_zotc_setting('nagad_merchant_id') }}"
                                                     placeholder="{{ translate('NAGAD MERCHANT ID') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_NUMBER">
+                                            <input type="hidden" name="types[]" value="nagad_merchant_number">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('NAGAD MERCHANT NUMBER') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="NAGAD_MERCHANT_NUMBER"
-                                                    value="{{ env('NAGAD_MERCHANT_NUMBER') }}"
+                                                <input type="text" class="form-control" name="nagad_merchant_number"
+                                                    value="{{ get_zotc_setting('nagad_merchant_number') }}"
                                                     placeholder="{{ translate('NAGAD MERCHANT NUMBER') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="NAGAD_PG_PUBLIC_KEY">
+                                            <input type="hidden" name="types[]" value="nagad_pg_public_key">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('NAGAD PG PUBLIC KEY') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="NAGAD_PG_PUBLIC_KEY"
-                                                    value="{{ env('NAGAD_PG_PUBLIC_KEY') }}"
+                                                <input type="text" class="form-control" name="nagad_pg_public_key"
+                                                    value="{{ get_zotc_setting('nagad_pg_public_key') }}"
                                                     placeholder="{{ translate('NAGAD PG PUBLIC KEY') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_PRIVATE_KEY">
+                                            <input type="hidden" name="types[]" value="nagad_merchant_private_key">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('NAGAD MERCHANT PRIVATE KEY') }}</label>
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control"
-                                                    name="NAGAD_MERCHANT_PRIVATE_KEY"
-                                                    value="{{ env('NAGAD_MERCHANT_PRIVATE_KEY') }}"
+                                                    name="nagad_merchant_private_key"
+                                                    value="{{ get_zotc_setting('nagad_merchant_private_key') }}"
                                                     placeholder="{{ translate('NAGAD MERCHANT PRIVATE KEY') }}">
                                             </div>
                                         </div>
@@ -225,25 +225,25 @@
                                         @csrf
                                         <input type="hidden" name="payment_method" value="sslcommerz">
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="SSLCZ_STORE_ID">
+                                            <input type="hidden" name="types[]" value="sslcz_store_id">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Sslcz Store Id') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="SSLCZ_STORE_ID"
-                                                    value="{{ env('SSLCZ_STORE_ID') }}"
+                                                <input type="text" class="form-control" name="sslcz_store_id"
+                                                    value="{{ get_zotc_setting('sslcz_store_id') }}"
                                                     placeholder="{{ translate('Sslcz Store Id') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="SSLCZ_STORE_PASSWD">
+                                            <input type="hidden" name="types[]" value="sslcz_store_passwd">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('Sslcz store password') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="SSLCZ_STORE_PASSWD"
-                                                    value="{{ env('SSLCZ_STORE_PASSWD') }}"
+                                                <input type="text" class="form-control" name="sslcz_store_passwd"
+                                                    value="{{ get_zotc_setting('sslcz_store_passwd') }}"
                                                     placeholder="{{ translate('Sslcz store password') }}">
                                             </div>
                                         </div>
@@ -255,7 +255,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="sslcommerz_sandbox" type="checkbox"
-                                                        @if (get_business_setting('sslcommerz_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('sslcommerz_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -288,25 +288,25 @@
                                         @csrf
                                         <input type="hidden" name="payment_method" value="aamarpay">
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="AAMARPAY_STORE_ID">
+                                            <input type="hidden" name="types[]" value="aamarpay_store_id">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Aamarpay Store Id') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="AAMARPAY_STORE_ID"
-                                                    value="{{ env('AAMARPAY_STORE_ID') }}"
+                                                <input type="text" class="form-control" name="aamarpay_store_id"
+                                                    value="{{ get_zotc_setting('aamarpay_store_id') }}"
                                                     placeholder="{{ translate('Aamarpay Store Id') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="AAMARPAY_SIGNATURE_KEY">
+                                            <input type="hidden" name="types[]" value="aamarpay_signature_key">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('Aamarpay signature key') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="AAMARPAY_SIGNATURE_KEY"
-                                                    value="{{ env('AAMARPAY_SIGNATURE_KEY') }}"
+                                                <input type="text" class="form-control" name="aamarpay_signature_key"
+                                                    value="{{ get_zotc_setting('aamarpay_signature_key') }}"
                                                     placeholder="{{ translate('Aamarpay signature key') }}">
                                             </div>
                                         </div>
@@ -318,7 +318,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="aamarpay_sandbox" type="checkbox"
-                                                        @if (get_business_setting('aamarpay_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('aamarpay_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -353,26 +353,26 @@
                                         <input type="hidden" name="payment_method" value="uddoktapay">
                                         @csrf
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="UDDOKTAPAY_API_KEY">
+                                            <input type="hidden" name="types[]" value="uddoktapay_api_key">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('UddoktaPay API KEY') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="UDDOKTAPAY_API_KEY"
-                                                    value="{{ env('UDDOKTAPAY_API_KEY') }}"
+                                                <input type="text" class="form-control" name="uddoktapay_api_key"
+                                                    value="{{ get_zotc_setting('uddoktapay_api_key') }}"
                                                     placeholder="{{ translate('UddoktaPay API KEY') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="UDDOKTAPAY_API_URL">
+                                            <input type="hidden" name="types[]" value="uddoktapay_api_url">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('UddoktaPay API URL') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="UDDOKTAPAY_API_URL"
-                                                    value="{{ env('UDDOKTAPAY_API_URL') }}"
+                                                <input type="text" class="form-control" name="uddoktapay_api_url"
+                                                    value="{{ get_zotc_setting('uddoktapay_api_url') }}"
                                                     placeholder="{{ translate('UddoktaPay API URL') }}">
                                             </div>
                                         </div>
@@ -405,25 +405,25 @@
                                         <input type="hidden" name="payment_method" value="paypal">
                                         @csrf
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="PAYPAL_CLIENT_ID">
+                                            <input type="hidden" name="types[]" value="paypal_client_id">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Paypal Client Id') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="PAYPAL_CLIENT_ID"
-                                                    value="{{ env('PAYPAL_CLIENT_ID') }}"
+                                                <input type="text" class="form-control" name="paypal_client_id"
+                                                    value="{{ get_zotc_setting('paypal_client_id') }}"
                                                     placeholder="{{ translate('Paypal Client ID') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="PAYPAL_CLIENT_SECRET">
+                                            <input type="hidden" name="types[]" value="paypal_client_secret">
                                             <div class="col-md-4">
                                                 <label
                                                     class="col-from-label">{{ translate('Paypal Client Secret') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="PAYPAL_CLIENT_SECRET"
-                                                    value="{{ env('PAYPAL_CLIENT_SECRET') }}"
+                                                <input type="text" class="form-control" name="paypal_client_secret"
+                                                    value="{{ get_zotc_setting('paypal_client_secret') }}"
                                                     placeholder="{{ translate('Paypal Client Secret') }}">
                                             </div>
                                         </div>
@@ -435,7 +435,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="paypal_sandbox" type="checkbox"
-                                                        @if (get_business_setting('paypal_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('paypal_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -469,24 +469,24 @@
                                         @csrf
                                         <input type="hidden" name="payment_method" value="stripe">
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="STRIPE_KEY">
+                                            <input type="hidden" name="types[]" value="stripe_key">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Stripe Key') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="STRIPE_KEY"
-                                                    value="{{ env('STRIPE_KEY') }}"
+                                                <input type="text" class="form-control" name="stripe_key"
+                                                    value="{{ get_zotc_setting('stripe_key') }}"
                                                     placeholder="{{ translate('STRIPE KEY') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="STRIPE_SECRET">
+                                            <input type="hidden" name="types[]" value="stripe_secret">
                                             <div class="col-md-4">
                                                 <label class="col-from-label">{{ translate('Stripe Secret') }}</label>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" name="STRIPE_SECRET"
-                                                    value="{{ env('STRIPE_SECRET') }}"
+                                                <input type="text" class="form-control" name="stripe_secret"
+                                                    value="{{ get_zotc_setting('stripe_secret') }}"
                                                     placeholder="{{ translate('STRIPE SECRET') }}">
                                             </div>
                                         </div>
@@ -525,7 +525,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="MERCADOPAGO_KEY"
-                                                    value="{{ env('MERCADOPAGO_KEY') }}"
+                                                    value="{{ get_zotc_setting('MERCADOPAGO_KEY') }}"
                                                     placeholder="{{ translate('Mercadopago Key') }}">
                                             </div>
                                         </div>
@@ -537,7 +537,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="MERCADOPAGO_ACCESS"
-                                                    value="{{ env('MERCADOPAGO_ACCESS') }}"
+                                                    value="{{ get_zotc_setting('MERCADOPAGO_ACCESS') }}"
                                                     placeholder="{{ translate('Mercadopago Access') }}">
                                             </div>
                                         </div>
@@ -549,7 +549,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="MERCADOPAGO_CURRENCY"
-                                                    value="{{ env('MERCADOPAGO_CURRENCY') }}"
+                                                    value="{{ get_zotc_setting('MERCADOPAGO_CURRENCY') }}"
                                                     placeholder="{{ translate('MERCADOPAGO CURRENCY') }}">
                                                 <br>
                                                 <div class="alert alert-primary" role="alert">
@@ -596,7 +596,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="IYZICO_API_KEY"
-                                                    value="{{ env('IYZICO_API_KEY') }}"
+                                                    value="{{ get_zotc_setting('IYZICO_API_KEY') }}"
                                                     placeholder="{{ translate('IYZICO API KEY') }}">
                                             </div>
                                         </div>
@@ -608,7 +608,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="IYZICO_SECRET_KEY"
-                                                    value="{{ env('IYZICO_SECRET_KEY') }}"
+                                                    value="{{ get_zotc_setting('IYZICO_SECRET_KEY') }}"
                                                     placeholder="{{ translate('IYZICO SECRET KEY') }}">
                                             </div>
                                         </div>
@@ -621,7 +621,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="iyzico_sandbox" type="checkbox"
-                                                        @if (get_business_setting('iyzico_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('iyzico_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -662,7 +662,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="IM_API_KEY"
-                                                    value="{{ env('IM_API_KEY') }}"
+                                                    value="{{ get_zotc_setting('IM_API_KEY') }}"
                                                     placeholder="{{ translate('IM API KEY') }}">
                                             </div>
                                         </div>
@@ -673,7 +673,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="IM_AUTH_TOKEN"
-                                                    value="{{ env('IM_AUTH_TOKEN') }}"
+                                                    value="{{ get_zotc_setting('IM_AUTH_TOKEN') }}"
                                                     placeholder="{{ translate('IM AUTH TOKEN') }}">
                                             </div>
                                         </div>
@@ -685,7 +685,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="instamojo_sandbox" type="checkbox"
-                                                        @if (get_business_setting('instamojo_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('instamojo_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -725,7 +725,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYSTACK_PUBLIC_KEY"
-                                                    value="{{ env('PAYSTACK_PUBLIC_KEY') }}"
+                                                    value="{{ get_zotc_setting('PAYSTACK_PUBLIC_KEY') }}"
                                                     placeholder="{{ translate('PUBLIC KEY') }}">
                                             </div>
                                         </div>
@@ -736,7 +736,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYSTACK_SECRET_KEY"
-                                                    value="{{ env('PAYSTACK_SECRET_KEY') }}"
+                                                    value="{{ get_zotc_setting('PAYSTACK_SECRET_KEY') }}"
                                                     placeholder="{{ translate('SECRET KEY') }}">
                                             </div>
                                         </div>
@@ -747,7 +747,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="MERCHANT_EMAIL"
-                                                    value="{{ env('MERCHANT_EMAIL') }}"
+                                                    value="{{ get_zotc_setting('MERCHANT_EMAIL') }}"
                                                     placeholder="{{ translate('MERCHANT EMAIL') }}">
                                             </div>
                                         </div>
@@ -759,7 +759,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYSTACK_CURRENCY_CODE"
-                                                    value="{{ env('PAYSTACK_CURRENCY_CODE') }}"
+                                                    value="{{ get_zotc_setting('PAYSTACK_CURRENCY_CODE') }}"
                                                     placeholder="{{ translate('PAYSTACK CURRENCY CODE') }}">
                                             </div>
                                         </div>
@@ -799,7 +799,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYHERE_MERCHANT_ID"
-                                                    value="{{ env('PAYHERE_MERCHANT_ID') }}"
+                                                    value="{{ get_zotc_setting('PAYHERE_MERCHANT_ID') }}"
                                                     placeholder="{{ translate('PAYHERE MERCHANT ID') }}">
                                             </div>
                                         </div>
@@ -810,7 +810,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYHERE_SECRET"
-                                                    value="{{ env('PAYHERE_SECRET') }}"
+                                                    value="{{ get_zotc_setting('PAYHERE_SECRET') }}"
                                                     placeholder="{{ translate('PAYHERE SECRET') }}">
                                             </div>
                                         </div>
@@ -821,7 +821,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="PAYHERE_CURRENCY"
-                                                    value="{{ env('PAYHERE_CURRENCY') }}"
+                                                    value="{{ get_zotc_setting('PAYHERE_CURRENCY') }}"
                                                     placeholder="{{ translate('PAYHERE CURRENCY') }}">
                                             </div>
                                         </div>
@@ -833,7 +833,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="payhere_sandbox" type="checkbox"
-                                                        @if (get_business_setting('payhere_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('payhere_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -874,7 +874,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="NGENIUS_OUTLET_ID"
-                                                    value="{{ env('NGENIUS_OUTLET_ID') }}"
+                                                    value="{{ get_zotc_setting('NGENIUS_OUTLET_ID') }}"
                                                     placeholder="{{ translate('NGENIUS OUTLET ID') }}">
                                             </div>
                                         </div>
@@ -885,7 +885,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="NGENIUS_API_KEY"
-                                                    value="{{ env('NGENIUS_API_KEY') }}"
+                                                    value="{{ get_zotc_setting('NGENIUS_API_KEY') }}"
                                                     placeholder="{{ translate('NGENIUS API KEY') }}">
                                             </div>
                                         </div>
@@ -896,7 +896,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="NGENIUS_CURRENCY"
-                                                    value="{{ env('NGENIUS_CURRENCY') }}"
+                                                    value="{{ get_zotc_setting('NGENIUS_CURRENCY') }}"
                                                     placeholder="{{ translate('NGENIUS CURRENCY') }}">
                                                 <br>
                                                 <div class="alert alert-primary" role="alert">
@@ -940,7 +940,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="VOGUE_MERCHANT_ID"
-                                                    value="{{ env('VOGUE_MERCHANT_ID') }}"
+                                                    value="{{ get_zotc_setting('VOGUE_MERCHANT_ID') }}"
                                                     placeholder="{{ translate('MERCHANT ID') }}">
                                             </div>
                                         </div>
@@ -951,7 +951,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="voguepay_sandbox" type="checkbox"
-                                                        @if (get_business_setting('voguepay_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('voguepay_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -991,7 +991,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="RAZOR_KEY"
-                                                    value="{{ env('RAZOR_KEY') }}"
+                                                    value="{{ get_zotc_setting('RAZOR_KEY') }}"
                                                     placeholder="{{ translate('RAZOR KEY') }}">
                                             </div>
                                         </div>
@@ -1002,7 +1002,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="RAZOR_SECRET"
-                                                    value="{{ env('RAZOR_SECRET') }}"
+                                                    value="{{ get_zotc_setting('RAZOR_SECRET') }}"
                                                     placeholder="{{ translate('RAZOR SECRET') }}">
                                             </div>
                                         </div>
@@ -1043,7 +1043,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="MERCHANT_LOGIN_ID"
-                                                    value="{{ env('MERCHANT_LOGIN_ID') }}"
+                                                    value="{{ get_zotc_setting('MERCHANT_LOGIN_ID') }}"
                                                     placeholder="{{ translate('MERCHANT LOGIN ID') }}">
                                             </div>
                                         </div>
@@ -1056,7 +1056,7 @@
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control"
                                                     name="MERCHANT_TRANSACTION_KEY"
-                                                    value="{{ env('MERCHANT_TRANSACTION_KEY') }}"
+                                                    value="{{ get_zotc_setting('MERCHANT_TRANSACTION_KEY') }}"
                                                     placeholder="{{ translate('MERCHANT TRANSACTION KEY') }}">
                                             </div>
                                         </div>
@@ -1069,7 +1069,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="authorizenet_sandbox" type="checkbox"
-                                                        @if (get_business_setting('authorizenet_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('authorizenet_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -1110,7 +1110,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="PAYKU_BASE_URL"
-                                                    value="{{ env('PAYKU_BASE_URL') }}"
+                                                    value="{{ get_zotc_setting('PAYKU_BASE_URL') }}"
                                                     placeholder="{{ translate('PAYKU_BASE_URL') }}">
                                             </div>
                                         </div>
@@ -1122,7 +1122,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="PAYKU_PUBLIC_TOKEN"
-                                                    value="{{ env('PAYKU_PUBLIC_TOKEN') }}"
+                                                    value="{{ get_zotc_setting('PAYKU_PUBLIC_TOKEN') }}"
                                                     placeholder="{{ translate('PAYKU_PUBLIC_TOKEN') }}">
                                             </div>
                                         </div>
@@ -1134,7 +1134,7 @@
                                             </div>
                                             <div class="col-lg-8">
                                                 <input type="text" class="form-control" name="PAYKU_PRIVATE_TOKEN"
-                                                    value="{{ env('PAYKU_PRIVATE_TOKEN') }}"
+                                                    value="{{ get_zotc_setting('PAYKU_PRIVATE_TOKEN') }}"
                                                     placeholder="{{ translate('PAYKU_PRIVATE_TOKEN') }}">
                                             </div>
                                         </div>
@@ -1209,14 +1209,14 @@
                                         action="{{ route('paytm.update_credentials') }}" method="POST">
                                         @csrf
                                         <div class="form-group row">
-                                            <input type="hidden" name="types[]" value="PAYTM_ENVIRONMENT">
+                                            <input type="hidden" name="types[]" value="PAYTM_get_zotc_settingIRONMENT">
                                             <div class="col-lg-4">
                                                 <label
-                                                    class="col-from-label">{{ translate('PAYTM ENVIRONMENT') }}</label>
+                                                    class="col-from-label">{{ translate('PAYTM get_zotc_settingIRONMENT') }}</label>
                                             </div>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" name="PAYTM_ENVIRONMENT"
-                                                    value="{{ env('PAYTM_ENVIRONMENT') }}"
+                                                <input type="text" class="form-control" name="PAYTM_get_zotc_settingIRONMENT"
+                                                    value="{{ get_zotc_setting('PAYTM_get_zotc_settingIRONMENT') }}"
                                                     placeholder="local or production">
                                             </div>
                                         </div>
@@ -1228,7 +1228,7 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" name="PAYTM_MERCHANT_ID"
-                                                    value="{{ env('PAYTM_MERCHANT_ID') }}"
+                                                    value="{{ get_zotc_setting('PAYTM_MERCHANT_ID') }}"
                                                     placeholder="PAYTM MERCHANT ID">
                                             </div>
                                         </div>
@@ -1240,7 +1240,7 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" name="PAYTM_MERCHANT_KEY"
-                                                    value="{{ env('PAYTM_MERCHANT_KEY') }}"
+                                                    value="{{ get_zotc_setting('PAYTM_MERCHANT_KEY') }}"
                                                     placeholder="PAYTM MERCHANT KEY">
                                             </div>
                                         </div>
@@ -1253,7 +1253,7 @@
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control"
                                                     name="PAYTM_MERCHANT_WEBSITE"
-                                                    value="{{ env('PAYTM_MERCHANT_WEBSITE') }}"
+                                                    value="{{ get_zotc_setting('PAYTM_MERCHANT_WEBSITE') }}"
                                                     placeholder="PAYTM MERCHANT WEBSITE">
                                             </div>
                                         </div>
@@ -1264,7 +1264,7 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" name="PAYTM_CHANNEL"
-                                                    value="{{ env('PAYTM_CHANNEL') }}" placeholder="PAYTM CHANNEL">
+                                                    value="{{ get_zotc_setting('PAYTM_CHANNEL') }}" placeholder="PAYTM CHANNEL">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -1275,7 +1275,7 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" name="PAYTM_INDUSTRY_TYPE"
-                                                    value="{{ env('PAYTM_INDUSTRY_TYPE') }}"
+                                                    value="{{ get_zotc_setting('PAYTM_INDUSTRY_TYPE') }}"
                                                     placeholder="PAYTM INDUSTRY TYPE">
                                             </div>
                                         </div>
@@ -1312,7 +1312,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="TOYYIBPAY_KEY"
-                                                    value="{{ env('TOYYIBPAY_KEY') }}"
+                                                    value="{{ get_zotc_setting('TOYYIBPAY_KEY') }}"
                                                     placeholder="{{ translate('TOYYIBPAY KEY') }}">
                                             </div>
                                         </div>
@@ -1324,7 +1324,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="TOYYIBPAY_CATEGORY"
-                                                    value="{{ env('TOYYIBPAY_CATEGORY') }}"
+                                                    value="{{ get_zotc_setting('TOYYIBPAY_CATEGORY') }}"
                                                     placeholder="{{ translate('TOYYIBPAY CATEGORY') }}">
                                             </div>
                                         </div>
@@ -1336,7 +1336,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="toyyibpay_sandbox" type="checkbox"
-                                                        @if (get_business_setting('toyyibpay_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('toyyibpay_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -1376,7 +1376,7 @@
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="MYFATOORAH_TOKEN"
-                                                    value="{{ env('MYFATOORAH_TOKEN') }}"
+                                                    value="{{ get_zotc_setting('MYFATOORAH_TOKEN') }}"
                                                     placeholder="{{ translate('MYFATOORAH TOKEN') }}">
                                             </div>
                                         </div>
@@ -1387,7 +1387,7 @@
                                             <div class="col-md-8">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
                                                     <input value="1" name="myfatoorah_sandbox" type="checkbox"
-                                                        @if (get_business_setting('myfatoorah_sandbox') == 1) checked @endif>
+                                                        @if (get_zotc_setting('myfatoorah_sandbox') == 1) checked @endif>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -1428,7 +1428,7 @@
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
                                                             name="MPESA_CONSUMER_KEY"
-                                                            value="{{ env('MPESA_CONSUMER_KEY') }}"
+                                                            value="{{ get_zotc_setting('MPESA_CONSUMER_KEY') }}"
                                                             placeholder="{{ translate('MPESA_CONSUMER_KEY') }}"
                                                             required>
                                                     </div>
@@ -1443,7 +1443,7 @@
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
                                                             name="MPESA_CONSUMER_SECRET"
-                                                            value="{{ env('MPESA_CONSUMER_SECRET') }}"
+                                                            value="{{ get_zotc_setting('MPESA_CONSUMER_SECRET') }}"
                                                             placeholder="{{ translate('MPESA_CONSUMER_SECRET') }}"
                                                             required>
                                                     </div>
@@ -1458,7 +1458,7 @@
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
                                                             name="MPESA_SHORT_CODE"
-                                                            value="{{ env('MPESA_SHORT_CODE') }}"
+                                                            value="{{ get_zotc_setting('MPESA_SHORT_CODE') }}"
                                                             placeholder="{{ translate('MPESA_SHORT_CODE') }}" required>
                                                     </div>
                                                 </div>
@@ -1470,7 +1470,7 @@
                                                     </div>
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
-                                                            name="MPESA_USERNAME" value="{{ env('MPESA_USERNAME') }}"
+                                                            name="MPESA_USERNAME" value="{{ get_zotc_setting('MPESA_USERNAME') }}"
                                                             placeholder="{{ translate('MPESA_USERNAME') }}" required>
                                                     </div>
                                                 </div>
@@ -1482,7 +1482,7 @@
                                                     </div>
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
-                                                            name="MPESA_PASSWORD" value="{{ env('MPESA_PASSWORD') }}"
+                                                            name="MPESA_PASSWORD" value="{{ get_zotc_setting('MPESA_PASSWORD') }}"
                                                             placeholder="{{ translate('MPESA_PASSWORD') }}" required>
                                                     </div>
                                                 </div>
@@ -1494,24 +1494,24 @@
                                                     </div>
                                                     <div class="col-lg-8">
                                                         <input type="text" class="form-control"
-                                                            name="MPESA_PASSKEY" value="{{ env('MPESA_PASSKEY') }}"
+                                                            name="MPESA_PASSKEY" value="{{ get_zotc_setting('MPESA_PASSKEY') }}"
                                                             placeholder="{{ translate('MPESA_PASSKEY') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <input type="hidden" name="types[]" value="MPESA_ENV">
+                                                    <input type="hidden" name="types[]" value="MPESA_get_zotc_setting">
                                                     <div class="col-lg-4">
                                                         <label
                                                             class="col-from-label">{{ translate('MPESA SANDBOX ACTIVATION') }}</label>
                                                     </div>
                                                     <div class="col-lg-8">
-                                                        <select name="MPESA_ENV" class="form-control aiz-selectpicker"
+                                                        <select name="MPESA_get_zotc_setting" class="form-control aiz-selectpicker"
                                                             required>
                                                             <option value="live"
-                                                                @if (env('MPESA_ENV') == 'live') selected @endif>
+                                                                @if (get_zotc_setting('MPESA_get_zotc_setting') == 'live') selected @endif>
                                                                 {{ translate('Live') }}</option>
                                                             <option value="sandbox"
-                                                                @if (env('MPESA_ENV') == 'sandbox') selected @endif>
+                                                                @if (get_zotc_setting('MPESA_get_zotc_setting') == 'sandbox') selected @endif>
                                                                 {{ translate('Sandbox') }}</option>
                                                         </select>
                                                     </div>
@@ -1555,7 +1555,7 @@
                                                 </div>
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control" name="FLW_PUBLIC_KEY"
-                                                        value="{{ env('FLW_PUBLIC_KEY') }}"
+                                                        value="{{ get_zotc_setting('FLW_PUBLIC_KEY') }}"
                                                         placeholder="{{ translate('FLW_PUBLIC_KEY') }}" required>
                                                 </div>
                                             </div>
@@ -1567,7 +1567,7 @@
                                                 </div>
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control" name="FLW_SECRET_KEY"
-                                                        value="{{ env('FLW_SECRET_KEY') }}"
+                                                        value="{{ get_zotc_setting('FLW_SECRET_KEY') }}"
                                                         placeholder="{{ translate('FLW_SECRET_KEY') }}" required>
                                                 </div>
                                             </div>
@@ -1579,7 +1579,7 @@
                                                 </div>
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control" name="FLW_SECRET_HASH"
-                                                        value="{{ env('FLW_SECRET_HASH') }}"
+                                                        value="{{ get_zotc_setting('FLW_SECRET_HASH') }}"
                                                         placeholder="{{ translate('FLW_SECRET_HASH') }}" required>
                                                 </div>
                                             </div>
@@ -1593,7 +1593,7 @@
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control"
                                                         name="FLW_PAYMENT_CURRENCY_CODE"
-                                                        value="{{ env('FLW_PAYMENT_CURRENCY_CODE') }}"
+                                                        value="{{ get_zotc_setting('FLW_PAYMENT_CURRENCY_CODE') }}"
                                                         placeholder="{{ translate('FLW_PAYMENT_CURRENCY_CODE') }}"
                                                         required>
                                                 </div>
@@ -1633,7 +1633,7 @@
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control"
                                                         name="PAYFAST_MERCHANT_ID"
-                                                        value="{{ env('PAYFAST_MERCHANT_ID') }}"
+                                                        value="{{ get_zotc_setting('PAYFAST_MERCHANT_ID') }}"
                                                         placeholder="{{ translate('PAYFAST_MERCHANT_ID') }}" required>
                                                 </div>
                                             </div>
@@ -1646,7 +1646,7 @@
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control"
                                                         name="PAYFAST_MERCHANT_KEY"
-                                                        value="{{ env('PAYFAST_MERCHANT_KEY') }}"
+                                                        value="{{ get_zotc_setting('PAYFAST_MERCHANT_KEY') }}"
                                                         placeholder="{{ translate('PAYFAST_MERCHANT_KEY') }}" required>
                                                 </div>
                                             </div>
@@ -1659,7 +1659,7 @@
                                                 <div class="col-md-8">
                                                     <label class="aiz-switch aiz-switch-success mb-0">
                                                         <input value="1" name="payfast_sandbox" type="checkbox"
-                                                            @if (get_business_setting('payfast_sandbox') == 1) checked @endif>
+                                                            @if (get_zotc_setting('payfast_sandbox') == 1) checked @endif>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>

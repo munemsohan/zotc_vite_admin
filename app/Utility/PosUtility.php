@@ -20,39 +20,60 @@ class PosUtility
 {
     public static function product_search($request_data): object
     {
-        $product_query = ProductStock::query()->join('products', 'product_stocks.product_id', '=', 'products.id');
+        // Base query with necessary joins
+        $product_query = ProductStock::query()
+            ->join('products', 'product_stocks.product_id', '=', 'products.id')
+            ->where([
+                ['products.auction_product', 0],
+                ['products.wholesale_product', 0],
+                ['products.published', 1],
+                ['products.approved', 1]
+            ])
+            ->select(
+                'products.*',
+                'product_stocks.id as stock_id',
+                'product_stocks.variant',
+                'product_stocks.price as stock_price',
+                'product_stocks.qty as stock_qty',
+                'product_stocks.image as stock_image'
+            );
 
-        if (auth()->user()->user_type == 'seller') {
-            $product_query->where('products.user_id', auth()->user()->id);
-        } else {
-            $product_query->where('products.added_by', 'admin');
+        // Filter by user type (Seller or Admin)
+        if (auth()->user()->user_type === 'seller') {
+            $product_query->where(function ($query) {
+                $query->where('products.user_id', auth()->id());
+
+                if (get_business_setting('reseller_system_activation')) {
+                    $query->orWhere('products.added_by', 'admin');
+                }
+            });
         }
-        $products = $product_query->where('products.auction_product', 0)
-            ->where('products.wholesale_product', 0)
-            ->where('products.published', 1)
-            ->where('products.approved', 1)
-            ->select('products.*', 'product_stocks.id as stock_id', 'product_stocks.variant', 'product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
-            ->orderBy('products.created_at', 'desc');
 
-
-        if ($request_data['category'] != null) {
+        // Apply filters dynamically using `when()`
+        $product_query->when(!empty($request_data['category']), function ($query) use ($request_data) {
             $arr = explode('-', $request_data['category']);
-            if ($arr[0] == 'category') {
+            if ($arr[0] === 'category') {
                 $category_ids = CategoryUtility::children_ids($arr[1]);
                 $category_ids[] = $arr[1];
-                $products = $products->whereIn('products.category_id', $category_ids);
+                $query->whereIn('products.category_id', $category_ids);
             }
-        }
+        });
 
-        if ($request_data['brand'] != null) {
-            $products = $products->where('products.brand_id', $request_data['brand']);
-        }
+        $product_query->when(
+            !empty($request_data['brand']),
+            fn($query) =>
+            $query->where('products.brand_id', $request_data['brand'])
+        );
 
-        if ($request_data['keyword'] != null) {
-            $products = $products->where('products.name', 'like', '%' . $request_data['keyword'] . '%')->orWhere('products.barcode', $request_data['keyword']);
-        }
+        // Keyword search (Product Name or Barcode)
+        $product_query->when(!empty($request_data['keyword']), function ($query) use ($request_data) {
+            $query->where(function ($q) use ($request_data) {
+                $q->where('products.name', 'like', "%{$request_data['keyword']}%")
+                    ->orWhere('products.barcode', $request_data['keyword']);
+            });
+        });
 
-        return $products->paginate(16);
+        return $product_query->orderByDesc('products.created_at')->paginate(16);
     }
 
     public static function get_shipping_address($request): array
@@ -132,6 +153,7 @@ class PosUtility
         }
 
         $price = CartUtility::get_price($product, $productStock, $quantity);
+
         $tax = CartUtility::tax_calculation($product, $price);
         CartUtility::save_cart_data($cart, $product, $price, $tax, $quantity);
         return array('success' => 1, 'message' => 'Added to cart successfully');
@@ -332,7 +354,7 @@ class PosUtility
                         }
                     }
 
-                    //sends email to customer with the invoice pdf attached
+                    // Sends email to customer with the invoice pdf attached
                     if (env('MAIL_USERNAME') != null) {
                         try {
                             Mail::to($shippingInfo['email'])->queue(new InvoiceEmailManager($array));

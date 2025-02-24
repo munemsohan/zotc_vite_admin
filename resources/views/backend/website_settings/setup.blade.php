@@ -303,6 +303,14 @@
             $('#order_minimum_pay_type').change(function() {
                 handleFeaturesFormSubmission($(this).closest('form').attr('id'));
             });
+
+            $('#vendor_system_activation').change(function() {
+                if ($(this).prop('checked')) {
+                    $('#reseller_system_activation_form').removeClass('d-none');
+                } else {
+                    $('#reseller_system_activation_form').addClass('d-none');
+                }
+            });
         });
 
         function handleFeaturesFormSubmission(formId) {

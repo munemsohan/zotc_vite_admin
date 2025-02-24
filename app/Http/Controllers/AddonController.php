@@ -87,95 +87,90 @@ class AddonController extends Controller
 
                 //dd($random_dir, $json);
 
-                if (BusinessSetting::where('type', 'current_version')->first()->value >= $json['minimum_item_version']) {
-                    if (count(Addon::where('unique_identifier', $json['unique_identifier'])->get()) == 0) {
-                        $addon = new Addon;
-                        $addon->name = $json['name'];
-                        $addon->unique_identifier = $json['unique_identifier'];
-                        $addon->version = $json['version'];
-                        $addon->activated = 1;
-                        $addon->image = $json['addon_banner'];
-                        $addon->purchase_code = $request->purchase_code;
-                        $addon->save();
+                if (count(Addon::where('unique_identifier', $json['unique_identifier'])->get()) == 0) {
+                    $addon = new Addon;
+                    $addon->name = $json['name'];
+                    $addon->unique_identifier = $json['unique_identifier'];
+                    $addon->version = $json['version'];
+                    $addon->activated = 1;
+                    $addon->image = $json['addon_banner'];
+                    $addon->purchase_code = $request->purchase_code;
+                    $addon->save();
 
-                        // Create new directories.
-                        if (!empty($json['directory'])) {
-                            //dd($json['directory'][0]['name']);
-                            foreach ($json['directory'][0]['name'] as $directory) {
-                                if (is_dir(base_path($directory)) == false) {
-                                    mkdir(base_path($directory), 0777, true);
-                                } else {
-                                    echo "error on creating directory";
-                                }
+                    // Create new directories.
+                    if (!empty($json['directory'])) {
+                        //dd($json['directory'][0]['name']);
+                        foreach ($json['directory'][0]['name'] as $directory) {
+                            if (is_dir(base_path($directory)) == false) {
+                                mkdir(base_path($directory), 0777, true);
+                            } else {
+                                echo "error on creating directory";
                             }
                         }
+                    }
 
-                        // Create/Replace new files.
-                        if (!empty($json['files'])) {
-                            foreach ($json['files'] as $file) {
-                                copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
+                    // Create/Replace new files.
+                    if (!empty($json['files'])) {
+                        foreach ($json['files'] as $file) {
+                            copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
+                        }
+                    }
+
+                    // Run sql modifications
+                    $sql_path = base_path('temp/' . $random_dir . '/addons/' . $dir . '/sql/update.sql');
+                    if (file_exists($sql_path)) {
+                        DB::unprepared(file_get_contents($sql_path));
+                    }
+
+                    flash(translate('Addon installed successfully'))->success();
+                    return redirect()->route('addons.index');
+                } else {
+                    $addon = Addon::where('unique_identifier', $json['unique_identifier'])->first();
+
+                    if ($json['unique_identifier'] == 'delivery_boy' && $addon->version < 3.3) {
+                        $dir = base_path('resources/views/delivery_boys');
+                        foreach (glob($dir . "/*.*") as $filename) {
+                            if (is_file($filename)) {
+                                unlink($filename);
                             }
                         }
+                    }
 
+                    // Create new directories.
+                    if (!empty($json['directory'])) {
+                        //dd($json['directory'][0]['name']);
+                        foreach ($json['directory'][0]['name'] as $directory) {
+                            if (is_dir(base_path($directory)) == false) {
+                                mkdir(base_path($directory), 0777, true);
+                            } else {
+                                echo "error on creating directory";
+                            }
+                        }
+                    }
+
+                    // Create/Replace new files.
+                    if (!empty($json['files'])) {
+                        foreach ($json['files'] as $file) {
+                            copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
+                        }
+                    }
+
+                    for ($i = $addon->version + 0.05; $i <= $json['version']; $i = $i + 0.1) {
                         // Run sql modifications
-                        $sql_path = base_path('temp/' . $random_dir . '/addons/' . $dir . '/sql/update.sql');
+                        $sql_version = $i + 0.05;
+                        $sql_path = base_path('temp/' . $random_dir . '/addons/' . $dir . '/sql/' . $sql_version . '.sql');
                         if (file_exists($sql_path)) {
                             DB::unprepared(file_get_contents($sql_path));
                         }
-
-                        flash(translate('Addon installed successfully'))->success();
-                        return redirect()->route('addons.index');
-                    } else {
-                        $addon = Addon::where('unique_identifier', $json['unique_identifier'])->first();
-
-                        if ($json['unique_identifier'] == 'delivery_boy' && $addon->version < 3.3) {
-                            $dir = base_path('resources/views/delivery_boys');
-                            foreach (glob($dir . "/*.*") as $filename) {
-                                if (is_file($filename)) {
-                                    unlink($filename);
-                                }
-                            }
-                        }
-
-                        // Create new directories.
-                        if (!empty($json['directory'])) {
-                            //dd($json['directory'][0]['name']);
-                            foreach ($json['directory'][0]['name'] as $directory) {
-                                if (is_dir(base_path($directory)) == false) {
-                                    mkdir(base_path($directory), 0777, true);
-                                } else {
-                                    echo "error on creating directory";
-                                }
-                            }
-                        }
-
-                        // Create/Replace new files.
-                        if (!empty($json['files'])) {
-                            foreach ($json['files'] as $file) {
-                                copy(base_path('temp/' . $random_dir . '/' . $file['root_directory']), base_path($file['update_directory']));
-                            }
-                        }
-
-                        for ($i = $addon->version + 0.05; $i <= $json['version']; $i = $i + 0.1) {
-                            // Run sql modifications
-                            $sql_version = $i + 0.05;
-                            $sql_path = base_path('temp/' . $random_dir . '/addons/' . $dir . '/sql/' . $sql_version . '.sql');
-                            if (file_exists($sql_path)) {
-                                DB::unprepared(file_get_contents($sql_path));
-                            }
-                        }
-
-                        $addon->version = $json['version'];
-                        $addon->name = $json['name'];
-                        $addon->image = $json['addon_banner'];
-                        $addon->purchase_code = $request->purchase_code;
-                        $addon->save();
-
-                        flash(translate('This addon is updated successfully'))->success();
-                        return redirect()->route('addons.index');
                     }
-                } else {
-                    flash(translate('This version is not capable of installing Addons, Please update.'))->error();
+
+                    $addon->version = $json['version'];
+                    $addon->name = $json['name'];
+                    $addon->image = $json['addon_banner'];
+                    $addon->purchase_code = $request->purchase_code;
+                    $addon->save();
+
+                    flash(translate('This addon is updated successfully'))->success();
                     return redirect()->route('addons.index');
                 }
             }
@@ -219,9 +214,7 @@ class AddonController extends Controller
      * @param \App\Models\Addon $addon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-    }
+    public function update(Request $request, $id) {}
 
     /**
      * Remove the specified resource from storage.

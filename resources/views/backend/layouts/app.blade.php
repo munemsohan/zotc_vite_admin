@@ -143,7 +143,7 @@
                     @yield('content')
                 </div>
                 <div class="bg-white text-center py-3 px-15px px-lg-25px mt-auto border-top">
-                    <p class="mb-0">&copy; {{ get_business_setting('site_name') }} | Ecommerce Automation
+                    <p class="mb-0">&copy; {{ get_business_setting('website_name') }} | Ecommerce Automation
                         v1.0 | {!! get_business_setting('developed_by') !!}</a></p>
                 </div>
             </div><!-- .aiz-main-content -->

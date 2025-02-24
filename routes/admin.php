@@ -107,6 +107,11 @@ Route::prefix('admin')->middleware(['auth', 'admin', 'prevent-back-history'])->g
 
     // Balance buy
     Route::post('/buyBalance', [AdminController::class, 'buyBalance'])->name('balance.buy');
+
+    // Lifetime plan
+    Route::get('/fraud_checker', [AdminController::class, 'fraudChecker'])->name('fraud_checker.index');
+    Route::post('/fraud_checker/check', [AdminController::class, 'fraudCheckerCheck'])->name('fraud_checker.check');
+    Route::post('/fraud_comments/get', [AdminController::class, 'getFraudComments'])->name('fraud_comments.get');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-back-history', 'check.order.limit']], function () {
@@ -460,9 +465,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/bulk-order-status', 'bulk_order_status')->name('bulk-order-status');
 
         Route::get('/orders/destroy/{id}', 'destroy')->name('orders.destroy');
-        Route::post('/bulk-order-delete', 'bulk_order_delete')->name('bulk-order-delete');
+        Route::get('/orders/mark-delete/{id}', 'markDelete')->name('orders.mark.delete');
 
-        Route::get('/orders/destroy/{id}', 'destroy')->name('orders.destroy');
+        Route::post('/bulk-order-delete', 'bulk_order_delete')->name('bulk-order-delete');
         Route::post('/orders/details', 'order_details')->name('orders.details');
         Route::post('/orders/update_delivery_status', 'update_delivery_status')->name('orders.update_delivery_status');
         Route::post('/orders/update_payment_status', 'update_payment_status')->name('orders.update_payment_status');
@@ -605,7 +610,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::get('/measurement-points/destroy/{id}',  [MeasurementPointsController::class, 'destroy'])->name('measurement-points.destroy');
 
     // Addon
-    // Route::resource('addons', AddonController::class);
+    Route::resource('addons', AddonController::class);
     Route::post('/addons/activation', [AddonController::class, 'activation'])->name('addons.activation');
 
     //Customer Package

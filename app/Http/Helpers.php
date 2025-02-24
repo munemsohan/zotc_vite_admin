@@ -1832,7 +1832,7 @@ if (!function_exists('get_domain')) {
 if (!function_exists('get_free_domain_slug')) {
     function get_free_domain_slug()
     {
-        $domains = json_decode(get_setting('domains'));
+        $domains = json_decode(get_zotc_setting('domains'));
         $free_domain = $domains->free_domain;
         $parts = explode('.', $free_domain);
         $free_domain_slug = $parts[0];
@@ -2854,69 +2854,59 @@ if (!function_exists('resizeAndSaveWebpImage')) {
         $originalWidth = imagesx($image);
         $originalHeight = imagesy($image);
 
-        // Handle resizing and fitting the image into the provided dimensions
-        if ($resizeImageInSquare || ($newWidth && $newHeight)) {
-            $targetWidth = $newWidth ?? $originalWidth;
-            $targetHeight = $newHeight ?? $originalHeight;
+        // If no new dimensions are provided, keep original size
+        if (!$newWidth && !$newHeight) {
+            $newWidth = $originalWidth;
+            $newHeight = $originalHeight;
+        } elseif (!$newHeight) {
+            $newHeight = intval(($originalHeight / $originalWidth) * $newWidth);
+        } elseif (!$newWidth) {
+            $newWidth = intval(($originalWidth / $originalHeight) * $newHeight);
+        }
 
+        if ($resizeImageInSquare) {
+            // Ensure the image fits within the square while maintaining aspect ratio
             $aspectRatioOriginal = $originalWidth / $originalHeight;
-            $aspectRatioTarget = $targetWidth / $targetHeight;
+            $aspectRatioTarget = $newWidth / $newHeight;
 
             if ($aspectRatioOriginal > $aspectRatioTarget) {
-                // Original image is wider; fit by width
-                $resizeWidth = $targetWidth;
-                $resizeHeight = intval($targetWidth / $aspectRatioOriginal);
+                $resizeWidth = $newWidth;
+                $resizeHeight = intval($newWidth / $aspectRatioOriginal);
             } else {
-                // Original image is taller or equal; fit by height
-                $resizeHeight = $targetHeight;
-                $resizeWidth = intval($targetHeight * $aspectRatioOriginal);
+                $resizeHeight = $newHeight;
+                $resizeWidth = intval($newHeight * $aspectRatioOriginal);
             }
 
-            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
-
-            imagealphablending($resizedImage, true);
+            // Create a new white canvas
+            $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
             $whiteColor = imagecolorallocate($resizedImage, 255, 255, 255);
             imagefill($resizedImage, 0, 0, $whiteColor);
 
-            $offsetX = ($targetWidth - $resizeWidth) / 2;
-            $offsetY = ($targetHeight - $resizeHeight) / 2;
+            $offsetX = ($newWidth - $resizeWidth) / 2;
+            $offsetY = ($newHeight - $resizeHeight) / 2;
 
-            if (!imagecopyresampled($resizedImage, $image, $offsetX, $offsetY, 0, 0, $resizeWidth, $resizeHeight, $originalWidth, $originalHeight)) {
-                throw new \Exception('Failed to copy and resize the image.');
-            }
-
-            $image = $resizedImage;
+            // Resize & copy to the new canvas
+            imagecopyresampled($resizedImage, $image, $offsetX, $offsetY, 0, 0, $resizeWidth, $resizeHeight, $originalWidth, $originalHeight);
         } else {
-            // Calculate new dimensions if not provided
-            if (is_null($newWidth) && is_null($newHeight)) {
-                $newWidth = $originalWidth;
-                $newHeight = $originalHeight;
-            } elseif (is_null($newHeight)) {
-                $newHeight = intval(($originalHeight / $originalWidth) * $newWidth);
-            } elseif (is_null($newWidth)) {
-                $newWidth = intval(($originalWidth / $originalHeight) * $newHeight);
-            }
-
+            // Resize the image exactly to the given dimensions, no white padding
             $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
 
+            // Preserve transparency for PNGs/GIFs
             imagealphablending($resizedImage, false);
             imagesavealpha($resizedImage, true);
             $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
             imagefill($resizedImage, 0, 0, $transparentColor);
 
-            if (!imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight)) {
-                throw new \Exception('Failed to copy and resize the image.');
-            }
-
-            $image = $resizedImage;
+            imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
         }
 
+        // Save the image
         $assetPath = public_path('uploads/' . get_zotc_setting('img_slug'));
         if (!file_exists($assetPath) && !mkdir($assetPath, 0755, true)) {
             throw new \Exception('Failed to create directory: ' . $assetPath);
         }
 
-        if (!imagewebp($image, public_path($path))) {
+        if (!imagewebp($resizedImage, public_path($path))) {
             throw new \Exception('Failed to save WebP image at: ' . $path);
         }
 
@@ -2926,24 +2916,31 @@ if (!function_exists('resizeAndSaveWebpImage')) {
         }
 
         chmod(dirname(public_path($path)), 0755);
-
+        imagedestroy($resizedImage);
         imagedestroy($image);
 
         return true;
     }
 }
 
+
 if (!function_exists('deleteImageIfNotWebp')) {
     function deleteImageIfNotWebp($imagePath)
     {
-        // Check if the file exists and is not a WebP image
-        $filePath = public_path($imagePath);
-        if (file_exists($filePath) && pathinfo($filePath, PATHINFO_EXTENSION) !== 'webp') {
-            // Try to delete the file
-            if (unlink($filePath)) {
-                return true;
-            }
+        // Ensure the path is not empty
+        if (empty($imagePath)) {
+            return false;
         }
+
+        // Get the full file path
+        $filePath = public_path($imagePath);
+
+        // Check if the file exists and is actually a file (not a directory)
+        if (is_file($filePath) && pathinfo($filePath, PATHINFO_EXTENSION) !== 'webp') {
+            // Try to delete the file
+            return unlink($filePath);
+        }
+
         return false;
     }
 }
@@ -3080,7 +3077,7 @@ if (!function_exists('get_affliate_option_status')) {
 if (!function_exists('check_order_status')) {
     function check_order_status()
     {
-        $planSettings = BusinessSetting::where('type', 'plan')->first();
+        $planSettings = ZotcSetting::where('type', 'plan')->first();
         $planSettings = explode(',', $planSettings->value);
         $expire_date_string = $planSettings[5];
 
@@ -3110,7 +3107,7 @@ if (!function_exists('check_order_status')) {
 if (!function_exists('this_months_sale')) {
     function this_months_sale()
     {
-        $planSettings = BusinessSetting::where('type', 'plan')->first();
+        $planSettings = ZotcSetting::where('type', 'plan')->first();
         $planSettings = explode(',', $planSettings->value);
         $start_date_string = $planSettings[4];
         $start_date = Carbon::createFromFormat('Y-m-d', $start_date_string);
@@ -3327,6 +3324,13 @@ if (!function_exists('getAllImagesContentMedia')) {
 
         // Construct URL for content media correctly without repeated slashes
         $url_content_media = url("public/uploads/{$imgSlug}/content_media");
+
+        // Ensure the directory exists and set permissions to 755
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        } else {
+            chmod($dir, 0755);
+        }
 
         // Accepted file types
         $accept = ['jpg', 'svg', 'jpeg', 'png', 'gif'];

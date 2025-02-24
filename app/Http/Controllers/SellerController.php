@@ -222,6 +222,19 @@ class SellerController extends Controller
         return redirect()->route('sellers.index');
     }
 
+    public function updateApproved(Request $request)
+    {
+        $shop = Shop::findOrFail($request->id);
+        $shop->verification_status = $request->status;
+        $shop->save();
+        Cache::forget('verified_sellers_id');
+
+        $status = $request->status == 1 ? 'approved' : 'rejected';
+        $users = User::findMany([$shop->user->id, User::where('user_type', 'admin')->first()->id]);
+        Notification::send($users, new ShopVerificationNotification($shop, $status));
+        return 1;
+    }
+
     public function reject_seller($id)
     {
         $shop = Shop::findOrFail($id);
@@ -248,19 +261,6 @@ class SellerController extends Controller
     {
         $shop = Shop::findOrFail($request->id);
         return view('backend.sellers.profile_modal', compact('shop'));
-    }
-
-    public function updateApproved(Request $request)
-    {
-        $shop = Shop::findOrFail($request->id);
-        $shop->verification_status = $request->status;
-        $shop->save();
-        Cache::forget('verified_sellers_id');
-
-        $status = $request->status == 1 ? 'approved' : 'rejected';
-        $users = User::findMany([$shop->user->id, User::where('user_type', 'admin')->first()->id]);
-        Notification::send($users, new ShopVerificationNotification($shop, $status));
-        return 1;
     }
 
     public function login($id)

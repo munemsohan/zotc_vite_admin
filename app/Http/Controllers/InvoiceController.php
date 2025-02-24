@@ -22,9 +22,6 @@ class InvoiceController extends Controller
     public function invoice_download($id)
     {
         try {
-            // Get logo
-            $logo = get_business_setting('header_logo_white') ?? get_business_setting('header_logo');
-
             // Get currency code from session or fallback to default
             $currency_code = Session::get('currency_code', function () {
                 return Currency::findOrFail(get_setting('system_default_currency'))->code;
@@ -67,7 +64,6 @@ class InvoiceController extends Controller
 
             // Pass data to the view
             $view = view('backend.invoices.invoice', [
-                'logo' => $logo,
                 'order' => $order,
                 'font_family' => $font_family,
                 'direction' => $direction,

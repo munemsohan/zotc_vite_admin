@@ -231,7 +231,7 @@ class ProductController extends Controller
                     $originalImagePath = $imageUpload->file_name;
 
                     // Process main image if it exists and needs resizing
-                    $imageUpload->file_name = processImage($originalImagePath, 500, 500, true);
+                    $imageUpload->file_name = processImage($originalImagePath, 750, 750, true);
 
                     // Process thumbnail
                     $imageUpload->thumbnail = processImage($originalImagePath,  250, 250, true);
@@ -448,10 +448,10 @@ class ProductController extends Controller
                     $originalImagePath = $imageUpload->file_name;
 
                     // Process main image if it exists and needs resizing
-                    $imageUpload->file_name = processImage($originalImagePath, 500);
+                    $imageUpload->file_name = processImage($originalImagePath, 750, 750, true);
 
                     // Process thumbnail
-                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250);
+                    $imageUpload->thumbnail = processImage($originalImagePath,  250, 250, true);
                     $imageUpload->save();
 
                     // Delete original image file if it's not a WebP

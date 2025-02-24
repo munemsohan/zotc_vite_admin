@@ -21,7 +21,7 @@
                                 <div class="text-center">
                                     @php
                                         $customDomain = null;
-                                        $customDomains = json_decode(get_business_setting('domains'));
+                                        $customDomains = json_decode(get_zotc_setting('domains'));
 
                                         if (isset($domains->custom_domain)) {
                                             $customDomains = $domains->custom_domain;
