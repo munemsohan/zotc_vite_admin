@@ -23,7 +23,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="GOOGLE_CLIENT_ID"
                                 value="{{ env('GOOGLE_CLIENT_ID') }}" placeholder="{{ translate('Google Client ID') }}"
-                                required>
+                               >
                         </div>
                     </div>
                     <div class="form-group row">
@@ -34,7 +34,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="GOOGLE_CLIENT_SECRET"
                                 value="{{ env('GOOGLE_CLIENT_SECRET') }}"
-                                placeholder="{{ translate('Google Client Secret') }}" required>
+                                placeholder="{{ translate('Google Client Secret') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -60,7 +60,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="FACEBOOK_CLIENT_ID"
                                 value="{{ env('FACEBOOK_CLIENT_ID') }}"
-                                placeholder="{{ translate('Facebook Client ID') }}" required>
+                                placeholder="{{ translate('Facebook Client ID') }}">
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="FACEBOOK_CLIENT_SECRET"
                                 value="{{ env('FACEBOOK_CLIENT_SECRET') }}"
-                                placeholder="{{ translate('Facebook Client Secret') }}" required>
+                                placeholder="{{ translate('Facebook Client Secret') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -101,7 +101,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="TWITTER_CLIENT_ID"
                                 value="{{ env('TWITTER_CLIENT_ID') }}"
-                                placeholder="{{ translate('Twitter Client ID') }}" required>
+                                placeholder="{{ translate('Twitter Client ID') }}">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -112,7 +112,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="TWITTER_CLIENT_SECRET"
                                 value="{{ env('TWITTER_CLIENT_SECRET') }}"
-                                placeholder="{{ translate('Twitter Client Secret') }}" required>
+                                placeholder="{{ translate('Twitter Client Secret') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -132,7 +132,7 @@
                     @csrf
                     <input type="hidden" name="types[]" value="SIGN_IN_WITH_APPLE_LOGIN">
                     <input type="hidden" name="SIGN_IN_WITH_APPLE_LOGIN" value="{{ url('/users/login') }}"
-                        required>
+                       >
                     <input type="hidden" name="types[]" value="SIGN_IN_WITH_APPLE_REDIRECT">
                     <div class="form-group row">
                         <input type="hidden" name="types[]" value="SIGN_IN_WITH_APPLE_REDIRECT">
@@ -152,7 +152,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="SIGN_IN_WITH_APPLE_CLIENT_ID"
                                 value="{{ env('SIGN_IN_WITH_APPLE_CLIENT_ID') }}"
-                                placeholder="{{ translate('Apple Client ID') }}" required>
+                                placeholder="{{ translate('Apple Client ID') }}">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -163,7 +163,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="SIGN_IN_WITH_APPLE_CLIENT_SECRET"
                                 value="{{ env('SIGN_IN_WITH_APPLE_CLIENT_SECRET') }}"
-                                placeholder="{{ translate('Apple Client Secret') }}" required>
+                                placeholder="{{ translate('Apple Client Secret') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -198,15 +198,15 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]"
-                            value="facebook_page_id
                         <div class="col-md-3">
-                        <label class="col-from-label">{{ translate('Facebook Page ID') }}</label>
-                    </div>
-                    <div class="col-md-7">
-                        <input type="text" class="form-control" name="facebook_page_id"
-                            value="{{ get_business_setting('facebook_page_id') }}"
-                            placeholder="{{ translate('Facebook Page ID') }}" required>
+                            <input type="hidden" name="types[]" value="facebook_page_id">
+                            <label class="col-from-label">{{ translate('Facebook Page ID') }}</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="facebook_page_id"
+                                value="{{ get_business_setting('facebook_page_id') }}"
+                                placeholder="{{ translate('Facebook Page ID') }}">
+                        </div>
                     </div>
             </div>
             <div class="form-group mb-0 text-right">
@@ -271,7 +271,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="tawk_id"
                                 value="{{ get_business_setting('tawk_id') }}"
-                                placeholder="{{ translate('Tawk ID Link') }}" required>
+                                placeholder="{{ translate('Tawk ID Link') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -311,7 +311,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="whatsapp_number"
                                 value="{{ get_business_setting('whatsapp_number') }}"
-                                placeholder="{{ translate('Whatsapp Number') }}" required>
+                                placeholder="{{ translate('Whatsapp Number') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -388,7 +388,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="FACEBOOK_APP_ID"
                                 value="{{ env('FACEBOOK_APP_ID') }}"
-                                placeholder="{{ translate('Facebook App ID') }}" required>
+                                placeholder="{{ translate('Facebook App ID') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -455,7 +455,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="facebook_pixel_id"
                                 value="{{ get_business_setting('facebook_pixel_id') }}"
-                                placeholder="{{ translate('Facebook Pixel ID') }}" required>
+                                placeholder="{{ translate('Facebook Pixel ID') }}">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -524,7 +524,7 @@
                         </div>
                         <div class="col-md-12">
                             <textarea type="text" class="form-control" name="facebook_domain_verification"
-                                placeholder="test*****************************" required>{{ get_business_setting('facebook_domain_verification') }}</textarea>
+                                placeholder="test*****************************">{{ get_business_setting('facebook_domain_verification') }}</textarea>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -567,7 +567,7 @@
                         </div>
                         <div class="col-md-12">
                             <textarea type="text" class="form-control" name="google_site_verification"
-                                placeholder="test*****************************" required>{{ get_business_setting('google_site_verification') }}</textarea>
+                                placeholder="test*****************************">{{ get_business_setting('google_site_verification') }}</textarea>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -622,7 +622,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="gtag_id"
                                 value="{{ get_business_setting('gtag_id') }}"
-                                placeholder="{{ translate('G-Tag ID eg: GTM-N3541234') }}" required>
+                                placeholder="{{ translate('G-Tag ID eg: GTM-N3541234') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -662,7 +662,7 @@
                         <div class="col-md-7">
                             <input type="text" class="form-control" name="tracking_id"
                                 value="{{ get_business_setting('tracking_id') }}"
-                                placeholder="{{ translate('Tracking ID') }}" required>
+                                placeholder="{{ translate('Tracking ID') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
@@ -742,7 +742,7 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control" name="CAPTCHA_KEY"
                                 value="{{ env('CAPTCHA_KEY') }}" placeholder="{{ translate('Site KEY') }}"
-                                required>
+                               >
                         </div>
                     </div>
                     <div class="form-group row">
@@ -753,7 +753,7 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control" name="RECAPTCHA_SECRET_KEY"
                                 value="{{ env('RECAPTCHA_SECRET_KEY') }}"
-                                placeholder="{{ translate('SECRET KEY') }}" required>
+                                placeholder="{{ translate('SECRET KEY') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
