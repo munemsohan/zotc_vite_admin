@@ -467,6 +467,7 @@ class SellerPosUtility
                     if ($data['profit'] > 0) {
                         // Add new row to seller_pending_balances table
                         SellerPendingBalance::create([
+                            'seller_id' => $data['seller_id'],
                             'order_id' => $order->id,
                             'amount' => $data['profit']
                         ]);

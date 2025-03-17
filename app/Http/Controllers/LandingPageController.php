@@ -118,23 +118,11 @@ class LandingPageController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, $id)
     {
         $products = Product::get();  // Retrieve all products
@@ -151,13 +139,6 @@ class LandingPageController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $landingPage = LandingPage::findOrFail($id);
@@ -228,13 +209,6 @@ class LandingPageController extends Controller
         return back();
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function delete($id)
     {
         $landingPage = LandingPage::with('landingPageProducts')->findOrFail($id);
@@ -263,15 +237,6 @@ class LandingPageController extends Controller
 
     public function showLandingPage($slug)
     {
-        // $landingPage = LandingPage::with('landingPageProducts.product')->where('slug', $slug)->first();
-
-        // if ($landingPage->type == 'builder') {
-        //     $folder = get_zotc_setting('img_slug');
-        //     return view('frontend.landing_page_builder', compact('landingPage', 'folder'));
-        // } else {
-        //     return view('frontend.landing_page', compact('landingPage'));
-        // }
-
         $landingPage = ZillaLandingPage::where('code', $slug)->first();
 
         if ($landingPage) {
@@ -451,7 +416,6 @@ class LandingPageController extends Controller
 
     public function builderStore(Request $request)
     {
-
         if (empty($request->product_id)) {
             flash(translate('No Product is added for Landing Page'))->error();
             return back();
@@ -486,6 +450,7 @@ class LandingPageController extends Controller
                 $landingPage = new LandingPage;
                 $landingPage->title = $request->title;
                 $landingPage->slug = $slug;
+                $landingPage->end_date = $request->end_date;
                 $landingPage->shipping_type = $request->shipping_type;
 
                 // Determine shipping info based on the shipping type
@@ -511,6 +476,10 @@ class LandingPageController extends Controller
                         $landingPageProduct = new LandingPageProduct;
                         $landingPageProduct->landing_page_id = $landingPage->id;
                         $landingPageProduct->product_id = $product_id;
+
+                        // Check if the product_id is present in the $request->is_selected array values
+                        $landingPageProduct->is_selected = in_array($product_id, $request->is_selected ?? []) ? 1 : 0;
+
                         $landingPageProduct->save();
                     }
                 }
@@ -612,8 +581,18 @@ class LandingPageController extends Controller
     public function builder($code)
     {
         $imgSlug = get_zotc_setting('img_slug') ?: 'all';
-
         // dd($imgSlug);
+
+        //copy all images first
+        $path = public_path("uploads/{$imgSlug}/content_media");
+        // Define the source directory
+        $sourceDir = public_path('modules/zillapage/assets/images/content_media');
+
+        // Check if the source directory exists and is readable
+        if (is_dir($sourceDir) && is_readable($sourceDir)) {
+            // Copy files recursively
+            $this->copyDir($sourceDir, $path);
+        }
 
         if (!empty($code)) {
             $page = ZillaLandingPage::where('code', $code)->first();

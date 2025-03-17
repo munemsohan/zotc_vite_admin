@@ -7,9 +7,7 @@
                 <h6 class="mb-0 fw-600">{{ translate('Landing Pages') }}</h6>
                 <div>
                     <a href="{{ route('landing-pages.builder.create') }}"
-                        class="btn btn-circle btn-info">{{ translate('add_landing_page_by_builder') }}</a>
-                    {{-- <a href="{{ route('landing-pages.create') }}"
-                        class="btn btn-circle btn-info">{{ translate('Add New Landing Page') }}</a> --}}
+                        class="btn btn-circle btn-info">{{ translate('Add Landing Page By Builder') }}</a>
                 </div>
             </div>
         @endcan
@@ -17,9 +15,9 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <th data-breakpoints="lg">#</th>
+                        <th>#</th>
                         <th>{{ translate('Name') }}</th>
-                        <th data-breakpoints="md">{{ translate('URL') }}</th>
+                        <th>{{ translate('URL') }}</th>
                         <th class="text-right">{{ translate('Actions') }}</th>
                     </tr>
                 </thead>

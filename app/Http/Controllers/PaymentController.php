@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\SellerPendingBalance;
 use App\Models\User;
 
 class PaymentController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         // Staff Permission Check
         $this->middleware(['permission:seller_payment_history'])->only('payment_histories');
     }
@@ -65,7 +67,7 @@ class PaymentController extends Controller
     {
         $user = User::find(decrypt($id));
         $payments = Payment::where('seller_id', $user->id)->orderBy('created_at', 'desc')->get();
-        if($payments->count() > 0){
+        if ($payments->count() > 0) {
             return view('backend.sellers.payment', compact('payments', 'user'));
         }
         flash(translate('No payment history available for this seller'))->warning();
@@ -104,5 +106,25 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function pendingBalances()
+    {
+        $sellerPendingBalances = SellerPendingBalance::latest()->paginate(15);
+        return view('backend.sellers.pending_balances.index', compact('sellerPendingBalances'));
+    }
+
+    public function confirmPendingBalance(Request $request)
+    {
+        $balance = SellerPendingBalance::findOrFail($request->balance_id);
+        $balance->status = 'confirmed';
+        $balance->save();
+
+        $seller = User::findOrFail($balance->seller_id);
+        $seller->pending_balance -= $balance->amount;
+        $seller->balance += $balance->amount;
+        $seller->save();
+
+        return response()->json(['success' => true, 'message' => 'Pending balance confirmed successfully.']);
     }
 }

@@ -7,12 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class SellerPendingBalance extends Model
 {
     protected $fillable = [
+        'seller_id',
         'order_id',
-        'amount'
+        'amount',
+        'status',
     ];
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
 
     public function order()
     {
-        return $this->belongsTo(related: Order::class);
+        return $this->belongsTo(Order::class);
     }
 }

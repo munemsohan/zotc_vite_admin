@@ -38,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'verification_code',
         'seller_id',
         'pending_balance',
+        'balance',
     ];
 
     /**

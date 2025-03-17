@@ -55,12 +55,21 @@
                             <label class="col-sm-2 col-from-label" for="name">{{ translate('Product') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                <select name="product_id[]" class="form-control aiz-selectpicker" data-live-search="true"
-                                    multiple required>
+                                <select name="product_id[]" id="product_select" class="form-control aiz-selectpicker"
+                                    data-live-search="true" multiple required>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-from-label" for="name">{{ translate('Title') }} <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" name="end_date"
+                                    placeholder="{{ translate('Select Date') }}">
                             </div>
                         </div>
                     </div>
@@ -79,6 +88,14 @@
                                 </div>
                                 <small
                                     class="form-text text-muted">{{ translate('Use character, number, hypen only') }}</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-from-label" for="name">
+                                {{ translate('Selected Products') }}
+                            </label>
+                            <div class="col-sm-10">
+                                <ul class="list-group" id="selected_product_list"></ul>
                             </div>
                         </div>
                     </div>
@@ -144,7 +161,8 @@
                                     </tbody>
                                 </table>
                                 <div class="col-md-12 text-center">
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addNewShipping()">Add New
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addNewShipping()">Add
+                                        New
                                         +</button>
                                 </div>
                             </div>
@@ -219,24 +237,69 @@
         function loadMorePages() {
             const pageContainer = $('#pageContainer');
             const maxPages = 15;
-            // const maxPages = 65;
             let html = '';
 
             for (let i = currentPage; i <= Math.min(currentPage + pagesToShow, maxPages); i++) {
                 html += `
             <div class="col-6 col-md-3">
-                <label class="aiz-megabox d-block mb-3">
-                    <input value="${i}" class="online_payment" type="radio" name="page_content">
-                    <span class="d-block aiz-megabox-elem p-1">
-                        <div class="screen mb-2">
-                            <img src="{{ static_asset('landing-pages/screenshots/${i}.webp') }}" class="img-fluid mb-2">
-                        </div>
-                        <span class="d-block text-center">
-                            <span class="d-block fw-600 fs-15">Landing Page ${i}</span>
-                        </span>
-                    </span>
-                </label>
+            <label class="aiz-megabox d-block mb-3">
+                <input value="${i}" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/${i}.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page ${i}</span>
+                </span>
+                </span>
+            </label>
             </div>`;
+
+                if (i === 15) {
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="24" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/24.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 24</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="25" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/25.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 25</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="36" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/36.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 36</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+                    break;
+                }
             }
 
             // Append the entire HTML at once for better performance
@@ -278,6 +341,27 @@
                 $('#custom_shipping_div').show();
             } else {
                 $('#custom_shipping_div').hide();
+            }
+        });
+
+        $('#product_select').on('change', function() {
+            var selectedProducts = $('#product_select option:selected');
+            var productList = $('#selected_product_list');
+            productList.empty();
+
+            if (selectedProducts.length > 0) {
+                selectedProducts.each(function() {
+                    var productId = $(this).val();
+                    var productName = $(this).text();
+
+                    var listItem = `
+                <li class="list-group-item d-flex justify-content-start align-items-center">
+                    <input type="checkbox" name="is_selected[]" value="${productId}" checked>
+                    <label class="ml-2">${productName}</label>
+                </li>
+            `;
+                    productList.append(listItem);
+                });
             }
         });
 

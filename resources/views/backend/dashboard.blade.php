@@ -18,6 +18,11 @@
 
     @can('admin_dashboard')
         <div class="row gutters-16 fs-14">
+            @php
+                $currency = get_zotc_setting('currency');
+                $plan = get_zotc_setting('plan');
+                $planParts = explode(',', $plan);
+            @endphp
             @if (get_zotc_setting('plan_details_show') == 1)
                 <div class="col-md-3 p-1">
                     <div class="dashboard-box overflow-hidden h-250px rounded" style="background: #1976d2">
@@ -32,8 +37,6 @@
                                             $customDomain = $customDomains[0];
                                         }
                                         $freeDomain = $domains->free_domain;
-
-                                        $currency = get_zotc_setting('currency');
                                     @endphp
                                     {!! QrCode::size(100)->generate($customDomain ? $customDomain : $freeDomain) !!}
                                     <p class="fs-12 mt-2">Scan the QR code <br> to visit your shop</p>
@@ -74,9 +77,6 @@
                     <div class="dashboard-box text-white overflow-hidden h-250px rounded" style="background: #26a69a;"
                         id="extend_parent_div">
                         @php
-                            $plan = get_zotc_setting('plan');
-                            $planParts = explode(',', $plan);
-
                             if (count($planParts) < 6) {
                                 echo 'Invalid plan settings';
                             } else {
@@ -304,7 +304,7 @@
                                                 $package_name = 'For more complex businesses';
                                             }
                                         @endphp
-                                        
+
                                         <h4>
                                             {{ $currency == 'BDT' ? $plan->price_bdt . ' BDT' : $plan->price . ' $' }}
                                         </h4>

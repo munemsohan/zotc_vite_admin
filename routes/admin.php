@@ -218,6 +218,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::controller(PaymentController::class)->group(function () {
         Route::get('/seller/payments', 'payment_histories')->name('sellers.payment_histories');
         Route::get('/seller/payments/show/{id}', 'show')->name('sellers.payment_history');
+        Route::get('/seller/pending_balances', 'pendingBalances')->name('sellers.pending_balances');
+        Route::post('/seller/pending_balances/confirm', 'confirmPendingBalance')->name('sellers.pending_balances.confirm');
     });
 
     // Seller Withdraw Request

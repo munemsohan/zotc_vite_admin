@@ -2759,5 +2759,6 @@
     "generate": "Generate",
     "sitemap_generated_successfully": "Sitemap Generated Successfully",
     "abandoned_cart" : "Abandoned Cart",
-    "fraud_checker" : "Fraud Checker"
+    "fraud_checker" : "Fraud Checker",
+    "seller_pending_balance":"Seller Pending Balance"
 }

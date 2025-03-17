@@ -1412,7 +1412,7 @@ class AdminController extends Controller
         // Return the view content and the count of data in JSON response
         return response()->json([
             'html' => $view,
-            'count' => count($steadfastData['data'] ?? []) 
+            'count' => count($steadfastData['data'] ?? [])
         ]);
     }
 
