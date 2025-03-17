@@ -1068,6 +1068,34 @@
                                 </div>
                             `,
                         }),
+                        n.add("block-countdown", {
+                            category: "Basic",
+                            label: "Countdown",
+                            attributes: { class: "fa fa-hourglass" },
+                            content: `
+                                <section id="countdown" style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
+                                    <h2 style="color: #333;">Timer Countdown Section will go here</h2>
+                                    <div style="display: flex; justify-content: center; gap: 10px; font-size: 24px; font-weight: bold;">
+                                        <div>
+                                            <span id="days" style="display: block; color: #ff0000;">02</span>
+                                            <small style="font-size: 14px; color: #777;">Days</small>
+                                        </div>
+                                        <div>
+                                            <span id="hours" style="display: block; color: #ff0000;">10</span>
+                                            <small style="font-size: 14px; color: #777;">Hours</small>
+                                        </div>
+                                        <div>
+                                            <span id="minutes" style="display: block; color: #ff0000;">24</span>
+                                            <small style="font-size: 14px; color: #777;">Minutes</small>
+                                        </div>
+                                        <div>
+                                            <span id="seconds" style="display: block; color: #ff0000;">59</span>
+                                            <small style="font-size: 14px; color: #777;">Seconds</small>
+                                        </div>
+                                    </div>
+                                </section>
+                            `,
+                        }),
                         o("quote") &&
                             n.add("quote", {
                                 label: "Quote",

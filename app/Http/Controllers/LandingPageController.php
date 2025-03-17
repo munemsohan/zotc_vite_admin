@@ -450,7 +450,7 @@ class LandingPageController extends Controller
                 $landingPage = new LandingPage;
                 $landingPage->title = $request->title;
                 $landingPage->slug = $slug;
-                $landingPage->end_date = $request->end_date;
+                $landingPage->end_time = $request->end_time;
                 $landingPage->shipping_type = $request->shipping_type;
 
                 // Determine shipping info based on the shipping type
