@@ -355,5 +355,6 @@
     "sitemap_generated_successfully": "সাইটম্যাপ সফলভাবে তৈরি হয়েছে",
     "abandoned_cart" : "পরিত্যক্ত কার্ট",
     "fraud_checker" : "ফ্রড চেকার",
-    "seller_pending_balance": "বিক্রেতার পেন্ডিং ব্যালেন্স"
+    "seller_pending_balance": "বিক্রেতার পেন্ডিং ব্যালেন্স",
+    "add_landing_page_by_builder": "ল্যান্ডিং পেজ তৈরি করুন বিল্ডার দ্বারা"
 }
