@@ -100,7 +100,6 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-
                         <div class="card-header">
                             <h6 class="fw-600 mb-0">{{ translate('Shipping') }}</h6>
                         </div>
@@ -345,6 +344,10 @@
         });
 
         $('#product_select').on('change', function() {
+            addSelectedProductRow();
+        });
+
+        function addSelectedProductRow() {
             var selectedProducts = $('#product_select option:selected');
             var productList = $('#selected_product_list');
             productList.empty();
@@ -363,7 +366,7 @@
                     productList.append(listItem);
                 });
             }
-        });
+        }
 
         function makeSlug(page_name) {
             var slug = page_name.trim().replace(/\s+/g, '-').toLowerCase();

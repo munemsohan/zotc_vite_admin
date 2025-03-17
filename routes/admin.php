@@ -383,17 +383,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('website-setup', [PageController::class, 'websiteSetup'])->name('website-setup');
 
         Route::prefix('landing-pages')->name('landing-pages.')->controller(LandingPageController::class)->group(function () {
+            
             Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/store', 'store')->name('store');
-
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::post('/update', 'update')->name('update');
-
-            Route::get('/delete/{id}', 'delete')->name('delete');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update', 'update')->name('update');
+            Route::get('delete/{id}', 'delete')->name('delete');
 
             Route::prefix('builder')->name('builder.')->group(function () {
-                Route::get('/edit/{code}', 'builder')->name('edit');
+                Route::get('edit/{code}', 'builderEdit')->name('edit');
                 Route::post('update', 'builderUpdate')->name('update');
                 Route::get('load/{code}', 'builderLoad')->name('load');
                 Route::post('uploadimage', 'builderUploadImage')->name('uploadimage');

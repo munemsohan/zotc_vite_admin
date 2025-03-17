@@ -160,7 +160,7 @@ class LandingPageController extends Controller
 
         // Handle missing name or template ID
         flash('Name and Template is required')->error();
-        return redirect()->route('landing-pages.builder.create');
+        return redirect()->route('landing-pages.create');
     }
 
     protected function getDefaultShippingInfo($productIds)
@@ -187,91 +187,103 @@ class LandingPageController extends Controller
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $products = Product::get();  // Retrieve all products
+        $products  =  Product::get();
+
         $landingPage = LandingPage::with('landingPageProducts.product')
-            ->where('slug', $id)
+            ->where('id', $id)
             ->first();
 
-        if ($landingPage->type == 'builder') {
-            $folder = get_zotc_setting('img_slug');
-            return view('backend.website_settings.landing-pages.builder2', compact('products', 'landingPage', 'folder'));
-            // return view('backend.website_settings.landing-pages.builderjs', compact('products', 'landingPage', 'folder'));
-        } else {
-            return view('backend.website_settings.landing-pages.edit', compact('products', 'landingPage'));
-        }
+        return view('backend.website_settings.landing-pages.edit', compact('products', 'landingPage'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $landingPage = LandingPage::findOrFail($id);
+        $landing_page_id = $request->landing_page_id;
 
-        $slugExists = LandingPage::where('slug', $request->slug)->where('id', '!=', $id)->exists();
-
-        if (!$slugExists) {
-            $landingPage->title = $request->title;
-            $landingPage->slug             = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
-            $landingPage->shipping_type = $request->shipping_type;
-
-            if ($request->shipping_type == 'default') {
-                $defaultShippingType = get_setting('shipping_type');
-                if ($defaultShippingType == "product_wise_shipping") {
-                    $product  =  Product::findOrFail($request->product_id);
-                    $shipping_info = ['Shipping Cost' => $product->shipping_cost];
-                } elseif ($defaultShippingType == "flat_rate") {
-                    $flatShippingCost = get_setting('flat_rate_shipping_cost');
-                    $shipping_info = ['Shipping Cost' => $flatShippingCost];
-                } else {
-                    $adminShippingCost = get_setting('shipping_cost_admin');
-                    $shipping_info = ['Shipping Cost' => $adminShippingCost];
-                }
-            } elseif ($request->shipping_type == 'custom') {
-                if ($request->filled('shipping_name') && $request->filled('shipping_cost')) {
-                    $shipping_info = array_combine($request->shipping_name, $request->shipping_cost);
-                } else {
-                    flash(translate('No Shipping Area is selected'))->error();
-                    return back();
-                }
-            }
-
-            $landingPage->shipping_info = json_encode($shipping_info);
-
-            $landingPage->page_body =  $request->page_body;
-            $landingPage->save();
-
-            $existingProducts = LandingPageProduct::where('landing_page_id', $landingPage->id)->pluck('product_id')->toArray();
-
-            $newProductIds = $request->product_id;
-
-            // Find products to be deleted
-            $productsToDelete = array_diff($existingProducts, $newProductIds);
-            LandingPageProduct::where('landing_page_id', $landingPage->id)
-                ->whereIn('product_id', $productsToDelete)
-                ->delete();
-
-            // Update or create new products
-            foreach ($newProductIds as $product_id) {
-                LandingPageProduct::updateOrCreate(
-                    [
-                        'landing_page_id' => $landingPage->id,
-                        'product_id' => $product_id
-                    ],
-                    [
-                        'landing_page_id' => $landingPage->id,
-                        'product_id' => $product_id
-                    ]
-                );
-            }
-
-
-            flash(translate('Landing Page has been updated successfully'))->success();
-            return redirect()->route('landing-pages.index');
+        if (empty($request->product_id)) {
+            flash(translate('No Product is added for Landing Page'))->error();
+            return back();
         }
 
-        flash(translate('Slug has been used already'))->warning();
-        return back();
+        // Find existing Landing Page or create a new one
+        $landingPage = LandingPage::find($landing_page_id);
+        if (!$landingPage) {
+            flash(translate('No Landing Page is found'))->error();
+            return back();
+        }
+
+        // Sanitize and format the slug
+        $slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', trim($request->slug)));
+
+        // Check if the slug is already in use by another page
+        if (
+            Page::where('slug', $slug)->exists() ||
+            LandingPage::where('slug', $slug)->where('id', '!=', $landing_page_id)->exists()
+        ) {
+            flash(translate('Slug has been used already'))->warning();
+            return back();
+        }
+
+        // Update landing page data
+        $landingPage->title = $request->title;
+        $landingPage->slug = $slug;
+        $landingPage->end_time = $request->end_time;
+        $landingPage->shipping_type = $request->shipping_type;
+
+        // Determine shipping info based on the shipping type
+        if ($request->shipping_type == 'default') {
+            $shipping_info = $this->getDefaultShippingInfo($request->product_id);
+        } elseif ($request->shipping_type == 'custom') {
+            $shipping_info = $this->getCustomShippingInfo($request);
+        }
+
+        // Handle invalid shipping info
+        if (!$shipping_info) {
+            flash(translate('Invalid shipping info'))->error();
+            return back();
+        }
+
+        $landingPage->shipping_info = json_encode($shipping_info);
+        $landingPage->type = 'builder';
+        $landingPage->save();
+
+        // Save/Update Landing Page Products
+        $existingProductIds = LandingPageProduct::where('landing_page_id', $landingPage->id)->pluck('product_id')->toArray();
+        $newProductIds = $request->product_id ?? [];
+
+        // Remove products that are no longer associated
+        LandingPageProduct::where('landing_page_id', $landingPage->id)
+            ->whereNotIn('product_id', $newProductIds)
+            ->delete();
+
+        // Add or update selected products
+        foreach ($newProductIds as $product_id) {
+            $landingPageProduct = LandingPageProduct::firstOrNew([
+                'landing_page_id' => $landingPage->id,
+                'product_id' => $product_id
+            ]);
+
+            // Check if the product is selected
+            $landingPageProduct->is_selected = in_array($product_id, $request->is_selected ?? []) ? 1 : 0;
+            $landingPageProduct->save();
+        }
+
+        // Save or update ZillaLandingPage record
+        $zillaLandingPage = ZillaLandingPage::firstOrNew(['landing_page_id' => $landingPage->id]);
+        $zillaLandingPage->code = $slug;
+        $zillaLandingPage->name = $request->title;
+
+        if ($zillaLandingPage->save()) {
+            flash(translate('Landing page updated successfully'))->success();
+            return redirect()->route('landing-pages.index');
+        } else {
+            flash(translate('Failed to update landing page'))->error();
+            return back();
+        }
     }
+
 
     public function delete($id)
     {
@@ -462,7 +474,7 @@ class LandingPageController extends Controller
         }
     }
 
-    public function builder($code)
+    public function builderEdit($code)
     {
         $imgSlug = get_zotc_setting('img_slug') ?: 'all';
         // dd($imgSlug);

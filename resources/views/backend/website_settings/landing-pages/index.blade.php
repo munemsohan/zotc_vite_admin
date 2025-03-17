@@ -37,9 +37,14 @@
                                     <i class="las la-eye"></i>
                                 </a>
                                 @can('edit_website_page')
-                                    <a href="{{ route('landing-pages.builder.edit', ['code' => $page->slug]) }}"
+                                    <a href="{{ route('landing-pages.edit', $page->id) }}"
                                         class="btn btn-icon btn-circle btn-sm btn-soft-success" title="Edit">
                                         <i class="las la-pen"></i>
+                                    </a>
+
+                                    <a href="{{ route('landing-pages.builder.edit', ['code' => $page->slug]) }}"
+                                        class="btn btn-icon btn-circle btn-sm btn-soft-warning" title="Edit">
+                                        <i class="las la-shapes"></i>
                                     </a>
                                 @endcan
                                 <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
