@@ -6,7 +6,7 @@
             <div class="card-header">
                 <h6 class="mb-0 fw-600">{{ translate('Landing Pages') }}</h6>
                 <div>
-                    <a href="{{ route('landing-pages.builder.create') }}"
+                    <a href="{{ route('landing-pages.create') }}"
                         class="btn btn-circle btn-info">{{ translate('Add Landing Page By Builder') }}</a>
                 </div>
             </div>
@@ -37,17 +37,10 @@
                                     <i class="las la-eye"></i>
                                 </a>
                                 @can('edit_website_page')
-                                    @if ($page->type == 'builder')
-                                        <a href="{{ route('landing-pages.builder.index', ['code' => $page->slug]) }}"
-                                            class="btn btn-icon btn-circle btn-sm btn-soft-success" title="Edit">
-                                            <i class="las la-pen"></i>
-                                        </a>
-                                    @else
-                                        <a href="{{ route('landing-pages.edit', ['id' => $page->slug]) }}"
-                                            class="btn btn-icon btn-circle btn-sm btn-soft-success" title="Edit">
-                                            <i class="las la-pen"></i>
-                                        </a>
-                                    @endif
+                                    <a href="{{ route('landing-pages.builder.edit', ['code' => $page->slug]) }}"
+                                        class="btn btn-icon btn-circle btn-sm btn-soft-success" title="Edit">
+                                        <i class="las la-pen"></i>
+                                    </a>
                                 @endcan
                                 <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
                                     data-href="{{ route('landing-pages.delete', $page->id) }} "

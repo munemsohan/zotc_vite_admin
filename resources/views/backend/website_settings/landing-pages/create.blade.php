@@ -55,12 +55,21 @@
                             <label class="col-sm-2 col-from-label" for="name">{{ translate('Product') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                <select name="product_id[]" class="form-control aiz-selectpicker" data-live-search="true"
-                                    multiple>
+                                <select name="product_id[]" id="product_select" class="form-control aiz-selectpicker"
+                                    data-live-search="true" multiple required>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-from-label" for="end_time">{{ translate('End Date') }} <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-10">
+                                <input type="datetime-local" class="form-control" name="end_time"
+                                    placeholder="{{ translate('Select Date and Time') }}">
                             </div>
                         </div>
                     </div>
@@ -72,13 +81,21 @@
                                 <div class="input-group d-block d-md-flex">
                                     <div class="input-group-prepend ">
                                         <span
-                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ route('home') }}/</span>
+                                            class="input-group-text text-sm flex-grow-1 py-0 px-2">{{ str_replace('admin/', '', url('landing')) }}</span>
                                     </div>
                                     <input type="text" class="form-control w-100 w-md-auto"
                                         placeholder="{{ translate('Slug') }}" name="slug" id="slug" required>
                                 </div>
                                 <small
                                     class="form-text text-muted">{{ translate('Use character, number, hypen only') }}</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-from-label" for="name">
+                                {{ translate('Selected Products') }}
+                            </label>
+                            <div class="col-sm-10">
+                                <ul class="list-group" id="selected_product_list"></ul>
                             </div>
                         </div>
                     </div>
@@ -144,7 +161,8 @@
                                     </tbody>
                                 </table>
                                 <div class="col-md-12 text-center">
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addNewShipping()">Add New
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addNewShipping()">Add
+                                        New
                                         +</button>
                                 </div>
                             </div>
@@ -162,7 +180,21 @@
                     </div>
                     <div class="col-md-12">
                         <div class="row" id="pageContainer">
-                            @for ($i = 1; $i <= 4; $i++)
+                            <div class="col-6 col-md-3">
+                                <label class="aiz-megabox d-block mb-3">
+                                    <input value="0" class="online_payment" type="radio" name="page_content">
+                                    <span class="d-block aiz-megabox-elem p-1">
+                                        <div class="screen mb-2">
+                                            <img src="{{ static_asset('assets/img/placeholderx200.webp') }}"
+                                                class="img-fluid">
+                                        </div>
+                                        <span class="d-block text-center">
+                                            <span class="d-block fw-600 fs-15">Empty Page</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            @for ($i = 1; $i <= 3; $i++)
                                 <div class="col-6 col-md-3">
                                     <label class="aiz-megabox d-block mb-3">
                                         <input value="{{ $i }}" class="online_payment" type="radio"
@@ -180,12 +212,12 @@
                                 </div>
                             @endfor
                         </div>
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-sm btn-success" id="seeMoreLink">See More</button>
                         </div>
                     </div>
 
-                    <div class="col-md-12 text-center mb-2">
+                    <div class="col-md-12 text-right mt-5 mb-2">
                         <button type="submit" class="btn btn-primary">{{ translate('Import Page') }}</button>
                     </div>
                 </div>
@@ -196,37 +228,90 @@
 @section('script')
     <script type="text/javascript">
         var currentPage = 4;
-        var pagesToShow = 4;
+        var pagesToShow = 3;
 
         $('#seeMoreLink').on('click', function() {
             loadMorePages();
         });
 
         function loadMorePages() {
-            var pageContainer = $('#pageContainer');
-            for (var i = currentPage + 1; i <= currentPage + pagesToShow; i++) {
-                var pageHtml = `
-                    <div class="col-6 col-md-3">
-                        <label class="aiz-megabox d-block mb-3">
-                            <input value="${i}" class="online_payment" type="radio" name="page_content">
-                            <span class="d-block aiz-megabox-elem p-1">
-                                <div class="screen mb-2">
-                                <img src="{{ static_asset('landing-pages/screenshots/${i}.webp') }}" class="img-fluid mb-2">
-                                </div>
-                                <span class="d-block text-center">
-                                    <span class="d-block fw-600 fs-15">Landing Page ${i}</span>
-                                </span>
-                            </span>
-                        </label>
-                    </div>`;
-                pageContainer.append(pageHtml);
+            const pageContainer = $('#pageContainer');
+            const maxPages = 15;
+            let html = '';
 
-                if (i == 65) {
-                    $('#seeMoreLink').hide();
+            for (let i = currentPage; i <= Math.min(currentPage + pagesToShow, maxPages); i++) {
+                html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="${i}" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/${i}.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page ${i}</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+
+                if (i === 15) {
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="24" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/24.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 24</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="25" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/25.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 25</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
+                    html += `
+            <div class="col-6 col-md-3">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="36" class="online_payment" type="radio" name="page_content">
+                <span class="d-block aiz-megabox-elem p-1">
+                <div class="screen mb-2">
+                    <img src="{{ static_asset('landing-pages/screenshots/36.webp') }}" class="img-fluid mb-2">
+                </div>
+                <span class="d-block text-center">
+                    <span class="d-block fw-600 fs-15">Landing Page 36</span>
+                </span>
+                </span>
+            </label>
+            </div>`;
                     break;
                 }
             }
-            currentPage += pagesToShow;
+
+            // Append the entire HTML at once for better performance
+            pageContainer.append(html);
+
+            // Check if maxPages reached, then hide the "See More" link
+            if (currentPage + pagesToShow >= maxPages) {
+                $('#seeMoreLink').hide();
+            }
+
+            // Update currentPage for the next call
+            currentPage += pagesToShow + 1;
         }
 
         function loadSearchPage() {
@@ -256,6 +341,27 @@
                 $('#custom_shipping_div').show();
             } else {
                 $('#custom_shipping_div').hide();
+            }
+        });
+
+        $('#product_select').on('change', function() {
+            var selectedProducts = $('#product_select option:selected');
+            var productList = $('#selected_product_list');
+            productList.empty();
+
+            if (selectedProducts.length > 0) {
+                selectedProducts.each(function() {
+                    var productId = $(this).val();
+                    var productName = $(this).text();
+
+                    var listItem = `
+                <li class="list-group-item d-flex justify-content-start align-items-center">
+                    <input type="checkbox" name="is_selected[]" value="${productId}" checked>
+                    <label class="ml-2">${productName}</label>
+                </li>
+            `;
+                    productList.append(listItem);
+                });
             }
         });
 

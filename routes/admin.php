@@ -386,14 +386,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+
             Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::post('/update', 'update')->name('update');
+
             Route::get('/delete/{id}', 'delete')->name('delete');
 
             Route::prefix('builder')->name('builder.')->group(function () {
-                Route::get('/code/{code}', 'builder')->name('index');
-                Route::get('create', 'builderCreate')->name('create');
-                Route::post('/store', 'builderStore')->name('store');
-
+                Route::get('/edit/{code}', 'builder')->name('edit');
                 Route::post('update', 'builderUpdate')->name('update');
                 Route::get('load/{code}', 'builderLoad')->name('load');
                 Route::post('uploadimage', 'builderUploadImage')->name('uploadimage');

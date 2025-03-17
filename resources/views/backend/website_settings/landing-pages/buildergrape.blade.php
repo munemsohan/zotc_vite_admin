@@ -70,15 +70,15 @@
         </div>
     </div>
     <div class="btn-page-group">
-        <a href="{{ route('landing-pages.builder.index', ['code' => $page->code]) }}" class="btn btn-light"
+        <a href="{{ route('landing-pages.index', ['code' => $page->code]) }}" class="btn btn-light"
             id="btn-main-page">{{ $page->name }}</a>
     </div>
     <div id="gjs">
     </div>
 
     <script type="text/javascript">
-        var csrfName = '{{ csrf_token() }}'; // Correct use of CSRF token
-        var csrfHash = ''; // Correctly noted that Laravel does not use a CSRF hash like CodeIgniter
+        var csrfName = '{{ csrf_token() }}';
+        var csrfHash = '';
         var urlStore = '{{ route('landing-pages.builder.update', ['code' => $page->code]) }}';
         var urlLoad = '{{ route('landing-pages.builder.load', ['code' => $page->code]) }}';
         var upload_Image = '{{ route('landing-pages.builder.uploadimage') }}';
@@ -89,9 +89,9 @@
         var page_url = "{{ route('landing-pages.show_landing_page', ['slug' => $page->code]) }}";
         var blockscss = '{{ route('landing-pages.builder.getblockscss') }}';
         var images_url = JSON.parse(JSON.stringify(
-            <?php echo $images_url; ?>)); // Ensure this variable is correctly defined and passed to the view
+            <?php echo $images_url; ?>));
         var blocks = JSON.parse(JSON.stringify(
-            <?php echo $blocks; ?>)); // Ensure this variable is correctly defined and passed to the view
+            <?php echo $blocks; ?>));
     </script>
 
     <script src="{{ url('public/modules/zillapage/assets/landingpage/js/customize-builder.js') }}"></script>
