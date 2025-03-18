@@ -33,7 +33,7 @@
                             <td class="text-right">
                                 <a href="{{ str_replace('admin/', '', url('landing/' . $page->slug)) }}" target="_blank"
                                     class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                    title="{{ translate('Delete') }}">
+                                    title="{{ translate('View') }}">
                                     <i class="las la-eye"></i>
                                 </a>
                                 @can('edit_website_page')
