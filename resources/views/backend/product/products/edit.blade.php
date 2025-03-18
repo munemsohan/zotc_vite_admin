@@ -199,7 +199,7 @@
                     <!-- Save Button -->
                     <div class="my-4">
                         <button type="button" id="advance_button"
-                            class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('advanced_menu') }}</button>
+                            class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('Advanced Menu') }}</button>
                     </div>
 
                     <div id="advance_div" style="display: none">
