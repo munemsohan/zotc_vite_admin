@@ -10,16 +10,8 @@ class ProductUtility
     public static function get_attribute_options($collection)
     {
         $options = array();
-        // $colors_active = 0;
 
-        if (
-            isset($collection['colors_active']) &&
-            $collection['colors_active'] &&
-            isset($collection['colors']) &&
-            is_array($collection['colors']) &&
-            count($collection['colors']) > 0
-        ) {
-            // $colors_active = 1;
+        if (isset($collection['colors']) && is_array($collection['colors']) && count($collection['colors']) > 0) {
             $options[] = $collection['colors'];
         }
 
@@ -52,11 +44,9 @@ class ProductUtility
             if ($key > 0) {
                 $str .= '-' . str_replace(' ', '', $item);
             } else {
-                if (isset($collection['colors_active']) && $collection['colors_active'] && $collection['colors'] && count($collection['colors']) > 0) {
+                if ($collection['colors'] && count($collection['colors']) > 0) {
                     $color_name = Color::where('code', $item)->first()->name;
                     $str .= $color_name;
-                } else {
-                    $str .= str_replace(' ', '', $item);
                 }
             }
         }

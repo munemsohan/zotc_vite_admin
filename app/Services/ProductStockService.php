@@ -33,7 +33,7 @@ class ProductStockService
                 $product_stock->save();
             }
         } else {
-            unset($collection['colors_active'], $collection['colors'], $collection['choice_no']);
+            unset($collection['colors'], $collection['choice_no']);
             $qty = $collection['current_stock'];
             $price = $collection['unit_price'];
             unset($collection['current_stock']);

@@ -185,7 +185,7 @@
                     <!-- Save Button -->
                     <div class="my-4">
                         <button type="button" id="advance_button"
-                            class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('advanced_menu') }}</button>
+                            class="mx-2 btn btn-primary w-230px btn-md rounded-2 fs-14 fw-700 shadow-primary action-btn">{{ translate('Advanced Menu') }}</button>
                     </div>
 
                     <div id="advance_div" style="display: none">
@@ -394,20 +394,14 @@
                                         </div>
                                         <!-- Colors -->
                                         <div class="form-group row gutters-5">
-                                            <div class="col-md-1">
-                                                <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input value="1" type="checkbox" name="colors_active">
-                                                    <span></span>
-                                                </label>
-                                            </div>
                                             <div class="col-md-3">
                                                 <input type="text" class="form-control"
                                                     value="{{ translate('Colors') }}" disabled>
                                             </div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-9">
                                                 <select class="form-control aiz-selectpicker" data-live-search="true"
                                                     data-selected-text-format="count" name="colors[]" id="colors"
-                                                    multiple disabled>
+                                                    multiple>
                                                     @foreach (\App\Models\Color::orderBy('name', 'asc')->get() as $key => $color)
                                                         <option value="{{ $color->code }}"
                                                             data-content="<span><span class='size-15px d-inline-block mr-2 rounded border' style='background:{{ $color->code }}'></span><span>{{ $color->name }}</span></span>">
@@ -417,7 +411,7 @@
                                             </div>
                                         </div>
                                         <!-- Attributes -->
-                                        <div class="form-group row gutters-5">
+                                        {{-- <div class="form-group row gutters-5">
                                             <div class="col-md-3">
                                                 <input type="text" class="form-control"
                                                     value="{{ translate('Attributes') }}" disabled>
@@ -433,10 +427,40 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- choice options -->
-                                        <div class="customer_choice_options mb-4" id="customer_choice_options"></div>
+                                        <div class="customer_choice_options mb-4" id="customer_choice_options">
+                                            @foreach (\App\Models\Attribute::all() as $key => $attribute)
+                                                <div class="form-group row gutters-5">
+                                                    <div class="col-md-3">
+                                                        <input type="hidden" name="choice_no[]"
+                                                            value="{{ $attribute->id }}">
+                                                        <input type="text" class="form-control" name="choice[]"
+                                                            value="{{ $attribute->getTranslation('name') }}"
+                                                            placeholder="{{ translate('Choice Title') }}" readonly>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select class="form-control aiz-selectpicker attribute_choice"
+                                                            data-live-search="true"
+                                                            name="choice_options_{{ $attribute->id }}[]"
+                                                            data-selected-text-format="count" multiple>
+                                                            @php
+                                                                $all_attribute_values = \App\Models\AttributeValue::with(
+                                                                    'attribute',
+                                                                )
+                                                                    ->where('attribute_id', $attribute->id)
+                                                                    ->get();
+                                                            @endphp
+                                                            @foreach ($all_attribute_values as $row)
+                                                                <option value="{{ $row->value }}">{{ $row->value }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
 
                                         <!-- sku combination -->
                                         <div class="sku_combination" id="sku_combination"></div>
@@ -976,7 +1000,6 @@
             handleFormSubmission();
             handleShippingTypeChange();
             handleMinimumPayCheckboxes();
-            handleChoiceAttributesChange();
             initializeSkuUpdateEvents();
             initializeFqBroughtProductSelectionType();
             handleTabHashChange();
@@ -1050,53 +1073,8 @@
             }).change();
         }
 
-        function add_more_customer_choice_option(i, name) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: "POST",
-                url: '{{ route('products.add-more-choice-option') }}',
-                data: {
-                    attribute_id: i
-                },
-                success: function(data) {
-                    var obj = JSON.parse(data);
-                    $('#customer_choice_options').append(
-                        `<div class="form-group row gutters-5">
-                            <div class="col-md-3">
-                                <input type="hidden" name="choice_no[]" value="${i}">
-                                <input type="text" class="form-control" name="choice[]" value="${name}" placeholder="{{ translate('Choice Title') }}" readonly>
-                            </div>
-                            <div class="col-md-9">
-                                <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_${i}[]" data-selected-text-format="count" multiple>
-                                    ${obj}
-                                </select>
-                            </div>
-                        </div>`
-                    );
-                    AIZ.plugins.bootstrapSelect('refresh');
-                }
-            });
-        }
-
-        function handleChoiceAttributesChange() {
-            $('#choice_attributes').on('change', function() {
-                $('#customer_choice_options').html(null);
-                $("#choice_attributes option:selected").each(function() {
-                    add_more_customer_choice_option($(this).val(), $(this).text());
-                });
-                update_sku();
-            });
-        }
-
         function initializeSkuUpdateEvents() {
             $(document).on("change", ".attribute_choice", update_sku);
-            $('input[name="colors_active"]').on('change', function() {
-                $('#colors').prop('disabled', !this.checked);
-                AIZ.plugins.bootstrapSelect('refresh');
-                update_sku();
-            });
             $('#colors').on('change', update_sku);
             $('input[name="unit_price"], input[name="name"]').on('keyup', update_sku);
         }

@@ -72,13 +72,7 @@ class ProductService
         $slug .= $slug_suffix;
 
         $colors = json_encode(array());
-        if (
-            isset($collection['colors_active']) &&
-            $collection['colors_active'] &&
-            isset($collection['colors']) &&
-            is_array($collection['colors']) &&
-            count($collection['colors']) > 0
-        ) {
+        if (isset($collection['colors']) && is_array($collection['colors']) && count($collection['colors']) > 0) {
             $colors = json_encode($collection['colors']);
         }
 
@@ -97,7 +91,6 @@ class ProductService
             }
         }
 
-        unset($collection['colors_active']);
 
         $choice_options = array();
         if (isset($collection['choice_no']) && $collection['choice_no']) {
@@ -225,13 +218,7 @@ class ProductService
         unset($collection['flat_shipping_cost']);
 
         $colors = json_encode(array());
-        if (
-            isset($collection['colors_active']) &&
-            $collection['colors_active'] &&
-            isset($collection['colors']) &&
-            is_array($collection['colors']) &&
-            count($collection['colors']) > 0
-        ) {
+        if (isset($collection['colors']) && is_array($collection['colors']) && count($collection['colors']) > 0) {
             $colors = json_encode($collection['colors']);
         }
 
@@ -249,8 +236,6 @@ class ProductService
                 unset($collection['img_' . str_replace('.', '_', $str)]);
             }
         }
-
-        unset($collection['colors_active']);
 
         $choice_options = array();
         if (isset($collection['choice_no']) && $collection['choice_no']) {

@@ -423,20 +423,11 @@
                                         </div>
                                         <!-- Colors -->
                                         <div class="form-group row gutters-5">
-                                            <div class="col-md-1">
-                                                <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input value="1" type="checkbox" name="colors_active"
-                                                        <?php if (count(json_decode($product->colors)) > 0) {
-                                                            echo 'checked';
-                                                        } ?>>
-                                                    <span></span>
-                                                </label>
-                                            </div>
                                             <div class="col-md-3">
                                                 <input type="text" class="form-control"
                                                     value="{{ translate('Colors') }}" disabled>
                                             </div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-9">
                                                 <select class="form-control aiz-selectpicker" data-live-search="true"
                                                     data-selected-text-format="count" name="colors[]" id="colors"
                                                     multiple>
@@ -1290,11 +1281,6 @@
 
             $(document).on("change", ".attribute_choice, #colors", update_sku);
 
-            $('input[name="colors_active"]').on('change', function() {
-                $('#colors').prop('disabled', !this.checked);
-                AIZ.plugins.bootstrapSelect('refresh');
-                update_sku();
-            });
             $('input[name="unit_price"], input[name="name"]').on('keyup', update_sku);
 
             AIZ.plugins.tagify();
@@ -1306,7 +1292,7 @@
                 url: '{{ route('products.sku_combination_edit') }}',
                 data: $('#choice_form').serialize(),
                 success: function(data) {
-                    console.log('Success:', data); // Log response data
+                    console.log('Success:', data);
                     $('#sku_combination').html(data);
                     setTimeout(() => {
                         AIZ.uploader.previewGenerate();

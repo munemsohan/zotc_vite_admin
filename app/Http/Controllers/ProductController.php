@@ -330,7 +330,6 @@ class ProductController extends Controller
 
         //Product Stock
         $this->productStockService->store($request->only([
-            'colors_active',
             'colors',
             'choice_no',
             'unit_price',
@@ -388,7 +387,6 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
 
-        // dd($product);
         if ($product->digital == 1) {
             return redirect('admin/digitalproducts/' . $id . '/edit');
         }
@@ -567,7 +565,6 @@ class ProductController extends Controller
         //Product Stock
         $product->stocks()->delete();
         $this->productStockService->store($request->only([
-            'colors_active',
             'colors',
             'choice_no',
             'unit_price',
@@ -801,11 +798,8 @@ class ProductController extends Controller
     public function sku_combination(Request $request)
     {
         $options = array();
-        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-            $colors_active = 1;
+        if ($request->has('colors') && count($request->colors) > 0) {
             array_push($options, $request->colors);
-        } else {
-            $colors_active = 0;
         }
 
         $unit_price = $request->unit_price;
@@ -827,7 +821,7 @@ class ProductController extends Controller
         }
 
         $combinations = (new CombinationService())->generate_combination($options);
-        return view('backend.product.products.sku_combinations', compact('combinations', 'unit_price', 'colors_active', 'product_name'));
+        return view('backend.product.products.sku_combinations', compact('combinations', 'unit_price', 'product_name'));
     }
 
     public function sku_combination_edit(Request $request)
@@ -835,11 +829,11 @@ class ProductController extends Controller
         $product = Product::findOrFail($request->id);
 
         $options = array();
-        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+        $colors_active = 0;
+
+        if ($request->has('colors') && count($request->colors) > 0) {
             $colors_active = 1;
             array_push($options, $request->colors);
-        } else {
-            $colors_active = 0;
         }
 
         $product_name = $request->name;
