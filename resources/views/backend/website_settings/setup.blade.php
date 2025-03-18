@@ -352,6 +352,25 @@
 
     {{-- cart settings --}}
     <script type="text/javascript">
+        function updateBusinessSettings(el, type) {
+            if ($(el).is(':checked')) {
+                var value = 1;
+            } else {
+                var value = 0;
+            }
+            $.post('{{ route('business.settings.update') }}', {
+                _token: '{{ csrf_token() }}',
+                type: type,
+                value: value
+            }, function(data) {
+                if (data == 1) {
+                    AIZ.plugins.notify('success', '{{ translate('Business Settings updated successfully') }}');
+                } else {
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+
         function updateCartSettings(el, type) {
             if ($(el).is(':checked')) {
                 var value = 1;

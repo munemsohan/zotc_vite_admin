@@ -141,5 +141,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="row border-top mt-2">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between p-2">
+                    <h5 class="mb-0 h6 text-center text-">{{ translate('Checkout Drawer') }}</h5>
+
+                    <label class="aiz-switch aiz-switch-success mb-0">
+                        <input type="checkbox" onchange="updateBusinessSettings(this, 'checkout_drawer')"
+                            {{ get_business_setting('checkout_drawer') == 1 ? 'checked' : '' }}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

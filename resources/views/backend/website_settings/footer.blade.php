@@ -24,8 +24,8 @@
 
                     <!-- Select Footer -->
                     <div class="form-group row">
-                        <label class="col-md-2 col-from-label mt-2">{{ translate('Select Footer') }}</label>
-                        <div class="col-md-7">
+                        <label class="col-md-4 col-from-label mt-2">{{ translate('Select Footer') }}</label>
+                        <div class="col-md-5">
                             <input type="hidden" name="types[]" value="homepage_footer">
                             <select class="form-control aiz-selectpicker" name="homepage_footer">
                                 <option value="footer"
@@ -42,6 +42,18 @@
                             <!-- Update Button -->
                             <button type="submit"
                                 class="btn btn-success btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navbar -->
+                    <div class="form-group row">
+                        <label class="col-md-4 col-from-label mt-2">{{ translate('Bottom Navbar') }} <br> (Mobile & Tab Screen)</label>
+                        <div class="col-md-5">
+                            <label class="aiz-switch aiz-switch-success mb-0">
+                                <input type="checkbox" onchange="updateBusinessSettings(this, 'bottom_navbar')"
+                                    {{ get_business_setting('bottom_navbar') == 1 ? 'checked' : '' }}>
+                                <span class="slider round"></span>
+                            </label>
                         </div>
                     </div>
 

@@ -595,6 +595,26 @@ class BusinessSettingsController extends Controller
         }
     }
 
+    public function businessSettingsUpdate(Request $request)
+    {
+        $type = $request->type;
+        $value = $request->value;
+
+        $business_settings = BusinessSetting::where('type', $type)->first();
+
+        if ($business_settings) {
+            $business_settings->value = $value;
+            $business_settings->save();
+        } else {
+            $business_settings = new BusinessSetting();
+            $business_settings->type = $type;
+            $business_settings->value = $value;
+            $business_settings->save();
+        }
+
+        return true;
+    }
+
     public function update(Request $request)
     {
         foreach ($request->types as $key => $type) {

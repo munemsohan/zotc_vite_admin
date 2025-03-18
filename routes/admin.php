@@ -263,6 +263,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     // Business Settings
     Route::controller(BusinessSettingsController::class)->group(function () {
         Route::post('/business-settings/update', 'update')->name('business_settings.update');
+        Route::post('/business-settings-update', 'businessSettingsUpdate')->name('business.settings.update');
+
         Route::post('/business-settings/update/activation', 'updateActivationSettings')->name('business_settings.update.activation');
         Route::post('/business-settings/update/checkbox', 'updateCheckboxSettings')->name('business_settings.update.checkbox');
         Route::post('/business-settings/cart/custom_field/update', 'updateCartCustom')->name('business_settings.cart.custom_field.update');
