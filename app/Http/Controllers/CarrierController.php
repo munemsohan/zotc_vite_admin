@@ -6,6 +6,7 @@ use App\Http\Requests\CarrierRequest;
 use App\Models\Carrier;
 use App\Models\CarrierRange;
 use App\Models\CarrierRangePrice;
+use App\Models\Order;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 
@@ -182,5 +183,58 @@ class CarrierController extends Controller
             return 1;
         }
         return 0;
+    }
+
+    public function pathaoStatusUpdateByWebHook(Request $request)
+    {
+        // Set the secret value directly
+        $pathaoSecret = 'f3992ecc-59da-4cbe-a049-a13da2018d51';
+
+        // Retrieve the secret from the database (or settings) using get_zotc_setting
+        $webhookId = get_zotc_setting('webhook_id');
+
+        // Validate if the signature matches the stored secret
+        $signature = $request->header('X-PATHAO-Signature');
+        if ($signature !== $webhookId) {
+            // Return 401 if the signature does not match
+            return response('Unauthorized', 401)
+                ->header('X-Pathao-Merchant-Webhook-Integration-Secret', $pathaoSecret);
+        }
+
+        // Validate event type
+        if ($request->event == 'webhook_integration') {
+            // Return success response for webhook_integration event
+            return response('Webhook integration successful', 202)
+                ->header('X-Pathao-Merchant-Webhook-Integration-Secret', $pathaoSecret);
+        }
+
+        // Handle other events, assuming status update is needed based on the event
+        if ($request->has('consignment_id') && $request->has('event')) {
+            // Extract status from the event name if needed (e.g., 'order.delivered')
+            $event = explode('.', $request->event);
+            $status = $event[1] ?? null;
+
+            // Proceed to update the order if a valid consignment_id and status are found
+            if ($status && $request->has('consignment_id')) {
+                // Update the order status using consignment_id
+                Order::where('tracking_code', $request->consignment_id)
+                    ->update(['delivery_status' => $status]);
+            }
+
+            // Return success response for other events
+            return response('Webhook integration successful', 202)
+                ->header('X-Pathao-Merchant-Webhook-Integration-Secret', $pathaoSecret);
+        }
+
+        // Return 401 if the event is not valid or missing required data
+        return response('Webhook integration not successful', 401)
+            ->header('X-Pathao-Merchant-Webhook-Integration-Secret', $pathaoSecret);
+    }
+
+
+    public function steadfastStatusUpdateByWebHook(Request $request)
+    {
+        Order::where('tracking_code', $request->consignment_id)
+            ->update(['delivery_status' => $request->status]);
     }
 }

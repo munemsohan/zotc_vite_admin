@@ -73,8 +73,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-from-label" for="end_time">{{ translate('End Date') }} <span
-                                    class="text-danger">*</span></label>
+                            <label class="col-sm-2 col-from-label" for="end_time">{{ translate('End Date') }}</label>
                             <div class="col-sm-10">
                                 <input type="datetime-local" class="form-control" name="end_time"
                                     value="{{ $landingPage->end_time ? \Carbon\Carbon::parse($landingPage->end_time)->format('Y-m-d\TH:i') : '' }}">

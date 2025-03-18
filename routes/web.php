@@ -5,6 +5,7 @@ use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
@@ -120,7 +121,7 @@ Route::controller(HomeController::class)->group(function () {
 
     //Home Page
     Route::get('/', 'index')->name('home');
-    
+
     //domain buy success
     Route::get('domainBuySuccess',  'domainBuySuccess')->name('domain.buy.success');
 
@@ -142,12 +143,6 @@ Route::controller(HomeController::class)->group(function () {
     //landing buy
     Route::post('landingBuyNotify',  'landingBuyNotify')->name('landing.buy.notify');
     Route::get('landingBuySuccess',  'landingBuySuccess')->name('landing.buy.success');
-
-    //pathao
-    Route::post('pathao/status-update', 'pathaoStatusUpdateByWebHook')->name('pathao.status.update');
-
-    //steadfast
-    Route::post('steadfast/status-update', 'steadfastStatusUpdateByWebHook')->name('steadfast.status.update');
 
     //Khudrobarta Balance
     Route::get('check-balance/khudrobarta/{api_key}', 'checkBalanceKhudrobarta')->name('check.balance.khudrobarta');
@@ -246,6 +241,12 @@ Route::controller(CartController::class)->group(function () {
     Route::get('updateCustomShippingCost/{cost}', 'updateCustomShippingCost')->name('cart.updateCustomShippingCost');
     Route::get('updateStateShippingCost/{state_id}', 'updateStateShippingCost')->name('cart.updateStateShippingCost');
     Route::get('updateCityShippingCost/{city_id}', 'updateCityShippingCost')->name('cart.updateCityShippingCost');
+});
+
+//courier webhook status update
+Route::controller(CarrierController::class)->group(function () {
+    Route::post('pathao/status-update', 'pathaoStatusUpdateByWebHook')->name('pathao.status.update');
+    Route::post('steadfast/status-update', 'steadfastStatusUpdateByWebHook')->name('steadfast.status.update');
 });
 
 //Paypal START

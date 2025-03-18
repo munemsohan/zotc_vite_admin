@@ -85,7 +85,78 @@
                             @endforeach
                         @endif
 
-                        <div class="form-group row">
+                        @if ($carrier->id == 1)
+                            <div class="row border p-2">
+                                <label class="col-md-2 col-from-label">{{ translate('Insert These in this URL:') }}
+                                    <a href="https://merchant.pathao.com/courier/developer-api" target="_blank">
+                                        https://merchant.pathao.com/courier/developer-api
+                                    </a>
+                                </label>
+
+                                <!-- Status Update URL -->
+                                <div class="col-md-5 form-group d-flex align-items-center mt-2">
+                                    <input type="text" id="statusUpdateUrl" value="{{ url('pathao/status-update') }}"
+                                        class="form-control w-full" readonly>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                        onclick="copyToClipboard('statusUpdateUrl')">
+                                        <i class="la la-copy"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Webhook ID -->
+                                <div class="col-md-2 form-group d-flex align-items-center mt-2 ml-3">
+                                    <input type="text" id="webhookId" value="{{ get_zotc_setting('webhook_id') }}"
+                                        class="form-control w-full" readonly>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                        onclick="copyToClipboard('webhookId')">
+                                        <i class="la la-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($carrier->id == 2)
+                            <div class="row border p-2">
+                                <label class="col-md-2 col-from-label">{{ translate('Insert These in this URL:') }}
+                                    <a href="https://steadfast.com.bd/user/webhook/add" target="_blank">
+                                        https://steadfast.com.bd/user/webhook/add
+                                    </a>
+                                </label>
+
+                                <!-- Status Update URL -->
+                                <div class="col-md-5 form-group d-flex align-items-center mt-2">
+                                    <input type="text" id="statusUpdateUrl" value="{{ url('steadfast/status-update') }}"
+                                        class="form-control w-full" readonly>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                        onclick="copyToClipboard('statusUpdateUrl')">
+                                        <i class="la la-copy"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Webhook ID -->
+                                <div class="col-md-2 form-group d-flex align-items-center mt-2 ml-3">
+                                    <input type="text" id="webhookId" value="{{ get_zotc_setting('webhook_id') }}"
+                                        class="form-control w-full" readonly>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                        onclick="copyToClipboard('webhookId')">
+                                        <i class="la la-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+
+                        <script>
+                            function copyToClipboard(elementId) {
+                                var copyText = $('#' + elementId);
+                                copyText.select();
+                                copyText[0].setSelectionRange(0, 99999);
+                                document.execCommand("copy");
+
+                                alert("Copied to clipboard: " + copyText.val());
+                            }
+                        </script>
+
+                        <div class="form-group row mt-2">
                             <label class="col-md-2 col-from-label">{{ translate('Free Shipping') }} ? </label>
                             <div class="col-md-9">
                                 <label class="aiz-switch aiz-switch-success mb-0">
@@ -314,53 +385,47 @@
             // console.log(tdlenght);
 
 
-            // last td input 
+            // last td input
             var first_lasttd = $("#price-range-table").find("tr:nth-child(1)").find("td:last").find("input").val();
             var second_lasttd = $("#price-range-table").find("tr:nth-child(2)").find("td:last").find("input").val();
 
             if ((second_lasttd == 0) || (second_lasttd == first_lasttd) ||
                 ((second_lasttd - first_lasttd) < 0)) {
                 alert('Please validate the last range before creating a new one.')
-            } else {
-                // clonning last tds
-                fnclone(tablebody, second_lasttd);
+            } else { //
+                clonning last tds fnclone(tablebody, second_lasttd);
             }
-
-        });
-
-        // last td remove
-        $(document).on("click", ".delete-range", function() {
+        }); // last td remove $(document).on("click", ".delete-range"
+        ,
+        function() {
             var iIndex = $(this).closest("td").prevAll("td").length;
             $(this).parents("#price-range-table").find("tr").each(function() {
                 $(this).find("td:eq(" + iIndex + ")").remove();
             });
+        }); // last td clone function function fnclone(tablebody, second_lasttd) {
+        tablebody.find("td:nth-last-child(1)").each(function() {
+            $(this).clone().find("input").val("").end()
+                .insertAfter(this);
         });
-
-
-        // last td clone function
-        function fnclone(tablebody, second_lasttd) {
-            tablebody.find("td:nth-last-child(1)").each(function() {
-                $(this).clone()
-                    .find("input").val("").end()
-                    .insertAfter(this);
-            });
-
-            $('#price-range-table tr:last td:last').html(
-                '<button type="button" id="disablebtn" class="btn btn-primary btn-sm delete-range">Delete</button>');
-
-            var first_lasttd = $("#price-range-table").find("tr:nth-child(1)").find("td:last").find("input");
-            first_lasttd.val(parseFloat(second_lasttd).toFixed(2));
+        $('#price-range-table tr:last
+            td: last ').html( ' < button type = "button"
+            id = "disablebtn"
+            class = "btn btn-primary btn-sm delete-range" > Delete < /button>'
+        );
+        var first_lasttd = $("#price-range-table").find("tr:nth-child(1)").find("td:last").find("input");
+        first_lasttd.val(parseFloat(second_lasttd).toFixed(2));
         }
-
         $("#carrier-submit-btn").click(function() {
-            var data = new FormData($('#carrier-form')[0]);
+            var data = new
+            FormData($('#carrier-form')[0]);
             if (!$('input[name=shipping_type]').prop('checked')) {
-                var delimiter1 = $('.delimiter1');
+                var
+                    delimiter1 = $('.delimiter1');
                 var delimiter2 = $('.delimiter2');
-
                 for (let i = 0; i < delimiter1.length; i++) {
                     if (delimiter1[i].value && delimiter2[i].value) {
-                        if (parseFloat(delimiter1[i].value) >= parseFloat(delimiter2[i].value)) {
+                        if (parseFloat(delimiter1[i].value) >=
+                            parseFloat(delimiter2[i].value)) {
                             alert('Please put the last range greater than first range.');
                             delimiter2[i].focus();
                             return false

@@ -920,7 +920,7 @@ class OrderController extends Controller
             $apiInfo = json_decode($pathao->api_info);
 
             // Check sandbox condition and whether required credentials are missing
-            if (($pathao->sandbox == 0 && (!$apiInfo->client_id || !$apiInfo->client_secret || !$apiInfo->username || !$apiInfo->password))) {
+            if (($pathao->sandbox == 0 && (!$apiInfo->client_id || !$apiInfo->client_secret || !$apiInfo->client_email || !$apiInfo->client_password))) {
                 return response()->json(['success' => false, 'message' => 'Pathao Api Info not set correctly']);
             }
 
@@ -929,7 +929,7 @@ class OrderController extends Controller
 
             // Determine base URL depending on sandbox mode
             $base_url = $pathao->sandbox
-                ? "https://courier-api-sandbox.pathao.com/"
+                ? "https://api-hermes.pathao.com/"
                 : "https://api-hermes.pathao.com/";
 
             // Set headers for all requests
@@ -1010,6 +1010,50 @@ class OrderController extends Controller
         }
     }
 
+    public function getPathaoToken($pathao)
+    {
+        $client = new Client();
+
+        if ($pathao->sandbox == 1) {
+            $baseUrl = "https://api-hermes.pathao.com/";
+            $requestData = [
+                'client_id' => '7N1aMJQbWm',
+                'client_secret' => 'wRcaibZkUdSNz2EI9ZyuXLlNrnAv0TdPUPXMnD39',
+                'username' => 'test@pathao.com',
+                'password' => 'lovePathao',
+                'grant_type' => 'password'
+            ];
+        } else {
+            $baseUrl = "https://api-hermes.pathao.com/";
+            $apiInfo = json_decode($pathao->api_info);
+            $requestData = [
+                'client_id' => $apiInfo->client_id,
+                'client_secret' => $apiInfo->client_secret,
+                'username' => $apiInfo->client_email,
+                'password' => $apiInfo->client_password,
+                'grant_type' => 'password'
+            ];
+        }
+
+        $endpoint = "aladdin/api/v1/issue-token";
+
+        try {
+            $response = $client->post($baseUrl . $endpoint, [
+                'json' => $requestData,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+
+            $responseData = json_decode($response->getBody(), true);
+            $accessToken = $responseData['access_token'];
+
+            return $accessToken;
+        } catch (RequestException $e) {
+            return $e->getMessage();
+        }
+    }
 
     protected function sendViaSteadfast(Order $order)
     {
@@ -1213,50 +1257,6 @@ class OrderController extends Controller
             $responseData = $response->json();
             // Handle response data
             var_dump($responseData);
-        }
-    }
-    public function getPathaoToken($pathao)
-    {
-        $client = new Client();
-
-        if ($pathao->sandbox == 1) {
-            $baseUrl = "https://courier-api-sandbox.pathao.com/";
-            $requestData = [
-                'client_id' => '7N1aMJQbWm',
-                'client_secret' => 'wRcaibZkUdSNz2EI9ZyuXLlNrnAv0TdPUPXMnD39',
-                'username' => 'test@pathao.com',
-                'password' => 'lovePathao',
-                'grant_type' => 'password'
-            ];
-        } else {
-            $baseUrl = "https://api-hermes.pathao.com/";
-            $apiInfo = json_decode($pathao->api_info);
-            $requestData = [
-                'client_id' => $apiInfo->client_id,
-                'client_secret' => $apiInfo->client_secret,
-                'username' => $apiInfo->username,
-                'password' => $apiInfo->password,
-                'grant_type' => 'password'
-            ];
-        }
-
-        $endpoint = "aladdin/api/v1/issue-token";
-
-        try {
-            $response = $client->post($baseUrl . $endpoint, [
-                'json' => $requestData,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ]
-            ]);
-
-            $responseData = json_decode($response->getBody(), true);
-            $accessToken = $responseData['access_token'];
-
-            return $accessToken;
-        } catch (RequestException $e) {
-            return $e->getMessage();
         }
     }
 

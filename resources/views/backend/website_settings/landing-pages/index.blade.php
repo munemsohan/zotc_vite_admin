@@ -43,7 +43,7 @@
                                     </a>
 
                                     <a href="{{ route('landing-pages.builder.edit', ['code' => $page->slug]) }}"
-                                        class="btn btn-icon btn-circle btn-sm btn-soft-warning" title="Edit">
+                                        class="btn btn-icon btn-circle btn-sm btn-soft-warning" title="Builder Edit">
                                         <i class="las la-shapes"></i>
                                     </a>
                                 @endcan

@@ -66,20 +66,6 @@ class HomeController extends Controller
         return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang'));
     }
 
-    public function pathaoStatusUpdateByWebHook(Request $request)
-    {
-        $order = Order::where('tracking_code', $request->consignment_id)->first();
-        $order->delivery_status  = $request->order_status_slug;
-        $order->save();
-    }
-
-    public function steadfastStatusUpdateByWebHook(Request $request)
-    {
-        $order = Order::where('tracking_code', $request->consignment_id)->first();
-        $order->delivery_status  = $request->status;
-        $order->save();
-    }
-
     public function checkCustomDomain($customDomain)
     {
         $customDomain = preg_replace('#^https?://(?:www\.)?#', '', $customDomain);

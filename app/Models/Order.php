@@ -6,6 +6,49 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = [
+        'delivery_status',
+        'combined_order_id',
+        'user_id',
+        'guest_id',
+        'seller_id',
+        'drop_shipper',
+        'city',
+        'zone',
+        'area',
+        'assign_delivery_boy',
+        'shipping_address',
+        'additional_info',
+        'shipping_type',
+        'order_from',
+        'pickup_point_id',
+        'carrier_id',
+        'payment_type',
+        'manual_payment',
+        'manual_payment_data',
+        'payment_status',
+        'payment_details',
+        'grand_total',
+        'partial_payments',
+        'coupon_discount',
+        'code',
+        'tracking_code',
+        'date',
+        'viewed',
+        'delivery_viewed',
+        'cancel_request',
+        'cancel_request_at',
+        'payment_status_viewed',
+        'commission_calculated',
+        'delivery_history_date',
+        'notified',
+        'editing',
+        'edited',
+        'fraud_status',
+        'track_url',
+        'status_history'
+    ];
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
