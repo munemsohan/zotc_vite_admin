@@ -379,7 +379,7 @@
 
 
     {{-- authenticate layout --}}
-    <div class="col-lg-6">
+    {{-- <div class="col-lg-6">
         @can('authentication_layout_settings')
             <div class="card shadow-none bg-light">
                 <div class="card-header">
@@ -468,10 +468,10 @@
                 </div>
             </div>
         @endcan
-    </div>
+    </div> --}}
 
     <!-- Cookies Agreement -->
-    <div class="col-lg-6">
+    {{-- <div class="col-lg-6">
         <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Cookies Agreement') }}</h6>
@@ -508,10 +508,10 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Website Popup -->
-    <div class="col-lg-6">
+    {{-- <div class="col-lg-6">
         <div class="card shadow-none bg-light">
             <div class="card-header">
                 <h6 class="fw-600 mb-0">{{ translate('Website Popup') }}</h6>
@@ -559,7 +559,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Product Default Description -->
     <div class="col-lg-6">
