@@ -165,15 +165,15 @@ class LandingPageController extends Controller
 
     protected function getDefaultShippingInfo($productIds)
     {
-        $defaultShippingType = get_setting('shipping_type');
+        $defaultShippingType = get_business_setting('shipping_type');
         if ($defaultShippingType == "product_wise_shipping") {
             $product = Product::findOrFail($productIds[0]);
             return ['shipping_cost' => $product->shipping_cost];
         } elseif ($defaultShippingType == "flat_rate") {
-            $flatShippingCost = get_setting('flat_rate_shipping_cost');
+            $flatShippingCost = get_business_setting('flat_rate_shipping_cost');
             return ['shipping_cost' => $flatShippingCost];
         } else {
-            $adminShippingCost = get_setting('shipping_cost_admin');
+            $adminShippingCost = get_business_setting('shipping_cost_admin');
             return ['shipping_cost' => $adminShippingCost];
         }
     }
