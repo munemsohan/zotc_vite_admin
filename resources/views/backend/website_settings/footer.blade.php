@@ -36,6 +36,10 @@
                                     {{ get_business_setting('homepage_footer') == 'footer2' ? 'selected' : '' }}>
                                     Footer 2
                                 </option>
+                                <option value="footer3"
+                                    {{ get_business_setting('homepage_footer') == 'footer3' ? 'selected' : '' }}>
+                                    Footer 3
+                                </option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -47,7 +51,8 @@
 
                     <!-- Bottom Navbar -->
                     <div class="form-group row">
-                        <label class="col-md-4 col-from-label mt-2">{{ translate('Bottom Navbar') }} <br> (Mobile & Tab Screen)</label>
+                        <label class="col-md-4 col-from-label mt-2">{{ translate('Bottom Navbar') }} <br> (Mobile & Tab
+                            Screen)</label>
                         <div class="col-md-5">
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input type="checkbox" onchange="updateBusinessSettings(this, 'bottom_navbar')"

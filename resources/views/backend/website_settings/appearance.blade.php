@@ -355,7 +355,7 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
                             <label class="aiz-megabox d-block mb-3">
                                 <input value="4" type="radio" name="product_card_type"
-                                    @if (get_business_setting('product_card_type') == null || get_business_setting('product_card_type') == '4') checked @endif>
+                                    @if (get_business_setting('product_card_type') == '4') checked @endif>
                                 <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
                                     <div class="h-220px w-100 overflow-hidden">
                                         <img src="{{ static_asset('assets/img/product_card/1.jpeg') }}"
