@@ -244,10 +244,6 @@
                             </label>
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
                                 <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Classic') }}</span>
-                                {{-- <span>
-                                    <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
-                                        onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                                </span> --}}
                             </div>
                         </div>
 
@@ -264,11 +260,24 @@
                                 </span>
                             </label>
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 1 - Modern') }}</span>
-                                {{-- <span>
-                                    <a href="javascript:void(0);" class="btn btn-xs btn-danger rounded-0"
-                                        onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
-                                </span> --}}
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 2 - Modern') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Minimal Classic -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="minimal" type="radio" name="theme"
+                                    @if (get_zotc_setting('theme') == 'minimal') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-350px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/pages/home-classic.png') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Homepage 3 - Minimal') }}</span>
                             </div>
                         </div>
                     </div>

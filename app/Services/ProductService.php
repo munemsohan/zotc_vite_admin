@@ -110,7 +110,10 @@ class ProductService
                 unset($collection[$str]);
 
                 $item['values'] = $attribute_data;
-                array_push($choice_options, $item);
+
+                if (count($item['values']) > 0) {
+                    array_push($choice_options, $item);
+                }
             }
         }
 
@@ -228,6 +231,9 @@ class ProductService
         $options = ProductUtility::get_attribute_options($collection);
 
         $combinations = (new CombinationService())->generate_combination($options);
+
+        // dd($combinations);
+
         if (count($combinations) > 0) {
             foreach ($combinations as $key => $combination) {
                 $str = ProductUtility::get_combination_string($combination, $collection);
@@ -246,23 +252,28 @@ class ProductService
             foreach ($collection['choice_no'] as $key => $no) {
                 $str = 'choice_options_' . $no;
                 $item['attribute_id'] = $no;
-                $attribute_data = array();
-                // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
+                $attribute_data = [];
+
                 if (isset($collection[$str]) && is_array($collection[$str])) {
-                    foreach ($collection[$str] as $key => $eachValue) {
-                        // Add each value to $attribute_data
-                        $attribute_data[] = $eachValue;
+                    foreach ($collection[$str] as $eachValue) {
+                        $attribute_data[] = $eachValue;  // Collecting attribute values.
                     }
                 } else {
-                    // Optional: Handle the case where the key is missing
-                    // Log an error or set a default value for $attribute_data
-                    $attribute_data = []; // Initialize as an empty array to avoid undefined variable issues
+                    $attribute_data = [];  // Initialize as an empty array to avoid undefined variable issues.
                 }
 
                 unset($collection[$str]);
 
                 $item['values'] = $attribute_data;
-                array_push($choice_options, $item);
+
+                if (count($item['values']) > 0) {
+                    array_push($choice_options, $item);
+                } else {
+                    $collection['choice_no'] = collect($collection['choice_no'])->filter(function ($value, $index) use ($no) {
+                        return $value !== $no;
+                    })->values();
+                    
+                }
             }
         }
 
