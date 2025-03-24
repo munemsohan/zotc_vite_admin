@@ -291,6 +291,125 @@
                 </form>
             </div>
         </div>
+
+        <!-- Product Details -->
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Product Card Type') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="types[]" value="product_card_type">
+                    <div class="row">
+                        <!-- Card 1 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="1" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == null || get_business_setting('product_card_type') == '1') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/1.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 1') }}</span>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="2" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == '2') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/2.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 2') }}</span>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="3" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == '3') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/3.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 3') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="4" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == null || get_business_setting('product_card_type') == '4') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/1.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 4') }}</span>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="5" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == '5') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/2.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 5') }}</span>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+                            <label class="aiz-megabox d-block mb-3">
+                                <input value="6" type="radio" name="product_card_type"
+                                    @if (get_business_setting('product_card_type') == '6') checked @endif>
+                                <span class="d-block aiz-megabox-elem rounded-0 img-overlay">
+                                    <div class="h-220px w-100 overflow-hidden">
+                                        <img src="{{ static_asset('assets/img/product_card/3.jpeg') }}"
+                                            class="w-100" alt="home-page">
+                                    </div>
+                                </span>
+                            </label>
+                            <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                <span class="fs-14 fw-500 text-dark">{{ translate('Card 6') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bg-light mt-5 mb-3">
+                        <div class="col-md-12 d-flex align-items-center justify-content-end">
+                            <!-- Update Button -->
+                            <button type="submit"
+                                class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-6">
