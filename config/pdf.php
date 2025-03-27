@@ -9,44 +9,44 @@ return
         'creator'               => 'Laravel Pdf',
         'display_mode'          => 'fullpage',
         'tempDir'               => base_path('temp/'),
-        'font_path' => base_path('public/assets/fonts/'),
+        'font_path'             => public_path('assets/fonts/'),
         'font_data' => [
             'roboto' => [
-                'R'  => 'Roboto-Regular.ttf',    // regular font
-                'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
-                'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                'R'  => 'Roboto-Regular.ttf',
+                'useOTL' => 0xFF,
+                'useKashida' => 75,
             ],
             'hindsiliguri' => [
-                'R'  => 'HindSiliguri-Regular.ttf',    // regular font
-                'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
-                'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                'R'  => 'HindSiliguri-Regular.ttf',
+                'useOTL' => 0xFF,
+                'useKashida' => 75,
             ],
             'arnamu' => [
-                'R'  => 'arnamu.ttf',    // regular font
-                'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
-                'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                'R'  => 'arnamu.ttf',
+                'useOTL' => 0xFF,
+                'useKashida' => 75,
             ],
             'varelaround' => [
-                'R'  => 'VarelaRound-Regular.ttf',    // regular font
-                'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
-                'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                'R'  => 'VarelaRound-Regular.ttf',
+                'useOTL' => 0xFF,
+                'useKashida' => 75,
             ],
             'hanuman' => [
-                'R'  => 'Hanuman-Regular.ttf',    // regular font
-                'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
-                'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                'R'  => 'Hanuman-Regular.ttf',
+                'useOTL' => 0xFF,
+                'useKashida' => 75,
             ],
             'kanit' => [
-                'R'  => 'Kanit-Regular.ttf',    // regular font
+                'R'  => 'Kanit-Regular.ttf',
             ],
             'yahei' => [
-                'R'  => 'chinese-msyh.ttf',    // regular font
+                'R'  => 'chinese-msyh.ttf',
             ],
             'pyidaungsu' => [
-                'R'  => 'Pyidaungsu.ttf',    // regular font
+                'R'  => 'Pyidaungsu.ttf',
             ],
             'zawgyi-one' => [
-                'R'  => 'Zawgyi-One.ttf',    // regular font
+                'R'  => 'Zawgyi-One.ttf',
             ]
         ]
     ];

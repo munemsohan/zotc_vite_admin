@@ -1056,6 +1056,71 @@
                             content:
                                 '\n            <div class="block-form-default">\n              <h3>FILL OUT THE FORM</h3>\n              <form class="registration-form">\n                <div class="form-group">\n                  <label class="sr-only" for="name">First name</label>\n                  <input type="text" name="name" required="" placeholder="Enter Your Name..." class="form-control">\n                </div>\n                <div class="form-group">\n                  <label class="sr-only" for="email">Email</label>\n                  <input type="text" name="email" required="" placeholder="Enter Your Email..." class="form-control">\n                </div>\n                <div class="form-group">\n                  <label class="sr-only" for="phone">Service</label>\n                  <select class="form-control" name="service" required="">\n                    <option value="">Select service</option>\n                    <option value="service A">service A</option>\n                    <option value="service B">service B</option>\n                    <option value="service C">service C</option>\n                  </select>\n                </div>\n                <div class="form-group">\n                    <label class="sr-only" for="message">Message</label>\n                    <textarea class="form-control" name="message" placeholder="Enter Your Message..." required="" row="3"></textarea>\n                  </div>\n                <button type="submit" class="btn btn-danger btn-round  btn-lg">Get it Now</button>\n              </form>\n            </div>',
                         }),
+                        n.add("block-countdown1", {
+                            category: "Basic",
+                            label: "Countdown 1",
+                            attributes: { class: "fa fa-hourglass" },
+                            content: `
+                                <section id="countdown" style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
+                                    <div style="width: 100%; padding: 10px 5px;">
+                                        <div
+                                            style="display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; max-width: 320px; margin: 0 auto;">
+                                            <div
+                                                style="background: #fff; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 6px 8px; min-width: 65px; text-align: center; border: 1px solid #e0e0e0;">
+                                                <span id="days"
+                                                    style="display: block; font-size: 1.4rem; font-weight: bold; color: #333;">00</span>
+                                                <small style="font-size: 0.8rem; color: #666;">Days</small>
+                                            </div>
+                                            <div
+                                                style="background: #fff; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 6px 8px; min-width: 65px; text-align: center; border: 1px solid #e0e0e0;">
+                                                <span id="hours"
+                                                    style="display: block; font-size: 1.4rem; font-weight: bold; color: #333;">00</span>
+                                                <small style="font-size: 0.8rem; color: #666;">Hours</small>
+                                            </div>
+                                            <div
+                                                style="background: #fff; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 6px 8px; min-width: 65px; text-align: center; border: 1px solid #e0e0e0;">
+                                                <span id="minutes"
+                                                    style="display: block; font-size: 1.4rem; font-weight: bold; color: #333;">00</span>
+                                                <small style="font-size: 0.8rem; color: #666;">Mins</small>
+                                            </div>
+                                            <div
+                                                style="background: #fff; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 6px 8px; min-width: 65px; text-align: center; border: 1px solid #e0e0e0;">
+                                                <span id="seconds"
+                                                    style="display: block; font-size: 1.4rem; font-weight: bold; color: #333;">00</span>
+                                                <small style="font-size: 0.8rem; color: #666;">Secs</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            `,
+                        }),
+                        n.add("block-countdown2", {
+                            category: "Basic",
+                            label: "Countdown 2",
+                            attributes: { class: "fa fa-hourglass" },
+                            content: `
+                                <section id="countdown" style="text-align: center; padding: 20px;">
+                                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                                        <div style="border: 2px solid black; padding: 10px; text-align: center; min-width: 70px; flex: 1 1 60px; max-width: 100px; margin-bottom: 5px;">
+                                            <span id="days" style="font-size: clamp(36px, 6vw, 40px); font-weight: bold;">00</span>
+                                            <div style="font-size: clamp(12px, 3vw, 14px);">Days</div>
+                                        </div>
+                                        <div style="border: 2px solid black; padding: 10px; text-align: center; min-width: 70px; flex: 1 1 60px; max-width: 100px; margin-bottom: 5px;">
+                                            <span id="hours" style="font-size: clamp(36px, 6vw, 40px); font-weight: bold;">00</span>
+                                            <div style="font-size: clamp(12px, 3vw, 14px);">Hours</div>
+                                        </div>
+                                        <div style="border: 2px solid black; padding: 10px; text-align: center; min-width: 70px; flex: 1 1 60px; max-width: 100px; margin-bottom: 5px;">
+                                            <span id="minutes" style="font-size: clamp(36px, 6vw, 40px); font-weight: bold;">00</span>
+                                            <div style="font-size: clamp(12px, 3vw, 14px);">Minutes</div>
+                                        </div>
+                                        <div style="border: 2px solid black; padding: 10px; text-align: center; min-width: 70px; flex: 1 1 60px; max-width: 100px; margin-bottom: 5px;">
+                                            <span id="seconds" style="font-size: clamp(36px, 6vw, 40px); font-weight: bold;">00</span>
+                                            <div style="font-size: clamp(12px, 3vw, 14px);">Seconds</div>
+                                        </div>
+                                    </div>
+                                </section>
+                            `,
+                        }),
                         n.add("block-form-product", {
                             category: "Basic",
                             label: "Products Form",
@@ -1066,34 +1131,6 @@
                                         <center style="margin-bottom: 30px; border: 1px dotted"><h1><b>Product Order Section Goes Here<b></h1></center>
                                     </div>
                                 </div>
-                            `,
-                        }),
-                        n.add("block-countdown", {
-                            category: "Basic",
-                            label: "Countdown",
-                            attributes: { class: "fa fa-hourglass" },
-                            content: `
-                                <section id="countdown" style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-                                    <h2 style="color: #333;">Timer Countdown Section will go here</h2>
-                                    <div style="display: flex; justify-content: center; gap: 10px; font-size: 24px; font-weight: bold;">
-                                        <div>
-                                            <span id="days" style="display: block; color: #ff0000;">02</span>
-                                            <small style="font-size: 14px; color: #777;">Days</small>
-                                        </div>
-                                        <div>
-                                            <span id="hours" style="display: block; color: #ff0000;">10</span>
-                                            <small style="font-size: 14px; color: #777;">Hours</small>
-                                        </div>
-                                        <div>
-                                            <span id="minutes" style="display: block; color: #ff0000;">24</span>
-                                            <small style="font-size: 14px; color: #777;">Minutes</small>
-                                        </div>
-                                        <div>
-                                            <span id="seconds" style="display: block; color: #ff0000;">59</span>
-                                            <small style="font-size: 14px; color: #777;">Seconds</small>
-                                        </div>
-                                    </div>
-                                </section>
                             `,
                         }),
                         o("quote") &&

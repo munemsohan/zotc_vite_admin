@@ -260,4 +260,4 @@
     $("#view_page").on("click", function (e) {
         window.location.href = page_url;
     });
-})(jQuery);
+})(jQuery); // End of use strict

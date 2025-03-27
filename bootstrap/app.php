@@ -38,10 +38,6 @@ $app = new Illuminate\Foundation\Application(
 
 // $envFile = base_path("env/.env.{$domain}");
 
-// // Cache key for the domain-specific .env file
-// $cacheKey = "env_file_path_{$domain}";
-
-// // Load environment variables based on the domain's environment file
 // if (file_exists($envFile)) {
 //     $dotenv = Dotenv\Dotenv::createImmutable(base_path(), "env/.env.{$domain}");
 //     $dotenv->load();
@@ -49,6 +45,7 @@ $app = new Illuminate\Foundation\Application(
 //     header('Location: https://zo.tc');
 //     exit;
 // }
+
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,

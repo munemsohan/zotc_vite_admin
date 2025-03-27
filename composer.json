@@ -5,26 +5,26 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.1",
         "aiz-packages/color-code-converter": "dev-main",
         "aiz-packages/combination-generate": "dev-main",
         "anandsiddharth/laravel-paytm-wallet": "^2.0",
         "authorizenet/authorizenet": "^2.0",
         "barryvdh/laravel-dompdf": "^3.0",
+        "barryvdh/laravel-snappy": "^1.0",
         "dompdf/dompdf": "^3.0",
         "enshrined/svg-sanitize": "^0.15.4",
-        "fideloper/proxy": "^4.4",
-        "genealabs/laravel-sign-in-with-apple": "*",
-        "genealabs/laravel-socialiter": "*",
+        "fruitcake/laravel-cors": "dev-develop",
         "guzzlehttp/guzzle": "^7.5",
         "instamojo/instamojo-php": "^0.4.0",
         "intervention/image": "^3.7",
         "iyzico/iyzipay-php": "^2.0",
         "kingflamez/laravelrave": "dev-master",
         "laracasts/flash": "^3.2",
-        "laravel/framework": "^9.2",
-        "laravel/sanctum": "^2.14.1",
-        "laravel/socialite": "^5.6",
+        "laravel/framework": "^10.0",
+        "laravel/octane": "^2.5",
+        "laravel/sanctum": "^3.2",
+        "laravel/socialite": "^6.0",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "lcobucci/jwt": "^4.0",
@@ -32,7 +32,7 @@
         "maatwebsite/excel": "^3.1",
         "mehedi-iitdu/core-component-repository": "^2.2",
         "mercadopago/dx-php": "^2.5",
-        "milon/barcode": "^9.0",
+        "milon/barcode": "^10.0",
         "mpdf/mpdf": "^8.2",
         "myfatoorah/laravel-package": "^2.1",
         "niklasravnsborg/laravel-pdf": "^4.1",
@@ -54,11 +54,11 @@
         "barryvdh/laravel-debugbar": "^3.8",
         "barryvdh/laravel-ide-helper": "^2.13",
         "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.0.1",
+        "laravel/sail": "^1.20",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "classmap": [
@@ -77,8 +77,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {

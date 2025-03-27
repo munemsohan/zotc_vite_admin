@@ -124,10 +124,7 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    'cookie' => Str::slug(env('APP_URL', 'laravel'), '_') . '_admin_session',
 
     /*
     |--------------------------------------------------------------------------
@@ -167,6 +164,7 @@ return [
     */
 
     'secure' => env('SESSION_SECURE_COOKIE', false),
+    'same_site' => 'lax',
 
     /*
     |--------------------------------------------------------------------------
