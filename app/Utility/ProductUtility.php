@@ -29,8 +29,11 @@ class ProductUtility
                     }
                 }
 
-                // Add $data to $options
-                $options[] = $data;
+                // Add $data to $options, if not empty
+                if (count($data) > 0) {
+                    $options[] = $data;
+                }
+                //if 
             }
         }
 
@@ -41,15 +44,15 @@ class ProductUtility
     {
         $str = '';
         foreach ($combination as $key => $item) {
-            if ($key > 0) {
-                $str .= '-' . str_replace(' ', '', $item);
+            if (isset($collection['colors']) && $key === 0 && $collection['colors'] && count($collection['colors']) > 0) {
+                $color = Color::where('code', $item)->first();
+                $color_name = $color ? $color->name : $item;  // Handle case where color is not found.
+                $str .= $color_name;
             } else {
-                if ($collection['colors'] && count($collection['colors']) > 0) {
-                    $color_name = Color::where('code', $item)->first()->name;
-                    $str .= $color_name;
-                }
+                $str .= ($key > 0 ? '-' : '') . str_replace(' ', '', $item);
             }
         }
+
         return $str;
     }
 }

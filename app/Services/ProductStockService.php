@@ -23,6 +23,7 @@ class ProductStockService
             $product->save();
             foreach ($combinations as $key => $combination) {
                 $str = ProductUtility::get_combination_string($combination, $collection);
+                
                 $product_stock = new ProductStock();
                 $product_stock->product_id = $product->id;
                 $product_stock->variant = $str;

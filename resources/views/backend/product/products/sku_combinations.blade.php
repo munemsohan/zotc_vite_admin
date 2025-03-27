@@ -33,9 +33,15 @@
                             $str .= '-' . str_replace(' ', '', $item);
                             $sku .= '-' . str_replace(' ', '', $item);
                         } else {
-                            $color_name = \App\Models\Color::where('code', $item)->first()->name;
-                            $str .= $color_name;
-                            $sku .= '-' . $color_name;
+                            $color = \App\Models\Color::where('code', $item)->first();
+                            if ($color) {
+                                $color_name = $color->name;
+                                $str .= $color_name;
+                                $sku .= '-' . $color_name;
+                            } else {
+                                $str .= $item;
+                                $sku .= '-' . $item;
+                            }
                         }
                     }
                 @endphp

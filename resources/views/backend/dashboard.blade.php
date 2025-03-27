@@ -114,7 +114,7 @@
                             $extendEligible = true;
 
                             // extend not for free, life time and percentage packages
-                            if ($planParts[0] == 1 || $planParts[0] == 10 || $planParts[0] == 11) {
+                            if ($planParts[0] == 10 || $planParts[0] == 11) {
                                 $extendEligible = false;
                             }
                         @endphp
@@ -181,9 +181,10 @@
                         </p>
 
                         <div class="text-right">
-                            <a class="text-white" href="{{ url('admin/activation#target') }}"><u>Edit Target</u></a>
+                            <a class="text-white" href="{{ route('website-setup', ['lang' => env('DEFAULT_LANGUAGE')]) }}">
+                                <u>Edit Target</u>
+                            </a>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-md-3 p-1">

@@ -63,28 +63,28 @@ class CarrierController extends Controller
         $carrier->save();
 
         // if not free shipping, then add the carrier ranges and prices
-        if ($free_shipping == 0) {
-            for ($i = 0; $i < count($request->delimiter1); $i++) {
+        // if ($free_shipping == 0) {
+        //     for ($i = 0; $i < count($request->delimiter1); $i++) {
 
-                // Add Carrier ranges
-                $carrier_range                  = new CarrierRange;
-                $carrier_range->carrier_id      = $carrier->id;
-                $carrier_range->billing_type    = $request->billing_type;
-                $carrier_range->delimiter1      = $request->delimiter1[$i];
-                $carrier_range->delimiter2      = $request->delimiter2[$i];
-                $carrier_range->save();
+        //         // Add Carrier ranges
+        //         $carrier_range                  = new CarrierRange;
+        //         $carrier_range->carrier_id      = $carrier->id;
+        //         $carrier_range->billing_type    = $request->billing_type;
+        //         $carrier_range->delimiter1      = $request->delimiter1[$i];
+        //         $carrier_range->delimiter2      = $request->delimiter2[$i];
+        //         $carrier_range->save();
 
-                // // Add carrier range prices
-                // foreach ($request->zones as $zone) {
-                //     $carrier_range_price =  new CarrierRangePrice;
-                //     $carrier_range_price->carrier_id = $carrier->id;
-                //     $carrier_range_price->carrier_range_id = $carrier_range->id;
-                //     $carrier_range_price->zone_id = $zone;
-                //     $carrier_range_price->price = $request->carrier_price[$zone][$i];
-                //     $carrier_range_price->save();
-                // }
-            }
-        }
+        //         // // Add carrier range prices
+        //         // foreach ($request->zones as $zone) {
+        //         //     $carrier_range_price =  new CarrierRangePrice;
+        //         //     $carrier_range_price->carrier_id = $carrier->id;
+        //         //     $carrier_range_price->carrier_range_id = $carrier_range->id;
+        //         //     $carrier_range_price->zone_id = $zone;
+        //         //     $carrier_range_price->price = $request->carrier_price[$zone][$i];
+        //         //     $carrier_range_price->save();
+        //         // }
+        //     }
+        // }
         flash(translate('New carrier has been added successfully'))->success();
         return 1;
     }
@@ -129,28 +129,28 @@ class CarrierController extends Controller
         $carrier->carrier_range_prices()->delete();
 
         // if not free shipping, then add the carrier ranges and prices
-        if ($free_shipping == 0) {
-            for ($i = 0; $i < count($request->delimiter1); $i++) {
+        // if ($free_shipping == 0) {
+        //     for ($i = 0; $i < count($request->delimiter1); $i++) {
 
-                // Add Carrier ranges
-                $carrier_range                  = new CarrierRange;
-                $carrier_range->carrier_id      = $carrier->id;
-                $carrier_range->billing_type    = $request->billing_type;
-                $carrier_range->delimiter1      = $request->delimiter1[$i];
-                $carrier_range->delimiter2      = $request->delimiter2[$i];
-                $carrier_range->save();
+        //         // Add Carrier ranges
+        //         $carrier_range                  = new CarrierRange;
+        //         $carrier_range->carrier_id      = $carrier->id;
+        //         $carrier_range->billing_type    = $request->billing_type;
+        //         $carrier_range->delimiter1      = $request->delimiter1[$i];
+        //         $carrier_range->delimiter2      = $request->delimiter2[$i];
+        //         $carrier_range->save();
 
-                // Add carrier range prices
-                // foreach ($request->zones as $zone) {
-                //     $carrier_range_price =  new CarrierRangePrice;
-                //     $carrier_range_price->carrier_id = $carrier->id;
-                //     $carrier_range_price->carrier_range_id = $carrier_range->id;
-                //     $carrier_range_price->zone_id = $zone;
-                //     $carrier_range_price->price = $request->carrier_price[$zone][$i];
-                //     $carrier_range_price->save();
-                // }
-            }
-        }
+        //         // Add carrier range prices
+        //         // foreach ($request->zones as $zone) {
+        //         //     $carrier_range_price =  new CarrierRangePrice;
+        //         //     $carrier_range_price->carrier_id = $carrier->id;
+        //         //     $carrier_range_price->carrier_range_id = $carrier_range->id;
+        //         //     $carrier_range_price->zone_id = $zone;
+        //         //     $carrier_range_price->price = $request->carrier_price[$zone][$i];
+        //         //     $carrier_range_price->save();
+        //         // }
+        //     }
+        // }
         flash(translate('New carrier has been added successfully'))->success();
         return back();
     }

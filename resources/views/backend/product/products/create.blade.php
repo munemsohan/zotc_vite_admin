@@ -1012,9 +1012,9 @@
                 }
             });
 
-            $('#tags').tagsinput({
-                trimValue: true,
-            });
+            // $('#tags').tagsinput({
+            //     trimValue: true,
+            // });
         });
 
         function initializeTreeView() {
@@ -1076,6 +1076,7 @@
         function initializeSkuUpdateEvents() {
             $(document).on("change", ".attribute_choice", update_sku);
             $('#colors').on('change', update_sku);
+            $('.attribute_choice').on('change', update_sku);
             $('input[name="unit_price"], input[name="name"]').on('keyup', update_sku);
         }
 

@@ -35,7 +35,16 @@
                                             Topbar
                                             4
                                         </option>
-                                        {{-- <option value="nav">Topbar 1</option> --}}
+                                        <option value="nav5"
+                                            {{ get_business_setting('homepage_topbar') == 'nav5' ? 'selected' : '' }}>
+                                            Topbar
+                                            5
+                                        </option>
+                                        <option value="nav6"
+                                            {{ get_business_setting('homepage_topbar') == 'nav6' ? 'selected' : '' }}>
+                                            Topbar
+                                            6
+                                        </option>
                                     </select>
                                 </div>
                             </div>

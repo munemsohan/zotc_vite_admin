@@ -1366,15 +1366,21 @@ class AdminController extends Controller
 
         $phone = $request->phone;
 
+        $domain = ZotcSetting::where('type', 'domains')->first();
+        $domains = json_decode($domain->value);
+        $freeDomain = $domains->free_domain;
+
         // Fetch OrderGuard and Steadfast Data
         $orderguardData = $this->fetchApiData('https://www.root6.xyz/wp-content/plugins/orderguard2/orderguard.php', [
             'apiKey' => '5467yujhgfred54erwsd',
-            'number' => $phone
+            'number' => $phone,
+            'shop_url' => $freeDomain
         ]);
 
         $steadfastData = $this->fetchApiData("https://ipinfo.zotc.pw/steadfast-com/api.php", [
             'key'    => '3456yjhgfde456',
-            'mobile' => $phone
+            'mobile' => $phone,
+            'shop_url' => $freeDomain
         ]);
 
         //update fraud checker
