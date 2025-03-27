@@ -114,7 +114,7 @@
                             $extendEligible = true;
 
                             // extend not for free, life time and percentage packages
-                            if ($planParts[0] == 1 || $planParts[0] == 10 || $planParts[0] == 11) {
+                            if ($planParts[0] == 10 || $planParts[0] == 11) {
                                 $extendEligible = false;
                             }
                         @endphp

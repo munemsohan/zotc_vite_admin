@@ -177,7 +177,7 @@
                     <td class="strong small gry-color">{{ translate('Bill to') }}:</td>
                 </tr>
                 <tr>
-                    <td class="strong" style="font-size: 1.5rem">{{ $shipping_address->name ?? '' }}</td>
+                    <td class="strong" style="font-size: 1.5rem">{{ $shipping_address->name ?? $order->user->name }}</td>
                 </tr>
                 <tr>
                     <td class="gry-color small">

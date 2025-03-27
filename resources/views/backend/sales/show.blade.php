@@ -267,6 +267,8 @@
                         <address>
                             @if (!empty($shippingAddress->name))
                                 <strong class="text-main">{{ $shippingAddress->name }}</strong><br>
+                            @else
+                                <strong class="text-main">{{ $order->user->name }}</strong><br>
                             @endif
 
                             @if (!empty($shippingAddress->email))

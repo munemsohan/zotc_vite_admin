@@ -443,6 +443,37 @@
             </div>
         </div>
 
+        <!-- Checkout Page -->
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Checkout Page Type') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Checkout Page Type') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="checkout_page_type">
+                            <select class="form-control" name="checkout_page_type">
+                                <option value="1" @if (get_business_setting('checkout_page_type') == 1) selected @endif>Checkout
+                                    Page Type 1
+                                </option>
+                                <option value="2" @if (get_business_setting('checkout_page_type') == 2) selected @endif>Checkout
+                                    Page Type 2
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Update Button -->
+                    <div class="mt-4 text-right">
+                        <button type="submit"
+                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Global SEO -->
         <div class="card shadow-none bg-light">
             <div class="card-header">
@@ -492,6 +523,31 @@
                                     value="{{ get_business_setting('meta_image') }}" class="selected-files">
                             </div>
                             <div class="file-preview box"></div>
+                        </div>
+                    </div>
+                    <!-- Update Button -->
+                    <div class="mt-4 text-right">
+                        <button type="submit"
+                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Product Default Description -->
+        <div class="card shadow-none bg-light">
+            <div class="card-header">
+                <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <!-- Description -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
+                        <div class="col-md-8">
+                            <input type="hidden" name="types[]" value="product_default_description">
+                            <textarea name="product_default_description" rows="4" class="aiz-text-editor form-control">{{ get_business_setting('product_default_description') }}</textarea>
                         </div>
                     </div>
                     <!-- Update Button -->
@@ -688,33 +744,6 @@
             </div>
         </div>
     </div> --}}
-
-    <!-- Product Default Description -->
-    <div class="col-lg-6">
-        <div class="card shadow-none bg-light">
-            <div class="card-header">
-                <h6 class="fw-600 mb-0">{{ translate('Product Default Description') }}</h6>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <!-- Description -->
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label">{{ translate('Description') }}</label>
-                        <div class="col-md-8">
-                            <input type="hidden" name="types[]" value="product_default_description">
-                            <textarea name="product_default_description" rows="4" class="aiz-text-editor form-control">{{ get_business_setting('product_default_description') }}</textarea>
-                        </div>
-                    </div>
-                    <!-- Update Button -->
-                    <div class="mt-4 text-right">
-                        <button type="submit"
-                            class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Update') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Custom Script -->
     <div class="col-lg-6">

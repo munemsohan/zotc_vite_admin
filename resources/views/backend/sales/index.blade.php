@@ -208,7 +208,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ date('d-m-Y h:i A', strtotime($order->created_at)) }}
+                                    {{ date('d-m-Y h:i A', $order->date) }}
                                 </td>
                                 <td>
                                     {{ count($order->orderDetails) }}
