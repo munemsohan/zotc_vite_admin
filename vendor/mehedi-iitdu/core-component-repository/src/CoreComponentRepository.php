@@ -40,37 +40,36 @@ class CoreComponentRepository
     }
 
     public static function initializeCache() {
-        return 'yes';
-        // foreach(Addon::all() as $addon){
-        //     if ($addon->purchase_code == null) {
-        //         self::finalizeCache($addon);
-        //     }
-        //     $item_name = get_setting('item_name') ?? 'ecommerce';
+        foreach(Addon::all() as $addon){
+            if ($addon->purchase_code == null) {
+                self::finalizeCache($addon);
+            }
+            $item_name = get_setting('item_name') ?? 'ecommerce';
             
-        //     if(Cache::get($addon->unique_identifier.'-purchased', 'no') == 'no'){
-        //         try {
-        //             $gate = "https://activeitzone.com/activation/addon_check/".$addon->unique_identifier."/".$addon->purchase_code."/".$item_name;
+            if(Cache::get($addon->unique_identifier.'-purchased', 'no') == 'no'){
+                try {
+                    $gate = "https://activeitzone.com/activation/addon_check/".$addon->unique_identifier."/".$addon->purchase_code."/".$item_name;
         
-        //             $stream = curl_init();
-        //             curl_setopt($stream, CURLOPT_URL, $gate);
-        //             curl_setopt($stream, CURLOPT_HEADER, 0);
-        //             curl_setopt($stream, CURLOPT_RETURNTRANSFER, 1);
-        //             $rn = curl_exec($stream);
-        //             curl_close($stream);
+                    $stream = curl_init();
+                    curl_setopt($stream, CURLOPT_URL, $gate);
+                    curl_setopt($stream, CURLOPT_HEADER, 0);
+                    curl_setopt($stream, CURLOPT_RETURNTRANSFER, 1);
+                    $rn = curl_exec($stream);
+                    curl_close($stream);
         
-        //             if($rn == 'no') {
-        //                 self::finalizeCache($addon);
-        //             }
-        //             else{
-        //                 Cache::rememberForever($addon->unique_identifier.'-purchased', function () {
-        //                     return 'yes';
-        //                 });
-        //             }
-        //         } catch (\Exception $e) {
+                    if($rn == 'no') {
+                        self::finalizeCache($addon);
+                    }
+                    else{
+                        Cache::rememberForever($addon->unique_identifier.'-purchased', function () {
+                            return 'yes';
+                        });
+                    }
+                } catch (\Exception $e) {
         
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
     }
 
     public static function finalizeCache($addon){
