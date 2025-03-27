@@ -181,9 +181,10 @@
                         </p>
 
                         <div class="text-right">
-                            <a class="text-white" href="{{ url('admin/activation#target') }}"><u>Edit Target</u></a>
+                            <a class="text-white" href="{{ route('website-setup', ['lang' => env('DEFAULT_LANGUAGE')]) }}">
+                                <u>Edit Target</u>
+                            </a>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-md-3 p-1">

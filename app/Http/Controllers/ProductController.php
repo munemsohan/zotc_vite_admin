@@ -797,6 +797,7 @@ class ProductController extends Controller
 
     public function sku_combination(Request $request)
     {
+        
         $options = array();
         if ($request->has('colors') && count($request->colors) > 0) {
             array_push($options, $request->colors);
@@ -821,6 +822,9 @@ class ProductController extends Controller
         }
 
         $combinations = (new CombinationService())->generate_combination($options);
+
+        // return $combinations;
+
         return view('backend.product.products.sku_combinations', compact('combinations', 'unit_price', 'product_name'));
     }
 
