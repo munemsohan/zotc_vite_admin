@@ -86,6 +86,18 @@
                                     </label>
                                 </div>
                             </div>
+                            <!-- Enable stikcy header -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-from-label">{{ translate('Compare Button') }}</label>
+                                <div class="col-md-8">
+                                    <label class="aiz-switch aiz-switch-success mb-0">
+                                        <input type="hidden" name="types[]" value="compare_button">
+                                        <input type="checkbox" name="compare_button"
+                                            @if (get_business_setting('compare_button') == 'on') checked @endif>
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </div>
                             <div class="border-top pt-3">
                                 <!-- Topbar Banner Large -->
                                 <div class="form-group row">
